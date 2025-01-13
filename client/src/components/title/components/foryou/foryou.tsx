@@ -1,4 +1,4 @@
-import "./showcase.css"
+import "./foryou.css"
 
 
 function Showcase() {

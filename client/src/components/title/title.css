@@ -15,7 +15,7 @@
 
 .wrapuwu {
   display: flex;
-  width: 100%;
+  width: 47%;
   border-right: 1px solid rgb(50, 50, 50);
   flex-wrap: wrap;
 }

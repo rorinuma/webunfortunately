@@ -3,9 +3,9 @@ import Login from './components/login/login'
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom"
 import SignUp from './components/signup/signup'
 import axios from "axios"
-import Showcase from './components/title/components/showcase/showcase'
+import Showcase from './components/title/components/foryou/foryou'
 import Title from './components/title/title'
-import Library from './components/title/components/library/library'
+import Library from './components/title/components/library/following'
 import { useEffect, useState, createContext } from 'react'
 
 

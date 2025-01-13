@@ -20,7 +20,7 @@ function Nav({username} : Props) {
   const profilePopupOptionsRef = useRef<HTMLDivElement | null>(null)
   const [ menuShown, setMenuShown ] = useState(false)
 
-  // doesn't work TODO tmrw // tomorrow happened, i'm not doing shit today.
+  // doesn't work TODO tmrw // tomorrow happened, i'm not doing shit today. // stil doesn't work fuck this...
   const handlePopupRemovalWhenClickedOutside = (e: MouseEvent) => {
     const target = e.target as HTMLElement
 
@@ -72,9 +72,15 @@ function Nav({username} : Props) {
     <nav className="title-nav">
       <div className="nav">
         <Link to="/" className="nav-link"><div><img src={HomeSvg} className="nav-svg" alt="homesvg" /><div>Home</div></div></Link>
-        <Link to="/library" className="nav-link"><div><img src={LibrarySvg} className="nav-svg" alt="librarysvg" /><div>Library</div></div></Link>
-        <Link to="/collections" className="nav-link"><div><img src={Collections} className="nav-svg" alt="collectionsysvg" /><div>Collections</div></div></Link>
-        <Link to="/cloud" className="nav-link"><div><img src={CloudSvg} className="nav-svg" alt="cloudSvg" /><div>Cloud</div></div></Link>
+        <Link to="/explore" className="nav-link"><div><img src={LibrarySvg} className="nav-svg" alt="librarysvg" /><div>Explore</div></div></Link>
+        <Link to="/notifications" className="nav-link"><div><img src={Collections} className="nav-svg" alt="collectionsysvg" /><div>Notifications</div></div></Link>
+        <Link to="/messages" className="nav-link"><div><img src={CloudSvg} className="nav-svg" alt="cloudSvg" /><div>Messages</div></div></Link>
+        <Link to="/grok" className="nav-link"><div><img src={CloudSvg} className="nav-svg" alt="cloudSvg" /><div>Grok</div></div></Link>
+        <Link to="/communities" className="nav-link"><div><img src={CloudSvg} className="nav-svg" alt="cloudSvg" /><div>Communities</div></div></Link>
+        <Link to="/premium" className="nav-link"><div><img src={CloudSvg} className="nav-svg" alt="cloudSvg" /><div>Premium</div></div></Link>
+        <Link to="/profile" className="nav-link"><div><img src={CloudSvg} className="nav-svg" alt="cloudSvg" /><div>Profile</div></div></Link>
+        <Link to="/more" className="nav-link"><div><img src={CloudSvg} className="nav-svg" alt="cloudSvg" /><div>More</div></div></Link>
+        <div className="post-btn-container"><button>Post</button></div>
       </div>
       <div className="profile">
         <div className="profile-popup-options" ref={profilePopupOptionsRef}>
