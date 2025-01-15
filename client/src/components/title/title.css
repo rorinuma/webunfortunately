@@ -16,12 +16,16 @@
 .wrapuwu {
   display: flex;
   width: 47%;
-  border-right: 1px solid rgb(50, 50, 50);
+  border: 1px solid rgb(50, 50, 50);
+  height: calc(100% + 120rem);
   flex-wrap: wrap;
 }
 
 .title-content {
   width: 100%;
   height: 100%;
+
+
 }
+
 

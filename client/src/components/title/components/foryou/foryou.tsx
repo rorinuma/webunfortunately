@@ -1,18 +1,43 @@
+import { useEffect, useState } from "react"
 import "./foryou.css"
+import Pfp from "../../../../assets/placeholderpfp.jpg"
 
 
-function Showcase() {
+function ForYou() {
+
+  const [ tweets, setTweets ] = useState([{text: null, img: undefined}])
+
+  useEffect(() => {
+    const tweetsArray = localStorage.getItem('tweets')
+    if(tweetsArray) {
+      setTweets(JSON.parse(tweetsArray))
+    }
+  }, [])
 
   return (
-    <div className="showcase-container">
-      <div className="recents-container">
-        <div className="showcase-label-container"><h3>Recents</h3></div>
-      </div>
-      <div className="favs-container">
-        <div className="showcase-label-container"><h3>Favorites</h3></div>
-      </div>
+    <div className="for-you-tweets-container">
+      {tweets.map((tweet, index) => (
+        <div key={index} className="tweet">
+          <div className="tweet-content">
+            <div className="tweet-content-text">
+              <div className="tweet-pfp"><img src={Pfp} alt="tweetPfp"/></div>
+              <div className="tweet-content-container">
+                <div className="tweet-content-info">
+                  <div>username</div>
+                  <div>@username</div>
+                  <div>date</div>
+                </div>
+                <div>{tweet.text}</div>
+                <div className="tweet-image"><img src={tweet.img} alt="imgurl"/></div>
+              </div>
+            </div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+      ))}
     </div>
   )
 }
 
-export default Showcase
+export default ForYou

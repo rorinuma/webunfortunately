@@ -1,12 +1,17 @@
+body {
+  --blue: rgb(29, 155, 240)
+}
+
 .header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   width: 100%;
   height: 52px;
   border-bottom: 1px solid rgb(50, 50, 50);
 }
 
-.header > div {
+.header-category-container {
   display: flex;
   flex: 1;
   height: 100%;
@@ -14,20 +19,137 @@
   width: 100%;
 }
 
-.header > div:hover {
+.header-category-container:hover {
   background-color: rgba(25, 25, 25, 0.9);
 }
 
 .header-category {
   display: flex;
-
   width: 100%;
   height: 100%;
 }
 
 .header-btn {
   all:unset;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-content: center;
   width: 100%;
   height: 100%;
+}
+
+.header-btn > div {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  height: 96%;
+  border-radius: 5px;
+}
+
+.header-category-text-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: fit-content;
+  height: 100%;
+}
+
+.header-category-text-container > div {
+  width: 100%;
+}
+
+.active {
+  height: 4px;
+  width: 100%;
+  margin-top: 13px;
+  margin-bottom: -13px;
+  background-color: var(--blue);
+  border-radius: 10px;
+}
+
+.tweet-post-container {
+  display: flex;
+  min-height: 80px;
+  width: 100%;
+  padding: 20px 20px 5px 20px;
+  border-bottom: 1px solid rgb(50, 50, 50);
+}
+
+.tweet-post-image {
+  max-width: 41rem;
+  max-height: 100%;
+}
+
+.tweet-post-pfp > img {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}
+
+.tweet-area-post-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 8px;
+  margin-left: 10px;
+}
+
+.tweet-area {
+  background-color: transparent;
+  color: #fff;
+  font-family: inherit;
+  outline: none;
+  border: 0;
+  resize: none;
+}
+
+.everyone-can-reply {
+  display: none;
+  width: 100%;
+  border-bottom: 1px solid rgb(50, 50, 50);
+  color: var(--blue)
+}
+
+.post-insert-data {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px
+}
+
+.post-insert-data-select {
+  display: flex;
+  align-items: center;
+}
+
+.image-select-btn {
+  all: unset;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 7px 6px;
+}
+
+.image-select-btn:hover {
+  background-color: rgba(29, 155, 240, 0.1);
+  border-radius: 4rem;
+}
+
+.img {
+  height: 20px;
+}
+
+.tweet-post-btn {
+  all: unset;
+  background-color: #fff;
+  text-align: center;
+  height: 40px;
+  color: black;
+  width: 75px;
+  cursor: pointer;
+  border-radius: 4rem;
+}
+
+.tweet-post-btn:disabled {
+  background-color: rgb(110, 110, 110);
+  cursor: default
 }

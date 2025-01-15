@@ -1,16 +1,17 @@
-body {
+:root {
   --hover: rgba(25, 25, 25, 0.9)
 }
 
 .title-nav {
   display: flex;
+  position: relative;
   flex-direction: column;
+  z-index: 100;
   align-items: flex-start;
-  width: fit-content;
+  max-width: fit-content;
   padding-right: 15px;
   height: 100%;
-  justify-content: space-between  ;
-  border-right: 1px solid rgb(50, 50, 50);
+  justify-content: space-between;
 }
 
 .nav {
