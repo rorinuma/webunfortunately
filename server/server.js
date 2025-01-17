@@ -4,11 +4,14 @@ const cookieParser = require("cookie-parser")
 const cors = require("cors")
 const mysql = require('mysql')
 const jwt = require('jsonwebtoken')
+const multer = require('multer')
+const path = require('path')
 const corsOptions = {
   origin: ["http://localhost:5173"],
   credentials: true,
 }
 require("dotenv").config()
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 app.use(cors(corsOptions));
@@ -105,6 +108,68 @@ app.get("/api/logout", (req, res) => {
 
 app.get("/api/protected", authorization, (req, res) => {
   return res.json({user: {id: req.userId, username: req.username}})
+})
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads')
+  },
+  filename: (req, file, cb) => {
+    cb(null, `image-${Date.now()}.${file.originalname}` )
+  }
+})
+
+const upload = multer({
+    
+  storage: storage,
+  limits:{fileSize:'1000000'},
+  fileFilter:(req, file, cb)=>{
+    const fileType = /jpeg|jpg|png|gif/
+    const mimeType = fileType.test(file.mimetype)
+    const extname = fileType.test(path.extname(file.originalname))
+    if(mimeType && extname){
+        return cb(null, true)
+    }
+    cb('Give proper file format to upload')
+  }
+}).single('tweet_post_image')
+
+app.post('/api/tweets', [authorization, upload], (req, res) => {
+  try {
+    const { text, date } = req.body
+    const userId = req.userId
+    const username = req.username
+    const file = req.file 
+    const filePath = req.file ? req.file.filename : null;
+    console.log(req.file)
+    res.json({message: file})
+    const q = "INSERT INTO tweets (userId, username, text, date, image) VALUES (?, ?, ?, ?, ?)"
+    db.query(q, [userId, username, text, date, filePath], (err, result) => {
+      if(err) {
+        return res.status(500).json('error while checking the db', err)
+      }
+      console.log("1 tweet added")
+    })
+
+  } catch  {
+    return res.sendStatus(500)
+  }
+})
+
+app.get("/api/tweets", authorization, (req, res) => {
+  try {
+    const q = "SELECT * FROM tweets"
+    db.query(q, (err, result) => {
+      if(err) throw err;
+      const tweetsWithImages = result.map((tweet) => ({
+        ...tweet, 
+        image: tweet.image ? `http://localhost:8080/uploads/${tweet.image}` : null
+      }))
+      res.status(200).json({tweets: tweetsWithImages})
+    })
+  } catch (err) {
+    return res.status(500).json('erorr uwu', err)
+  }
 })
 
 

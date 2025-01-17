@@ -7,7 +7,7 @@ import Collections from "../../assets/collections.svg"
 import CloudSvg from "../../assets/cloud.svg"
 import Pfp from "../../assets/placeholderpfp.jpg"
 import More from "../../assets/more.svg"
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 
 interface Props {
   username: string
@@ -19,32 +19,6 @@ function Nav({username} : Props) {
   const navigate = useNavigate()
   const profilePopupOptionsRef = useRef<HTMLDivElement | null>(null)
   const [ menuShown, setMenuShown ] = useState(false)
-
-  // doesn't work TODO tmrw // tomorrow happened, i'm not doing shit today. // stil doesn't work fuck this...
-  const handlePopupRemovalWhenClickedOutside = (e: MouseEvent) => {
-    const target = e.target as HTMLElement
-
-    if(profilePopupOptionsRef.current) {
-      if (!target.classList.contains('profile-popup-options') && !target.classList.contains('profilepfp') && !target.classList.contains('profile-username') 
-        && !target.classList.contains('profile-at') && !target.classList.contains('more') && !target.classList.contains('recents-container')) {
-        profilePopupOptionsRef.current.style.display = "none"
-        setMenuShown(false)
-      }
-    }
-  }
-
-  useEffect(() => {
-    if(menuShown) {
-      document.body.addEventListener('click', handlePopupRemovalWhenClickedOutside)
-    }
-    if(!menuShown) {
-      document.body.removeEventListener('click', handlePopupRemovalWhenClickedOutside)
-    }
-    
-    return () => {
-      document.body.removeEventListener('click', handlePopupRemovalWhenClickedOutside)
-    }
-  }, [menuShown])
 
   const handleLogout = async () => {
     try {

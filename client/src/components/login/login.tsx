@@ -15,8 +15,6 @@ const Login: React.FC = () => {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-
-
   axios.defaults.withCredentials = true
 
   const handleSubmit = async (e : React.FormEvent) => {

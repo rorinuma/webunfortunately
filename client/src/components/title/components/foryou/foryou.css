@@ -42,6 +42,7 @@
 }
 
 .tweet-image > img {
-  max-width: 36rem;
+  max-width: 30rem;
+  border-radius: 1rem;
   max-height: 100%
 }

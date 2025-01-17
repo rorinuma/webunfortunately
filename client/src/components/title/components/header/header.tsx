@@ -9,7 +9,7 @@ import gif from "../../assets/gif.svg"
 import hospital from "../../assets/hospital.svg"
 import location from "../../assets/location.svg"
 import schedule from "../../assets/schedule.svg"
-
+import axios from "axios"
 
 
 interface Props {
@@ -48,24 +48,32 @@ const Header = ({forYouActive, followingActive, handleOnFollowingActive, handleO
   }
 
 
-  const handleTweetPost = (e: React.FormEvent) => {
+  const handleTweetPost = async (e: React.FormEvent) => {
     e.preventDefault()
-    
-    const tweets = localStorage.getItem('tweets')
-    if(tweets) {
-      const tweetsObjectsArray = JSON.parse(tweets)
-      const newArray = [...tweetsObjectsArray, {text: tweetValue, img: imgUrl}]
-      localStorage.setItem('tweets', JSON.stringify(newArray))
+
+    try {
+      const formData = new FormData()
+      formData.append("date", Date.now().toString())
+      formData.append("text", tweetValue)
+      if(imgInput) {
+        formData.append('tweet_post_image', imgInput)
+      }
+      const response = await axios.post('http://localhost:8080/api/tweets', formData, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": 'multipart/form-data'
+        }
+      })
+      console.log('tweet posted successfully', response.data)
       setTweetValue('')
       setImgInput(null)
       setImgUrl('')
-    } else {
-      localStorage.setItem('tweets', JSON.stringify([{text: tweetValue, img: imgUrl}]))
-      setTweetValue('')
-      setImgInput(null)
-      setImgUrl('')
+
+    } catch (error) {
+      console.error(error)
     }
   }
+
 
 
 
@@ -100,7 +108,7 @@ const Header = ({forYouActive, followingActive, handleOnFollowingActive, handleO
           </div>
         </div>
       </header>
-      <form className="tweet-post-container" onSubmit={handleTweetPost}>
+      <form className="tweet-post-container" action="http://localhost:8080/api/tweets" encType={'multipart/form-data'} onSubmit={handleTweetPost}>
         <div className="tweet-post-pfp"><img src={Pfp} alt="post-pfp"/></div>
         <div className="tweet-area-post-container">
           <TextareaAutosize
@@ -109,14 +117,14 @@ const Header = ({forYouActive, followingActive, handleOnFollowingActive, handleO
           value={tweetValue} 
           onChange={handleTweetValueChange}
           />
-          <img src={imgUrl} alt="tweet-post-image" className="tweet-post-image" />
+          {imgUrl && (<img src={imgUrl} alt="tweet-post-image" className="tweet-post-image" />)}
           <div className="everyone-can-reply">Everyone can reply</div>
           <div className="post-insert-data">
             <div className="post-insert-data-select">
               <button className="image-select-btn" type="button">
                 <img src={img} onClick={handleImageBtnClick} alt="image-select" className="img"/>
               </button>
-              <input type="file" accept="image/*" onChange={handleImageUpload} ref={imgInputRef} hidden/>
+              <input type="file" accept="image/*" name="tweet_post_image" onChange={handleImageUpload} ref={imgInputRef} hidden/>
               <button type="button" className="image-select-btn">
                 <img src={gif} alt="image-select" className="img" />
               </button>
