@@ -1,9 +1,9 @@
 import './App.css'
-import Login from './components/login/login'
+import Login from './features/login/login'
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom"
-import SignUp from './components/signup/signup'
+import SignUp from './features/signup/signup'
 import axios from "axios"
-import Title from './components/title/title'
+import Title from './features/home/title'
 import { useEffect, useState } from 'react'
 
 

@@ -2,25 +2,36 @@
   --hover: rgba(25, 25, 25, 0.9)
 }
 
+nav {
+  display: flex;
+  justify-content: flex-end;
+  width: 330px;
+  flex-grow: 1;
+}
+
 .title-nav {
   display: flex;
-  position: relative;
   flex-direction: column;
   z-index: 100;
+  top: 0;
+  position: fixed;
+  justify-content: flex-end;
   align-items: flex-start;
-  max-width: fit-content;
-  padding-right: 15px;
+  max-width: fit-content; 
   height: 100%;
+  width: 275px;
+  padding-right: 15px;
   justify-content: space-between;
 }
 
 .nav {
   display: flex;
+  position: relative;
   flex-direction: column;
   align-items: flex-start;
   width: fit-content;
   height: fit-content;
-  margin-top: 4px;
+  margin-top: 0.25rem;
 }
 
 .nav-link {
@@ -49,11 +60,14 @@
   display: flex;
   align-self: center;
   justify-self: center;
+  margin-top: 1rem;
 }
 
 .post-btn-container > button {
   all: unset;
   color: black;
+  position: relative;
+  z-index: 1;
   background-color: #fff;
   text-align: center;
   width: 233px;
@@ -86,13 +100,28 @@
 .profile-popup-options {
   display: none;
   position: absolute;
-  align-items: center;
-  bottom: 70px;
-  height: 30px;
-  width: 200px;
+  align-items: stretch;
+  justify-content: space-around;
+  flex-direction: column;
+  background-color: black;
+  bottom: 73px;
+  height: 6rem;
+  width: 300px;
   padding: 7px;
   border-radius: 10px;
+  z-index: 100;
   box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 15px, rgba(255, 255, 255, 0.15) 0px 0px 3px 1px;
+}
+
+.profile-popup-options::after {
+  content: " ";
+  position: absolute;
+  right: 150px;
+  bottom: -4px;
+  border-top: none;
+  border-right: 12px solid transparent;
+  border-left: 12px solid transparent;
+  border-top: 12px solid black;
 }
 
 .logout-container {
@@ -103,8 +132,8 @@
   all: unset;
   cursor: pointer;
   font-size: 13px;
-  width: 100%;
-  padding: 5px 5px 5px 9px;
+  width: 99%;
+  padding: 13px 5px 13px 13px;
   margin-left: -8px
 }
 
@@ -120,12 +149,12 @@
   gap: 15px;
   border: 0;
   border-radius: 4rem;
-  padding: 10px 12px 10px 14px
+  padding: 10px 12px 10px 14px;
 }
 
 .profile-btn:hover {
   background-color: var(--hover);
-  transition: 300ms;
+  transition: 0.3s;
 }
   
 .profile-username {

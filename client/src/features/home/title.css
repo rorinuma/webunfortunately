@@ -1,31 +1,41 @@
 .title-screen {
   display: flex;
-  justify-content: center;
-  align-items: center;
   width: 100vw;
   height: 100vh;
 }
 
 .title-container {
   display: flex;
-  width: 83%;
   height: 100%;
+  width: 100%;
   border-radius: 10px;
 }
 
+.main-container {
+  flex-grow: 1;
+  flex-shrink: 1;
+} 
+
+.main {
+  display: flex;
+  width: 1050px;
+  flex-shrink: 1;
+  flex-grow: 1;
+}
+
+
 .wrapuwu {
   display: flex;
-  width: 47%;
   border: 1px solid rgb(50, 50, 50);
   height: calc(100% + 120rem);
   flex-wrap: wrap;
 }
 
 .title-content {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
-
-
 }
 
 

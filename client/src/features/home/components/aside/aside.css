@@ -1,0 +1,44 @@
+:root {
+  --blue: rgb(29, 155, 240)
+}
+
+aside {
+  display: flex;
+  flex-direction: column;
+  margin-left: 2rem;
+}
+
+.search-bar {
+  position: relative;
+  margin-top: 0.25rem;
+}
+
+.search-bar > input {
+  height: 2.75rem;
+  width: 23rem;
+  padding-left: 2rem;
+  font-family: inherit;
+  border-radius: 4rem;
+  background-color: inherit;
+  box-sizing: border-box;
+  caret-color: var(--blue);
+  color: inherit;
+  outline: none;
+  border: 1px solid rgb(50, 50, 50)
+}
+
+.search-bar > input:focus {
+  border: 2px solid var(--blue);
+}
+
+
+.search-button-container {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.5rem
+}
+
+.search-button-container > img {
+  color: #999;
+  height: 21px;
+}

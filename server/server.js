@@ -139,16 +139,13 @@ app.post('/api/tweets', [authorization, upload], (req, res) => {
     const { text, date } = req.body
     const userId = req.userId
     const username = req.username
-    const file = req.file 
     const filePath = req.file ? req.file.filename : null;
-    console.log(req.file)
-    res.json({message: file})
     const q = "INSERT INTO tweets (userId, username, text, date, image) VALUES (?, ?, ?, ?, ?)"
     db.query(q, [userId, username, text, date, filePath], (err, result) => {
       if(err) {
         return res.status(500).json('error while checking the db', err)
       }
-      console.log("1 tweet added")
+      console.log("tweet added")
     })
 
   } catch  {

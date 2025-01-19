@@ -1,4 +1,4 @@
-import FormInput from "../form-input/form-input";
+import FormInput from "../../components/form-input/form-input";
 import "./signup.css";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";

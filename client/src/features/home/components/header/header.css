@@ -1,4 +1,4 @@
-body {
+:root {
   --blue: rgb(29, 155, 240)
 }
 
@@ -30,7 +30,7 @@ body {
 }
 
 .header-btn {
-  all:unset;
+  all: unset;
   display: flex;
   justify-content: center;
   align-content: center;
@@ -50,6 +50,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  box-sizing: border-box;
   width: fit-content;
   height: 100%;
 }
@@ -69,9 +70,9 @@ body {
 
 .tweet-post-container {
   display: flex;
-  min-height: 80px;
+  min-height: 40px;
   width: 100%;
-  padding: 20px 20px 5px 20px;
+  padding: 20px 20px 0.75rem 20px;
   border-bottom: 1px solid rgb(50, 50, 50);
 }
 
@@ -98,6 +99,8 @@ body {
   background-color: transparent;
   color: #fff;
   font-family: inherit;
+  font-size: 18px;
+  overflow: hidden;
   outline: none;
   border: 0;
   resize: none;
@@ -113,7 +116,7 @@ body {
 .post-insert-data {
   display: flex;
   justify-content: space-between;
-  margin-top: 30px
+  margin-top: 1.25rem
 }
 
 .post-insert-data-select {

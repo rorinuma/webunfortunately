@@ -1,5 +1,5 @@
 import "./login.css"
-import FormInput from "../form-input/form-input"
+import FormInput from "../../components/form-input/form-input"
 import { Link, useNavigate } from "react-router-dom"
 import { useRef} from "react"
 import axios from "axios"
@@ -32,8 +32,8 @@ const Login: React.FC = () => {
           'Content-Type': "application/json"
         }
       })
-      console.log(`Response: ${response.data}`)
-      navigate("/")
+      if(response.status === 200) navigate('/')
+ 
     } catch(err) {
       console.log(err)
     }

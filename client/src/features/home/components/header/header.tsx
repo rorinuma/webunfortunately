@@ -74,12 +74,6 @@ const Header = ({forYouActive, followingActive, handleOnFollowingActive, handleO
     }
   }
 
-
-
-
-
-
-
   return (
     <>
       <header className="header">
