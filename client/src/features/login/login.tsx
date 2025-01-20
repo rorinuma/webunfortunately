@@ -4,11 +4,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { useRef} from "react"
 import axios from "axios"
 
-
-
-
 const Login: React.FC = () => {
-
 
   const navigate = useNavigate()
 

@@ -13,14 +13,11 @@ interface Props {
   username: string
 }
 
-
-
 function Nav({username} : Props) {
   const navigate = useNavigate()
   const profilePopupOptionsRef = useRef<HTMLDivElement | null>(null)
   const profileButtonRef = useRef<HTMLButtonElement | null>(null)
   const [ menuShown, setMenuShown ] = useState(false)
-
 
   const handleLogout = async () => {
     try {
@@ -57,19 +54,19 @@ function Nav({username} : Props) {
   }, [menuShown]);
 
   return (
-    <nav>
-      <div className="title-nav">
-        <div className="nav">
-          <Link to="/" className="nav-link"><div><img src={HomeSvg} className="nav-svg" alt="homesvg" /><div>Home</div></div></Link>
-          <Link to="/explore" className="nav-link"><div><img src={LibrarySvg} className="nav-svg" alt="librarysvg" /><div>Explore</div></div></Link>
-          <Link to="/notifications" className="nav-link"><div><img src={Collections} className="nav-svg" alt="collectionsysvg" /><div>Notifications</div></div></Link>
-          <Link to="/messages" className="nav-link"><div><img src={CloudSvg} className="nav-svg" alt="cloudSvg" /><div>Messages</div></div></Link>
-          <Link to="/grok" className="nav-link"><div><img src={CloudSvg} className="nav-svg" alt="cloudSvg" /><div>Grok</div></div></Link>
-          <Link to="/communities" className="nav-link"><div><img src={CloudSvg} className="nav-svg" alt="cloudSvg" /><div>Communities</div></div></Link>
-          <Link to="/premium" className="nav-link"><div><img src={CloudSvg} className="nav-svg" alt="cloudSvg" /><div>Premium</div></div></Link>
-          <Link to="/profile" className="nav-link"><div><img src={CloudSvg} className="nav-svg" alt="cloudSvg" /><div>Profile</div></div></Link>
-          <Link to="/more" className="nav-link"><div><img src={CloudSvg} className="nav-svg" alt="cloudSvg" /><div>More</div></div></Link>
-          <div className="post-btn-container"><button>Post</button></div>
+    <nav id="nav-element">
+      <div className="title-nav" id="title-nav">
+        <div className="nav" id="nav">
+          <Link to="/" className="nav-link"><div><img src={HomeSvg} className="nav-svg" alt="homesvg" /><div className="nav-annotations">Home</div></div></Link>
+          <Link to="/explore" className="nav-link"><div><img src={LibrarySvg} className="nav-svg" alt="librarysvg" /><div className="nav-annotations">Explore</div></div></Link>
+          <Link to="/notifications" className="nav-link"><div><img src={Collections} className="nav-svg" alt="collectionsysvg" /><div className="nav-annotations">Notifications</div></div></Link>
+          <Link to="/messages" className="nav-link"><div><img src={CloudSvg} className="nav-svg" alt="cloudSvg" /><div className="nav-annotations">Messages</div></div></Link>
+          <Link to="/grok" className="nav-link"><div><img src={CloudSvg} className="nav-svg" alt="cloudSvg" /><div className="nav-annotations">Grok</div></div></Link>
+          <Link to="/communities" className="nav-link"><div><img src={CloudSvg} className="nav-svg" alt="cloudSvg" /><div className="nav-annotations">Communities</div></div></Link>
+          <Link to="/premium" className="nav-link"><div><img src={CloudSvg} className="nav-svg" alt="cloudSvg" /><div className="nav-annotations">Premium</div></div></Link>
+          <Link to="/profile" className="nav-link"><div><img src={CloudSvg} className="nav-svg" alt="cloudSvg" /><div className="nav-annotations">Profile</div></div></Link>
+          <Link to="/more" className="nav-link"><div><img src={CloudSvg} className="nav-svg" alt="cloudSvg" /><div className="nav-annotations">More</div></div></Link>
+          <div className="post-btn-container"><button id="nav-post-btn">Post</button></div>
         </div>
         <div className="profile">
           {menuShown &&  (
@@ -80,11 +77,11 @@ function Nav({username} : Props) {
             )}
           <button className="profile-btn" type="button" onClick={toggleProfileMenu} ref={profileButtonRef}>
             <div><img src={Pfp} alt="pfp" className="profilepfp"/></div>
-            <div className="profile-username">
+            <div className="profile-username" id="profile-username">
               <div>{username}</div>
               <div className="profile-at">@{username}</div>
             </div>
-            <div><img src={More} alt="more" className="more"/></div>
+            <div id="more-btn"><img src={More} alt="more" className="more"/></div>
           </button>
         </div>
       </div>

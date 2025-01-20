@@ -124,7 +124,7 @@ const upload = multer({
   storage: storage,
   limits:{fileSize:'1000000'},
   fileFilter:(req, file, cb)=>{
-    const fileType = /jpeg|jpg|png|gif/
+    const fileType = /jpeg|jpg|png|jfif|gif/
     const mimeType = fileType.test(file.mimetype)
     const extname = fileType.test(path.extname(file.originalname))
     if(mimeType && extname){
@@ -139,9 +139,10 @@ app.post('/api/tweets', [authorization, upload], (req, res) => {
     const { text, date } = req.body
     const userId = req.userId
     const username = req.username
+    const at = req.username
     const filePath = req.file ? req.file.filename : null;
-    const q = "INSERT INTO tweets (userId, username, text, date, image) VALUES (?, ?, ?, ?, ?)"
-    db.query(q, [userId, username, text, date, filePath], (err, result) => {
+    const q = "INSERT INTO tweets (userId, at, username, text, date, image) VALUES (?, ?, ?, ?, ?, ?)"
+    db.query(q, [userId, at, username, text, date, filePath], (err, result) => {
       if(err) {
         return res.status(500).json('error while checking the db', err)
       }

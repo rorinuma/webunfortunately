@@ -1,11 +1,23 @@
 :root {
-  --blue: rgb(29, 155, 240)
+  --blue: rgb(29, 155, 240);
 }
 
 aside {
   display: flex;
   flex-direction: column;
-  margin-left: 2rem;
+  margin-left: 1.125rem;
+}
+
+@media (max-width: 1024px) {
+  #aside {
+    display: none;
+  }
+}
+
+@media (max-width: 1105px) {
+  #search-input {
+    width: 15rem;
+  }
 }
 
 .search-bar {
@@ -15,7 +27,7 @@ aside {
 
 .search-bar > input {
   height: 2.75rem;
-  width: 23rem;
+  width: 19.5rem;
   padding-left: 2rem;
   font-family: inherit;
   border-radius: 4rem;
@@ -31,11 +43,10 @@ aside {
   border: 2px solid var(--blue);
 }
 
-
 .search-button-container {
   position: absolute;
   top: 0.75rem;
-  left: 0.5rem
+  left: 0.5rem;
 }
 
 .search-button-container > img {

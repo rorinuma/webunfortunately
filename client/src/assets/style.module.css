@@ -1,0 +1,31 @@
+.dimFont {color: #999}
+.blueFont {color: rgb(29, 155, 240)}
+.blueBackground {background-color: rgb(29, 155, 240);}
+.fancyBoxShadow {box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 15px, rgba(255, 255, 255, 0.15) 0px 0px 3px 1px;}
+
+@keyframes blueHover {
+  from {color: 0, 0, 0}
+  to {color: rgb(29, 155, 240)}
+}
+@keyframes greenHover {
+  from {color: 0, 0, 0}
+  to {color: rgb(0, 186, 124)}
+}
+
+@keyframes redHover {
+  from {color: rgb(0, 0, 0)}
+  to {color: rgb(249, 24, 128)}
+}
+
+
+.blue:hover {
+  background-color: rgba(29, 155, 240, 0.1);
+}
+.green:hover {
+  background-color: rgba(0, 186, 124, 0.1);
+
+}
+.red:hover {
+  background-color: rgba(249, 24, 128, 0.1);
+}
+

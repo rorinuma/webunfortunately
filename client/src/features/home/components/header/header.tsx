@@ -11,7 +11,6 @@ import location from "../../assets/location.svg"
 import schedule from "../../assets/schedule.svg"
 import axios from "axios"
 
-
 interface Props {
   forYouActive: string;
   followingActive: string;
@@ -46,7 +45,6 @@ const Header = ({forYouActive, followingActive, handleOnFollowingActive, handleO
       setImgUrl(fileUrl)
     }
   }
-
 
   const handleTweetPost = async (e: React.FormEvent) => {
     e.preventDefault()

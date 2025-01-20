@@ -54,10 +54,10 @@
 .signup-link {
   text-decoration: none;
   font-size: 15px;
-  color: rgba(25, 25, 199, 0.9)
+  color: rgba(25, 25, 199, 0.9);
 }
 
 .signup-link:hover {
   text-decoration: underline;
-  color: rgba(25, 25, 199, 1)
+  color: rgba(25, 25, 199, 1);
 }

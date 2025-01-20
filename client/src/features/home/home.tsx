@@ -1,17 +1,16 @@
-import "./title.css"
+import "./home.css"
 import Nav from "../../components/nav/nav"
 import { useState } from "react"
 import Header from "./components/header/header"
 import ForYou from "./components/foryou/foryou"
 import Following from "./components/following/following"
 import Aside from "./components/aside/aside"
+
 interface Props {
   username: string;
 }
 
-
-
-function Title({username} : Props) {
+function Home({username} : Props) {
 
   const [forYouActive, setForYouActive] = useState('active')
   const [followingActive, setFollowingActive] = useState('disabled')
@@ -27,18 +26,18 @@ function Title({username} : Props) {
   }
 
   return (
-    <div className="title-screen">
-      <div className="title-container">
+    <div className="home-screen">
+      <div className="home-container">
         <Nav username={username}/>
         <div className="main-container">
-          <div className="main">
-            <div className="wrapuwu">
+          <div className="main" id="main">
+            <div className="wrapuwu" id="wrapuwu">
               <Header forYouActive={forYouActive}
               handleOnForYouActive={handleOnForYouActive}
               followingActive={followingActive}
               handleOnFollowingActive={handleOnFollowingActive}
               />
-              <div className="title-content">
+              <div className="home-content">
                 {forYouActive === 'active' ? <ForYou /> : <Following /> }
               </div>
             </div>
@@ -50,4 +49,4 @@ function Title({username} : Props) {
   )
 }
 
-export default Title
+export default Home

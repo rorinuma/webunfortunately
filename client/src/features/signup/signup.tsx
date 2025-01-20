@@ -86,7 +86,6 @@ function SignUp() {
       }
   }
 
-
   return (
     <div className="signup-screen">
       <div className="signup-center">

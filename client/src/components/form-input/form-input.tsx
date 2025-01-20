@@ -1,14 +1,12 @@
 import React, {forwardRef} from "react";
 import "./form-input.css"
 
-
 interface Props {
   id: string;
   value?: string;
   type?: string;
   onChange?: (event: React.FocusEvent<HTMLInputElement>) => void;
 } 
-
  
 const FormInput = forwardRef<HTMLInputElement, Props>(({id, value, type="text", onChange}, ref) => {
 

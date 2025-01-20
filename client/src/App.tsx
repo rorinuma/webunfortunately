@@ -3,9 +3,8 @@ import Login from './features/login/login'
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom"
 import SignUp from './features/signup/signup'
 import axios from "axios"
-import Title from './features/home/title'
+import Home from './features/home/home'
 import { useEffect, useState } from 'react'
-
 
 const App = () => {
   const [ loggedIn, setLoggedIn ] = useState(false)
@@ -32,13 +31,12 @@ const App = () => {
     checkLogin();
   }, [])
   
-
-
   return (
     <Routes>
       <Route path="/login" element={loggedIn ? <Navigate to="/" /> : <Login />}/>
       <Route path="/signup" element={<SignUp />} />
-      <Route path="/" element={loggedIn ? <Title username={username}/> : <Navigate to="/login" />} />
+      <Route path="/" element={loggedIn ? <Home username={username}/> : <Navigate to="/login" />} />
+      <Route path="/" element={<Home username={username}/>} />
     </Routes>
   )
 }
