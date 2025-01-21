@@ -111,16 +111,6 @@ nav {
   border-radius: 4rem;
 }
 
-.post-btn-container > button {
-  all: unset;
-  color: black;
-  background-color: #fff;
-  cursor: pointer;
-  text-align: center;
-  width: 233px;
-  height: 52px;
-  border-radius: 4rem;
-}
 .post-btn-container > button:hover {
   background-color: rgb(160, 160, 160);
 }

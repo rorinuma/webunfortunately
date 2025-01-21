@@ -126,26 +126,32 @@ button {
 }
 
 .tweet-action-btn {
+  display: flex;
+  gap: 0.25rem;
   padding: 0.25rem 0.5rem;
   border-radius: 50%;
 }
 
-.reply-btn:hover .reply-icon {
+.reply-btn:hover .reply-icon,
+.reply-btn:hover .reply-text {
   color:rgb(29, 155, 240);
   transition: 0.3s;
 }
 
-.repost-btn:hover .repost-icon {
+.repost-btn:hover .repost-icon,
+.repost-btn:hover .repost-text {
   color:rgb(0, 186, 124);
   transition: 0.3s;
 }
 
-.like-btn:hover .like-icon {
+.like-btn:hover .like-icon,
+.like-btn:hover .like-text {
   color:rgb(249, 24, 128);
   transition: 0.3s;
 }
 
-.view-btn:hover .view-icon {
+.view-btn:hover .view-icon,
+.view-btn:hover .view-text {
   color:rgb(29, 155, 240);
   transition: 0.3s;
 }
@@ -175,3 +181,6 @@ button {
   transition: 0.3s;
 }
 
+.liked {
+  color: rgb(249, 24, 128)
+}

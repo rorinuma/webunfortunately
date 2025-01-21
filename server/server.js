@@ -32,6 +32,7 @@ db.connect((err) => {
 
 app.post('/api/register', (req, res) => {
   const { email, username, password } = req.body
+  const at = username
   const checkQuery = "SELECT * FROM users WHERE username = ? OR email = ?";
   db.query(checkQuery, [username, email], (checkErr, checkResult) => {
     if(checkErr) {
@@ -41,13 +42,21 @@ app.post('/api/register', (req, res) => {
     if(checkResult.length > 0) {
       return res.status(400).json({error: "Username already exists"})
     }
-    const q = "INSERT INTO users (email, username, password) VALUES(?, ?, ?)"
-    db.query(q, [email, username, password], (err, result) => {
+    const q = "INSERT INTO users (email, username, at, password) VALUES(?, ?, ?, ?)"
+    db.query(q, [email, username, at, password], (err, result) => {
       if(err) {
         console.error(err)
         res.status(500).json({error: "DB error"})
       } else {
-        res.json({message: "user registered successfully"})
+        
+        const likesQuery = "CREATE TABLE ?? (id INT AUTO_INCREMENT PRIMARY KEY, tweet_id INT)"
+        likesUsername = username + '_likes'
+0
+        db.query(likesQuery, [likesUsername], (err, result) => {
+          if(err) throw err;
+          console.log('table created too...')
+          res.status(200).json({message: 'user registered successfully'})
+        })
       }
     })
   });
@@ -159,17 +168,64 @@ app.get("/api/tweets", authorization, (req, res) => {
     const q = "SELECT * FROM tweets"
     db.query(q, (err, result) => {
       if(err) throw err;
-      const tweetsWithImages = result.map((tweet) => ({
-        ...tweet, 
-        image: tweet.image ? `http://localhost:8080/uploads/${tweet.image}` : null
-      }))
-      res.status(200).json({tweets: tweetsWithImages})
+      const username = req.username + "_likes";
+      const likesQuery = "SELECT * FROM ??"
+      db.query(likesQuery, [username], (likesErr, likesResult) => {
+         
+        const tweetsWithImages = result.map((tweet, index) => ({
+          ...tweet, 
+          image: tweet.image ? `http://localhost:8080/uploads/${tweet.image}` : null,
+          liked: likesResult.some(like => like.tweet_id === tweet.id) ? true : false,
+        }))
+        res.status(200).json({tweets: tweetsWithImages})
+      })
     })
   } catch (err) {
     return res.status(500).json('erorr uwu', err)
   }
 })
 
+app.put("/api/tweets/likes", authorization, (req, res) => {
+  try {
+    const index = req.body.index + 1;
+    const username = req.username
+    const findQuery = "SELECT * FROM tweets WHERE id = ?"
+    db.query(findQuery, index, (err, result) => {
+      if(err) throw err;
+      const tweet_id = result[0].id 
+      checkQuery = "SELECT * FROM ?? WHERE tweet_id = ?"
+      db.query(checkQuery, [username + '_likes', tweet_id], (err, result) => {
+        if(err) throw err;
+        if (result.length === 0) {
+          addQuery = "INSERT INTO ?? (tweet_id) VALUES (?)"
+          db.query(addQuery, [username + '_likes', tweet_id], (err, result) => {
+            if(err) throw err
+            addCountQuery = "UPDATE tweets SET likes = likes + 1 WHERE id = ?"
+            db.query(addCountQuery, [tweet_id], (err, result) => {
+              if(err) throw err;
+              console.log('tweet like added and the count increased')
+              res.status(200).json({message: 'like added', result})
+            })
+          })
+        }
+        if (result.length === 1) {
+          deleteQuery = "DELETE FROM ?? WHERE tweet_id = ?"
+          db.query(deleteQuery, [username + '_likes', tweet_id], (err, result) => {
+            if(err) throw err;
+            removeCountQuery = "UPDATE tweets SET likes = likes - 1 WHERE id = ?"
+            db.query(removeCountQuery, [tweet_id], (err, result) => {
+              if(err) throw err;
+              console.log('tweet like removed and the count decremented')
+              res.status(200).json({message: 'the tweet count has been decremented'})
+            })
+          })
+        }
+      }) 
+    })
+  } catch(err) {
+    res.status(500).json('error while accessing likes API')
+  }
+})
 
 app.listen(8080, () => {
     console.log("Server started on port 8080")

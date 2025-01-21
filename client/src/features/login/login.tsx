@@ -39,7 +39,7 @@ const Login: React.FC = () => {
     <div className="login-screen">
       <div className="login-center">
         <form className="login-container" onSubmit={handleSubmit}>
-          <div><h2 className="login-header">Login to use the reader</h2></div>
+          <div><h2 className="login-header">Login</h2></div>
           <div><FormInput id="username" ref={usernameRef} /></div>
           <div><FormInput id="password" type="password" ref={passwordRef} /></div>
           <div className="login-btn-container"><button className="login-btn"><h4>Login</h4></button></div>

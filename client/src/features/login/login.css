@@ -1,3 +1,8 @@
+h4 {
+  margin: 0;
+  padding: 0
+}
+
 .login-screen {
   display: flex;
   justify-content: center;
@@ -39,6 +44,7 @@
   border: 0 solid black;
   background-color: #fff;
   border-radius: 30px;
+  text-align: center;
   cursor: pointer;
 }
 
