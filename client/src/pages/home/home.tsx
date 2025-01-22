@@ -1,21 +1,22 @@
 import "./home.css"
 import Nav from "../../components/nav/nav"
 import { useEffect, useState, useRef } from "react"
+import { Outlet } from "react-router-dom"
 import Header from "./components/header/header"
-import ForYou from "./components/foryou/foryou"
-import Following from "./components/following/following"
 import Aside from "./components/aside/aside"
 import TweetTextArea from "../../components/tweettextarea/tweettextarea"
 import styles from "../../assets/style.module.css"
 
 interface Props {
   username: string;
-}
+  forYouActive: string,
+  handleOnForYouActive: () => void,
+  followingActive: string,
+  handleOnFollowingActive: () => void
+} 
 
-const Home = ({username} : Props) => {
+const Home = ({username, forYouActive, handleOnFollowingActive, followingActive, handleOnForYouActive} : Props) => {
   const tweetPostRef = useRef<HTMLDivElement | null>(null)
-  const [forYouActive, setForYouActive] = useState('active')
-  const [followingActive, setFollowingActive] = useState('disabled')
   const [postButtonActive, setPostButtonActive ] = useState(false)
 
   useEffect(() => {
@@ -38,15 +39,7 @@ const Home = ({username} : Props) => {
     setPostButtonActive((prev) => !prev)
   }
 
-  const handleOnForYouActive = () => {
-    setForYouActive('active')
-    setFollowingActive('disabled')
-  }
-  
-  const handleOnFollowingActive = () => {
-    setForYouActive('disabled')
-    setFollowingActive('active')
-  }
+
 
   return (
     <>
@@ -73,7 +66,7 @@ const Home = ({username} : Props) => {
                   handleOnFollowingActive={handleOnFollowingActive}
                 />
                 <div className="home-content">
-                  {forYouActive === 'active' ? <ForYou /> : <Following /> }
+                  <Outlet />
                 </div>
               </div>
               <Aside />

@@ -13,10 +13,11 @@ button {
   display: flex;
   flex-direction: column;
   position: fixed;
+  overflow-y: scroll;
   top: 5%;
   left: 31%;
   min-height: 17rem;  
-  max-height: 37rem;
+  max-height: 90vh;
   min-width: 37.5rem;
   background-color: black;
   border-radius: 1rem;

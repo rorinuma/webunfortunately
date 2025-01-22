@@ -28,7 +28,14 @@ button {
 .tweet-area-container {
   display: flex;
   flex-direction: column;
-  max-height: 700px;
+  overflow-y: scroll;
+  -ms-overflow-style: none; 
+  scrollbar-width: none;
+  max-height: 100vh;
+}
+
+.tweet-area-container::-webkit-scrollbar {
+  display: none
 }
 
 .tweet-area {
@@ -36,8 +43,8 @@ button {
   color: #fff;
   font-family: inherit;
   font-size: 18px;
-  overflow: hidden;
-  min-height: 27px;
+  min-height: 29px;
+  max-height: 50vh;
   outline: none;
   border: 0;
   resize: none;
@@ -45,15 +52,9 @@ button {
 
 .tweet-post-image-container {
   position: relative;
-  max-height: 300px;
-  overflow-y: scroll;
-  -ms-overflow-style: none; 
-  scrollbar-width: none;
+  max-height: 50vh;
 }
 
-.tweet-post-image-container::-webkit-scrollbar {
-  display: none
-}
 
 .image-edit,
 .image-delete {
