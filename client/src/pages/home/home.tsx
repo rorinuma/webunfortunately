@@ -12,7 +12,7 @@ interface Props {
   username: string;
 }
 
-function Home({username} : Props) {
+const Home = ({username} : Props) => {
   const tweetPostRef = useRef<HTMLDivElement | null>(null)
   const [forYouActive, setForYouActive] = useState('active')
   const [followingActive, setFollowingActive] = useState('disabled')
@@ -42,6 +42,7 @@ function Home({username} : Props) {
     setForYouActive('active')
     setFollowingActive('disabled')
   }
+  
   const handleOnFollowingActive = () => {
     setForYouActive('disabled')
     setFollowingActive('active')
@@ -65,10 +66,11 @@ function Home({username} : Props) {
           <div className="main-container">
             <div className="main" id="main">
               <div className="wrapuwu" id="wrapuwu">
-                <Header forYouActive={forYouActive}
-                handleOnForYouActive={handleOnForYouActive}
-                followingActive={followingActive}
-                handleOnFollowingActive={handleOnFollowingActive}
+                <Header
+                  forYouActive={forYouActive}
+                  handleOnForYouActive={handleOnForYouActive}
+                  followingActive={followingActive}
+                  handleOnFollowingActive={handleOnFollowingActive}
                 />
                 <div className="home-content">
                   {forYouActive === 'active' ? <ForYou /> : <Following /> }

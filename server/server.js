@@ -51,7 +51,6 @@ app.post('/api/register', (req, res) => {
         
         const likesQuery = "CREATE TABLE ?? (id INT AUTO_INCREMENT PRIMARY KEY, tweet_id INT)"
         likesUsername = username + '_likes'
-0
         db.query(likesQuery, [likesUsername], (err, result) => {
           if(err) throw err;
           console.log('table created too...')
@@ -108,7 +107,7 @@ const authorization = (req, res, next) => {
   }
 }
 
-app.get("/api/logout", (req, res) => {
+app.get("/api/logout", authorization, (req, res) => {
   return res
   .clearCookie("access_token")
   .status(200)
@@ -165,18 +164,19 @@ app.post('/api/tweets', [authorization, upload], (req, res) => {
 
 app.get("/api/tweets", authorization, (req, res) => {
   try {
-    const q = "SELECT * FROM tweets"
+    const q = "SELECT * FROM tweets ORDER BY date DESC"
     db.query(q, (err, result) => {
       if(err) throw err;
       const username = req.username + "_likes";
       const likesQuery = "SELECT * FROM ??"
       db.query(likesQuery, [username], (likesErr, likesResult) => {
-         
-        const tweetsWithImages = result.map((tweet, index) => ({
+        if(likesErr) throw err;
+        const tweetsWithImages = result.map((tweet) => ({
           ...tweet, 
           image: tweet.image ? `http://localhost:8080/uploads/${tweet.image}` : null,
           liked: likesResult.some(like => like.tweet_id === tweet.id) ? true : false,
         }))
+        console.log(tweetsWithImages)
         res.status(200).json({tweets: tweetsWithImages})
       })
     })
@@ -187,7 +187,7 @@ app.get("/api/tweets", authorization, (req, res) => {
 
 app.put("/api/tweets/likes", authorization, (req, res) => {
   try {
-    const index = req.body.index + 1;
+    const index = req.body.index;
     const username = req.username
     const findQuery = "SELECT * FROM tweets WHERE id = ?"
     db.query(findQuery, index, (err, result) => {
@@ -201,9 +201,11 @@ app.put("/api/tweets/likes", authorization, (req, res) => {
           db.query(addQuery, [username + '_likes', tweet_id], (err, result) => {
             if(err) throw err
             addCountQuery = "UPDATE tweets SET likes = likes + 1 WHERE id = ?"
+
             db.query(addCountQuery, [tweet_id], (err, result) => {
               if(err) throw err;
               console.log('tweet like added and the count increased')
+              console.log(tweet_id, index)
               res.status(200).json({message: 'like added', result})
             })
           })

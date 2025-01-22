@@ -23,6 +23,7 @@ function ForYou() {
     likes: number | null,
     views: number | null,
     liked: boolean,
+    id: number
   }
 
   const [ tweets, setTweets ] = useState<Tweet[]>([])
@@ -34,6 +35,7 @@ function ForYou() {
         withCredentials: true,
         headers: {'Content-Type': 'multipart/form-data'}}
         )
+        console.log(response.data.tweets)
         setTweets(response.data.tweets)
 
       } catch (err) {
@@ -65,21 +67,17 @@ function formatTweetDate(created_at: string) {
   }
 }
 
-  const sendLikes = async (index : number, liked: boolean) => {
+  const sendLikes = async (id : number, liked : boolean) => {
 
+    liked = !liked
     try {
-      liked = !liked;
-      const updatedTweets = [...tweets];
-      updatedTweets[index].liked = liked
-      if (liked) {
-        updatedTweets[index].likes = (updatedTweets[index].likes || 0) + 1;
-      } else {
-        updatedTweets[index].likes = Math.max((updatedTweets[index].likes || 0) - 1, 0);
-      }
+      const updatedTweets = tweets.map((tweet) => {
+        return tweet.id === id ? {...tweet, liked: liked, likes: liked ? (tweet.likes ?? 0) + 1 : tweet.likes && tweet.likes - 1 } : tweet
+      })
       setTweets(updatedTweets);
-
+      
       let data = {
-        index: index
+        index: id
       }
       await axios.put("http://localhost:8080/api/tweets/likes", data, {
         headers: {"Content-Type": "application/json"},
@@ -93,8 +91,8 @@ function formatTweetDate(created_at: string) {
   return (
     <>
       <div className="for-you-tweets-container">
-        {tweets && tweets.map(({text, username, created_at, image, at, replies, retweets, likes, views, liked}, index) => (
-          <div key={index} className="tweet">
+        {tweets && tweets.map(({text, username, created_at, image, at, replies, retweets, likes, views, liked, id}) => (
+          <div key={`${id}`} className="tweet">
             <div className="tweet-content-wrapper">
               <div className="tweet-content">
                 <div className="tweet-user-info">
@@ -129,7 +127,7 @@ function formatTweetDate(created_at: string) {
                     </button>
                   </div>
                   <div className="like">
-                    <button data-title="Like" className={`tweet-action-btn like-btn red`} onClick={() => sendLikes(index, liked)}>
+                    <button data-title="Like" className={`tweet-action-btn like-btn red`} onClick={() => sendLikes((Number(id)), liked)}>
                       <div>{liked ? <FaHeart className="like-icon liked" /> : <FaRegHeart className="like-icon" />}</div>
                       {liked ? <div className="like-text liked">{likes !== 0 && likes}</div> :  <div className="like-text">{likes !== 0 && likes}</div> }
                     </button> 
