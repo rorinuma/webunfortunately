@@ -1,10 +1,11 @@
 import './App.css'
-import Login from './features/login/login'
+import Login from './pages/login/login'
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom"
-import SignUp from './features/signup/signup'
+import SignUp from './pages/signup/signup'
 import axios from "axios"
-import Home from './features/home/home'
+import Home from './pages/home/home'
 import { useEffect, useState } from 'react'
+
 
 const App = () => {
   const [ loggedIn, setLoggedIn ] = useState(false)

@@ -95,7 +95,6 @@ function SignUp() {
           </div>
           <span className="warning">{usernameTaken && "email/username taken"}</span>
 
-          {/* Email Input */}
           <FormInput
             id="email"
             value={emailInput}
@@ -107,7 +106,6 @@ function SignUp() {
           />
           <div className="warning">{!emailValid && emailInput && "Invalid email address."}</div>
 
-          {/* Username Input */}
           <FormInput
             id="username"
             value={usernameInput}
@@ -121,7 +119,6 @@ function SignUp() {
             {!usernameValid && usernameInput && "Username must be 3-16 characters long."}
           </div>
 
-          {/* Password Input */}
           <FormInput
             id="password"
             type="password"
@@ -136,14 +133,12 @@ function SignUp() {
             {!passwordValid && passwordInput && "Password must be 9-30 characters with letters and numbers."}
           </div>
 
-          {/* Submit Button */}
           <div className="signup-btn-container">
             <button className="signup-btn" type="submit" disabled={isDisabled}>
               <h4>Sign up</h4>
             </button>
           </div>
 
-          {/* Login Link */}
           <div className="login-link-container">
             <Link to="/" className="login-link">
               Login

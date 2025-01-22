@@ -1,71 +1,5 @@
-:root {
-  --blue: rgb(29, 155, 240)
-}
-
-.header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  width: 100%;
-  height: 52px;
-  border-bottom: 1px solid rgb(50, 50, 50);
-}
-
-.header-category-container {
-  display: flex;
-  flex: 1;
-  height: 100%;
-  cursor: pointer;
-  width: 100%;
-}
-
-.header-category-container:hover {
-  background-color: rgba(25, 25, 25, 0.9);
-}
-
-.header-category {
-  display: flex;
-  width: 100%;
-  height: 100%;
-}
-
-.header-btn {
+button {
   all: unset;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  width: 100%;
-  height: 100%;
-}
-
-.header-btn > div {
-  display: flex;
-  align-items: center;
-  width: fit-content;
-  height: 96%;
-  border-radius: 5px;
-}
-
-.header-category-text-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  box-sizing: border-box;
-  width: fit-content;
-  height: 100%;
-}
-
-.header-category-text-container > div {
-  width: 100%;
-}
-
-.active {
-  height: 4px;
-  width: 100%;
-  margin-top: 13px;
-  margin-bottom: -13px;
-  background-color: var(--blue);
-  border-radius: 10px;
 }
 
 .tweet-post-container {
@@ -74,11 +8,6 @@
   width: 100%;
   padding: 20px 20px 0.75rem 20px;
   border-bottom: 1px solid rgb(50, 50, 50);
-}
-
-.tweet-post-image {
-  max-width: 30rem;
-  max-height: 100%;
 }
 
 .tweet-post-pfp > img {
@@ -90,9 +19,16 @@
 .tweet-area-post-container {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   width: 100%;
   margin-top: 8px;
   margin-left: 10px;
+}
+
+.tweet-area-container {
+  display: flex;
+  flex-direction: column;
+  max-height: 700px;
 }
 
 .tweet-area {
@@ -101,22 +37,74 @@
   font-family: inherit;
   font-size: 18px;
   overflow: hidden;
+  min-height: 27px;
   outline: none;
   border: 0;
   resize: none;
+}
+
+.tweet-post-image-container {
+  position: relative;
+  max-height: 300px;
+  overflow-y: scroll;
+  -ms-overflow-style: none; 
+  scrollbar-width: none;
+}
+
+.tweet-post-image-container::-webkit-scrollbar {
+  display: none
+}
+
+.image-edit,
+.image-delete {
+  position: absolute;
+}
+
+.image-edit {
+  left: 0.625rem;
+  top: 0.75rem;
+}
+
+.image-edit > button {
+  padding: 0.25rem 1rem;
+  background-color: rgba(15, 20, 25, 0.75);
+  border-radius: 4rem;
+  backdrop-filter: blur(4px);
+}
+
+.image-delete {
+  left: 81%;
+  top: 0.75rem
+}
+
+.image-delete > button {
+  padding: 0.25rem 11px;
+  background-color: rgba(15, 20, 25, 0.75);
+  border-radius: 4rem;
+  backdrop-filter: blur(4px);
+}
+
+.tweet-post-image {
+  padding: 0.5rem 0 0 0.5rem;
+  max-width: 30rem;
+  max-height: 100%;
+  border-radius: 1rem;
 }
 
 .everyone-can-reply {
   display: none;
   width: 100%;
   border-bottom: 1px solid rgb(50, 50, 50);
-  color: var(--blue)
+  color: var(--blue);
 }
 
 .post-insert-data {
   display: flex;
+  position: sticky;
+  background-color: black;
+  z-index: 100;
   justify-content: space-between;
-  margin-top: 1.25rem
+  margin-top: 1.25rem;
 }
 
 .post-insert-data-select {
@@ -156,3 +144,4 @@
   background-color: rgb(110, 110, 110);
   cursor: default
 }
+  

@@ -10,10 +10,11 @@ import More from "../../assets/more.svg"
 import { useEffect, useRef, useState } from "react"
 
 interface Props {
-  username: string
+  username: string,
+  handlePostButtonActive: () => void
 }
 
-function Nav({username} : Props) {
+function Nav({username, handlePostButtonActive} : Props) {
   const navigate = useNavigate()
   const profilePopupOptionsRef = useRef<HTMLDivElement | null>(null)
   const profileButtonRef = useRef<HTMLButtonElement | null>(null)
@@ -66,7 +67,7 @@ function Nav({username} : Props) {
           <Link to="/premium" className="nav-link"><div><img src={CloudSvg} className="nav-svg" alt="cloudSvg" /><div className="nav-annotations">Premium</div></div></Link>
           <Link to="/profile" className="nav-link"><div><img src={CloudSvg} className="nav-svg" alt="cloudSvg" /><div className="nav-annotations">Profile</div></div></Link>
           <Link to="/more" className="nav-link"><div><img src={CloudSvg} className="nav-svg" alt="cloudSvg" /><div className="nav-annotations">More</div></div></Link>
-          <div className="post-btn-container"><button id="nav-post-btn">Post</button></div>
+          <div className="post-btn-container"><button id="nav-post-btn" onClick={handlePostButtonActive}>Post</button></div>
         </div>
         <div className="profile">
           {menuShown &&  (

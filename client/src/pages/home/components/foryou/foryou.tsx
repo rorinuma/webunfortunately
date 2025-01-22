@@ -8,6 +8,7 @@ import { AiOutlineRetweet } from "react-icons/ai";
 import { CiBookmark } from "react-icons/ci";
 import { IoIosMore, IoMdStats} from "react-icons/io";
 import styles from "../../../../assets/style.module.css"
+import { format, formatDistanceToNow } from "date-fns"
 
 function ForYou() {
 
@@ -46,6 +47,24 @@ function ForYou() {
     doFetch()
   }, [])
 
+
+function formatTweetDate(created_at: string) {
+  const date = new Date(created_at);
+  const now = new Date();
+
+  const diffInDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+
+  if (diffInDays === 0) {
+    return formatDistanceToNow(date, { addSuffix: true });
+  } else if (diffInDays < 7) {
+    return format(date, 'EEE');
+  } else if (date.getFullYear() === now.getFullYear()) {
+    return format(date, 'MMM d');
+  } else {
+    return format(date, 'MMM d, yyyy'); 
+  }
+}
+
   const sendLikes = async (index : number, liked: boolean) => {
 
     try {
@@ -71,9 +90,6 @@ function ForYou() {
     }
   }
 
-
-
-
   return (
     <>
       <div className="for-you-tweets-container">
@@ -86,8 +102,8 @@ function ForYou() {
                   <div className="tweet-content-container">
                     <div className="tweet-content-info">
                       <div>{username}</div>
-                      <div className={styles.dimFont}>{at}</div>
-                      <div className={styles.dimFont}>{created_at}</div>
+                      <div className={styles.dimFont}>@{at}</div>
+                      <div className={styles.dimFont}>{formatTweetDate(created_at)}</div>
                     </div>
                     <div className="tweet-text">{text}</div>
                     {image && (<div className="tweet-image"><img src={image} alt="imgurl"/></div>)}
