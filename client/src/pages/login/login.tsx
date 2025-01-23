@@ -1,7 +1,7 @@
 import "./login.css"
 import FormInput from "../../components/form-input/form-input"
 import { Link, useNavigate } from "react-router-dom"
-import { useRef} from "react"
+import { useEffect, useRef, useState } from "react"
 import axios from "axios"
 
 interface Props {
@@ -14,6 +14,7 @@ const Login = ({handleLoginStatus} : Props) => {
 
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+  const [ showError, setShowError ] = useState(false)
 
   axios.defaults.withCredentials = true
 
@@ -35,18 +36,29 @@ const Login = ({handleLoginStatus} : Props) => {
       console.log(response)
       if(response.status === 200 && response.statusText === "OK") {
         handleLoginStatus(null)
-        navigate('/')
-      }
+      } 
+
  
     } catch(err) {
-      console.log(err)
+      setShowError(true)
+      console.error(err)
     }
   }
+
+  useEffect(() => {
+    if(showError) {
+      setTimeout(() => {
+        setShowError(false)
+      }, 5000)
+    }
+
+  }, [showError])
   
   return (
     <div className="login-screen">
       <div className="login-center">
         <form className="login-container" onSubmit={handleSubmit}>
+        {showError && <div className="warning">Wrong email or password</div>}
           <div><h2 className="login-header">Login</h2></div>
           <div><FormInput id="username" ref={usernameRef} /></div>
           <div><FormInput id="password" type="password" ref={passwordRef} /></div>

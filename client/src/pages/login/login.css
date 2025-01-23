@@ -20,6 +20,13 @@ h4 {
   border: 1px solid grey;
 }
 
+.warning {
+  color: #DC143C;
+  text-align: center;
+  font-size: 11px;
+  margin-top: 1px;
+}
+
 .login-container {
   display: flex;
   flex-direction: column;

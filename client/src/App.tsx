@@ -66,7 +66,7 @@ const App = () => {
       </>
       ) : (
         <>
-          <Route path="/login" element={loggedIn ? <Navigate to="/" /> : <Login handleLoginStatus={handleLoginStatus}/>}/>
+          <Route path="/login" element={<Login handleLoginStatus={handleLoginStatus}/>}/>
           <Route path="/signup" element={<SignUp />} />
           <Route path="*" element={<Navigate to="/login" />} />
         </>
