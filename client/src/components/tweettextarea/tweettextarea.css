@@ -111,6 +111,12 @@ button {
 .post-insert-data-select {
   display: flex;
   align-items: center;
+  gap: 6px;
+}
+
+.tweet-area-images {
+  color: var(--blue);
+  font-size: 18px;
 }
 
 .image-select-btn {

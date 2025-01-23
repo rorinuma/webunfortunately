@@ -1,15 +1,16 @@
 import Pfp from "../../assets/placeholderpfp.jpg"
 import TextareaAutosize from "react-textarea-autosize";
-import img from "../../assets/image.svg"
-import ballot from "../../assets/ballot.svg"
-import emoji from "../../assets/emoji.svg"
-import gif from "../../assets/gif.svg"
-import hospital from "../../assets/hospital.svg"
-import location from "../../assets/location.svg"
-import schedule from "../../assets/schedule.svg"
+import { IoImagesOutline } from "react-icons/io5";
+import { MdOutlinePoll } from "react-icons/md";
+import { BsEmojiSmile } from "react-icons/bs";
+import { MdOutlineGifBox } from "react-icons/md";
+import { LiaChairSolid } from "react-icons/lia";
+import { IoLocationOutline } from "react-icons/io5";
+import { RiCalendarScheduleLine } from "react-icons/ri";
 import { useState, useRef, useEffect } from "react";
 import axios from "axios"
 import "./tweettextarea.css"
+import { IconContext } from "react-icons";
 
 interface Props {
   postButtonActive?: boolean,
@@ -103,28 +104,30 @@ const TweetTextArea = ({ postButtonActive} : Props) => {
         <div className="everyone-can-reply">Everyone can reply</div>
         <div className="post-insert-data">
           <div className="post-insert-data-select">
-            <button className="image-select-btn" type="button">
-              <img src={img} onClick={handleImageBtnClick} alt="image-select" className="img"/>
-            </button>
-            <input type="file" accept="image/*" name="tweet_post_image" onChange={handleImageUpload} ref={imgInputRef} hidden/>
-            <button type="button" className="image-select-btn">
-              <img src={gif} alt="image-select" className="img" />
-            </button>
-            <button type="button" className="image-select-btn">
-              <img src={hospital} alt="image-select" className="img" />
-            </button>
-            <button type="button" className="image-select-btn">
-              <img src={ballot} alt="image-select" className="img" />
-            </button>
-            <button type="button" className="image-select-btn">
-              <img src={emoji} alt="image-select" className="img" />
-            </button>
-            <button type="button" className="image-select-btn">
-              <img src={schedule} alt="image-select" className="img" />
-            </button>
-            <button type="button" className="image-select-btn">
-              <img src={location} alt="image-select" className="img" />
-            </button>
+            <IconContext.Provider value={{className: "tweet-area-images"}}>
+              <button className="image-select-btn" type="button" onClick={handleImageBtnClick}>
+                <IoImagesOutline />
+              </button>
+              <input type="file" accept="image/*" name="tweet_post_image" onChange={handleImageUpload} ref={imgInputRef} hidden/>
+              <button type="button" className="image-select-btn">
+                <MdOutlineGifBox />
+              </button>
+              <button type="button" className="image-select-btn">
+                <LiaChairSolid />
+              </button>
+              <button type="button" className="image-select-btn">
+                <MdOutlinePoll />
+              </button>
+              <button type="button" className="image-select-btn">
+                <BsEmojiSmile />
+              </button>
+              <button type="button" className="image-select-btn">
+                <RiCalendarScheduleLine />
+              </button>
+              <button type="button" className="image-select-btn">
+                <IoLocationOutline />
+              </button>
+            </IconContext.Provider>
           </div>
           <div><button className="tweet-post-btn" disabled={isBtnDisabled}>Post</button></div>
         </div>

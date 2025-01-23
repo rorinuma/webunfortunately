@@ -70,6 +70,16 @@ nav {
   margin-top: 0.25rem;
 }
 
+.nav-twitter-link {
+  padding: 6px 10px;
+}
+
+.nav-twitter-link:hover {
+  background-color: var(--hover);
+  border-radius: 4rem;
+  transition: 300ms;
+}
+
 .nav-link {
   text-decoration: none;
   color: #fff;
@@ -88,8 +98,10 @@ nav {
   gap: 10px
 }
 
-.nav-svg {
-  height: 40px;
+
+.nav-icons {
+  font-size: 32px;
+  color: white
 }
 
 .post-btn-container {
@@ -202,7 +214,8 @@ nav {
   border-radius: 50%;
 }
 
-.more {
+.more-icon {
+  font-size: 20px;
   margin-left: 60px;
 }
   

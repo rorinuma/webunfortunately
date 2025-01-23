@@ -107,6 +107,10 @@ button {
   max-height: 30rem;
 }
 
+.sss {
+  font-size: 300px
+}
+
 .tweet-actions-wrapper {
   display: flex;
   justify-content: flex-end;

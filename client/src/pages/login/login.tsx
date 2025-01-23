@@ -4,7 +4,11 @@ import { Link, useNavigate } from "react-router-dom"
 import { useRef} from "react"
 import axios from "axios"
 
-const Login: React.FC = () => {
+interface Props {
+  handleLoginStatus: (status: boolean | null) => void, 
+}
+
+const Login = ({handleLoginStatus} : Props) => {
 
   const navigate = useNavigate()
 
@@ -28,7 +32,11 @@ const Login: React.FC = () => {
           'Content-Type': "application/json"
         }
       })
-      if(response.status === 200) navigate('/')
+      console.log(response)
+      if(response.status === 200 && response.statusText === "OK") {
+        handleLoginStatus(null)
+        navigate('/')
+      }
  
     } catch(err) {
       console.log(err)
