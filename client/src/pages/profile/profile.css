@@ -1,0 +1,154 @@
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+header {
+  position: sticky;
+  top: 0;
+  height: 53px;
+  backdrop-filter: blur(12px);
+  background-color: rgba(0, 0, 0, 0.65);
+  width: 100%;
+  z-index: 100;
+}
+
+.sticky {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding-left: 8px;
+  gap: 23px;
+}
+
+.sticky > div:nth-child(1) > button {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+}
+
+.sticky > div:nth-child(1) > button:hover {
+  background-color: var(--hover);
+  border-radius: 4rem;
+  transition: 0.3s;
+}
+
+
+.post-count {
+  color: #999;
+  font-size: 0.75rem
+}
+
+article {
+  position: relative;
+}
+
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+}
+
+.profile-bg-img {
+  height: 200px;
+  width: 100%;
+  background-color: rgba(10, 10, 10, 0.65);
+}
+
+.profile-overview {
+  display: flex;
+  flex-direction: column;
+  height: 200px;
+  width: 100%;
+  margin-left: 16px;
+}
+
+.profile-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.profile-actions > div:nth-child(1) {
+  height: 60px;
+  width: 60px;
+}
+
+.profile-img {
+  position: absolute;
+  top: 28%;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 3px solid black;
+}
+
+.profile-img > img {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+}
+
+.profile-actions-container {
+  margin: 12px 32px 0 0;
+}
+
+.profile-edit-btn {
+  background-color: transparent;
+  padding: 6px 16px;
+  font-size: 0.875rem;
+  border: 1px solid rgb(83, 100, 113);
+  border-radius: 4rem;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+}
+
+.profile-info > div:nth-child(1) {
+  font-size: 1.25rem;
+}
+
+.profile-at {
+  color: var(--grey-color);
+  font-size: 0.75rem;
+}
+
+.follow-stats {
+  display: flex;
+}
+
+.profile-nav {
+  display: flex;
+  justify-content: space-around;
+  height: 53px;
+}
+
+.profile-nav > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  min-width: 56px;
+  flex: 1;
+  padding: 0 19px
+}
+
+.profile-nav > div:hover {
+  background-color: var(--hover);
+  transition: 0.3s;
+}
+
+.profile-nav > div > div:nth-child(2) {
+  position: absolute;
+  height: 4px;
+  border-radius: 4rem;
+  bottom: 0px;
+  min-width: 56px;
+  background-color: rgb(29, 155, 240);
+}
+

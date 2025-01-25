@@ -25,9 +25,7 @@ function Nav({username, handlePostButtonActive, handleLoginStatus} : Props) {
   const profileButtonRef = useRef<HTMLButtonElement | null>(null)
   const [ menuShown, setMenuShown ] = useState(false)
   let location = useLocation()
-
-
-
+  
   const handleLogout = async () => {
     try {
       const response = await axios.get("http://localhost:8080/api/logout", {withCredentials: true})
@@ -76,7 +74,7 @@ function Nav({username, handlePostButtonActive, handleLoginStatus} : Props) {
             <Link to="/grok" className="nav-link"><div>{location.pathname === "/grok" ? <RiArmchairFill /> : <RiArmchairLine />}<div className="nav-annotations">Grok</div></div></Link>
             <Link to="/communities" className="nav-link"><div>{location.pathname === "/communities" ? <MdPeople /> : <MdPeopleOutline />}<div className="nav-annotations">Communities</div></div></Link>
             <Link to="/premium" className="nav-link"><div><FaXTwitter /><div className="nav-annotations">Premium</div></div></Link>
-            <Link to="/profile" className="nav-link"><div>{location.pathname === "/profile" ? <BsPersonFill /> : <BsPerson />}<div className="nav-annotations">Profile</div></div></Link>
+            <Link to={`profile/${username}`} className="nav-link"><div>{location.pathname === `/profile/${username}` ? <BsPersonFill /> : <BsPerson />}<div className="nav-annotations">Profile</div></div></Link>
             <Link to="/more" className="nav-link"><div><CiCircleMore /><div className="nav-annotations">More</div></div></Link>
           </IconContext.Provider>
           <div className="post-btn-container"><button id="nav-post-btn" onClick={handlePostButtonActive}>Post</button></div>

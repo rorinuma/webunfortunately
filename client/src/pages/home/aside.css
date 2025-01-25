@@ -21,7 +21,8 @@ aside {
 }
 
 .search-bar {
-  position: relative;
+  position: sticky;
+  top: 10px;
   margin-top: 0.25rem;
 }
 

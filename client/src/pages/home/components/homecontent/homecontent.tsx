@@ -1,6 +1,7 @@
 import Header from "../header/header"
 import ForYou from "../foryou/foryou"
 import Following from "../following/following"
+import TweetTextArea from "../../../../components/tweettextarea/tweettextarea"
 import "./homecontent.css"
 
 interface Props {
@@ -19,6 +20,7 @@ const HomeContent = ({forYouActive, handleOnForYouActive, followingActive, handl
       followingActive={followingActive}
       handleOnFollowingActive={handleOnFollowingActive}
     />
+    <TweetTextArea />
     <div className="home-content">
       {forYouActive === 'active' ? <ForYou /> : <Following />}
     </div>

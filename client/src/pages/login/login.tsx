@@ -1,6 +1,6 @@
 import "./login.css"
 import FormInput from "../../components/form-input/form-input"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { useEffect, useRef, useState } from "react"
 import axios from "axios"
 
@@ -9,8 +9,6 @@ interface Props {
 }
 
 const Login = ({handleLoginStatus} : Props) => {
-
-  const navigate = useNavigate()
 
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -47,9 +45,11 @@ const Login = ({handleLoginStatus} : Props) => {
 
   useEffect(() => {
     if(showError) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         setShowError(false)
       }, 5000)
+
+      return () => clearTimeout(timer)
     }
 
   }, [showError])

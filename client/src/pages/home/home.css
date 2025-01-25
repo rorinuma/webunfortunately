@@ -1,3 +1,75 @@
+:root {
+  --grey-border: rgb(50, 50, 50);
+  --hover: rgba(25, 25, 25, 0.9);
+  --grey-color: rgb(113, 118, 123)
+}
+
+.no-defaults {
+  all: unset;
+}
+
+.tweet-presentation {
+  display: flex;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 1002;
+}
+
+.tweet-image-presentation {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  flex-basis: 77%;
+}
+
+.tweet-image-presentation > div:nth-child(1) {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  flex: 1;
+  flex-basis: 93%;
+
+}
+.tweet-image-presentation > div:nth-child(2) {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  flex-basis: 7%;
+}
+
+.tweet-presentation-btn {
+  position: absolute;
+  left: 0;
+}
+
+.presentation-image {
+  display: flex;
+  flex-basis: 90%;
+  justify-content: center;
+
+}
+
+.presentation-image > img {
+  max-width: 100%;
+  max-height: 93vh
+}
+
+.presentation-actions {
+  width: 50%;
+}
+
+.tweet-image-click-comments {
+  display: flex;
+  flex: 1;
+  flex-basis: 23%;
+  z-index: 1002;
+  background-color: black;
+  border-left: 1px solid var(--grey-border)
+}
+
+
 .home-screen {
   display: flex;
   flex-shrink: 1;
@@ -104,7 +176,7 @@ button {
   display: flex;
   border: 1px solid rgb(50, 50, 50);
   height: calc(100% + 120rem);
-  max-width: 640px;
+  max-width: 600px;
   flex-shrink: 1;
   flex-grow: 1;
   flex-wrap: wrap;

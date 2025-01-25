@@ -78,11 +78,11 @@ app.post('/api/login',  (req, res) => {
         userId: checkResult[0].id,
         username: checkResult[0].username
       }
-      const token = jwt.sign(data, jwtSecretKey, {expiresIn: '1h'})
+      const token = jwt.sign(data, jwtSecretKey, {expiresIn: '7d'})
       return res
       .cookie('access_token', token, {
         httpOnly: true,
-        maxAge: 60 * 60 * 1000
+        maxAge: 7 * 24 * 60 * 60 * 1000
       })
       .status(200)
       .json({message: 'logged in successfully'})
@@ -118,6 +118,37 @@ app.get("/api/protected", authorization, (req, res) => {
   return res.json({user: {id: req.userId, username: req.username}})
 })
 
+app.get("/api/users/:username", authorization, (req, res) => {
+  const { username } = req.params;
+
+  const userQuery = "SELECT * FROM users WHERE username = ?";
+  db.query(userQuery, [username], (err, userResult) => {
+    if (err) {
+      console.error("User query error:", err);
+      return res.status(500).json({ message: "Error while fetching user data" });
+    }
+
+    if (userResult.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const tweetsQuery = "SELECT * FROM tweets WHERE username = ?";
+    db.query(tweetsQuery, [username], (tweetsErr, tweetsResult) => {
+      if (tweetsErr) {
+        console.error("Tweets query error:", tweetsErr);
+        return res.status(500).json({ message: "Error while fetching tweets" });
+      }
+
+      const responseData = {
+        username: req.username, 
+        tweets: tweetsResult  
+      };
+
+      res.status(200).json(responseData);
+    });
+  });
+});
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads')
@@ -140,9 +171,9 @@ const upload = multer({
     }
     cb('Give proper file format to upload')
   }
-}).single('tweet_post_image')
+})
 
-app.post('/api/tweets', [authorization, upload], (req, res) => {
+app.post('/api/tweets', [authorization, upload.single('tweet_post_image')], (req, res) => {
   try {
     const { text, date } = req.body
     const userId = req.userId
@@ -162,7 +193,7 @@ app.post('/api/tweets', [authorization, upload], (req, res) => {
   }
 })
 
-app.get("/api/tweets", authorization, (req, res) => {
+app.get("/api/tweets/all", authorization, (req, res) => {
   try {
     const q = "SELECT * FROM tweets ORDER BY date DESC"
     db.query(q, (err, result) => {
@@ -176,12 +207,34 @@ app.get("/api/tweets", authorization, (req, res) => {
           image: tweet.image ? `http://localhost:8080/uploads/${tweet.image}` : null,
           liked: likesResult.some(like => like.tweet_id === tweet.id) ? true : false,
         }))
-        console.log(tweetsWithImages)
         res.status(200).json({tweets: tweetsWithImages})
       })
     })
   } catch (err) {
     return res.status(500).json('erorr uwu', err)
+  }
+})
+
+app.get("/api/tweets/posts", authorization, (req, res) => {
+  try {
+    const q = "select * from tweets where username = ? order by date desc"
+    username = req.query.username
+    db.query(q, [username], (err, result) => {
+      if(err) res.status(403).json({message: "bad request"})
+        const likesQuery = "SELECT * FROM ??"
+      db.query(likesQuery, [username + "_likes"], (likesErr, likesResult) => {
+        if(likesErr) throw err;
+        const tweetsWithImages = result.map((tweet) => ({
+          ...tweet, 
+          image: tweet.image ? `http://localhost:8080/uploads/${tweet.image}` : null,
+          liked: likesResult.some(like => like.tweet_id === tweet.id) ? true : false,
+        }))
+        res.status(200).json({tweets: tweetsWithImages})
+      })
+    })
+
+  } catch (err) {
+    return res.status(500).json({message: "server error"})
   }
 })
 
@@ -205,7 +258,6 @@ app.put("/api/tweets/likes", authorization, (req, res) => {
             db.query(addCountQuery, [tweet_id], (err, result) => {
               if(err) throw err;
               console.log('tweet like added and the count increased')
-              console.log(tweet_id, index)
               res.status(200).json({message: 'like added', result})
             })
           })
