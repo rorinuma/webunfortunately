@@ -1,0 +1,70 @@
+const { transformTweets } = require("../utils/tweetUtils")
+const tweetModel = require("../models/tweetModel");
+
+
+exports.createTweet = async (req, res) => {
+  try {
+    const { text, date } = req.body;
+    const image = req.file ? req.file.filename : null;
+
+    await tweetModel.createTweet(req.userId, req.username, text, date, image);
+
+    res.status(201).json({ message: "Tweet posted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error posting tweet" });
+  }
+};
+
+exports.getAllTweets = async (req, res) => {
+  try {
+    const tweets = await tweetModel.getAllTweets();
+    const likedTweets = await tweetModel.getLikedTweets(req.user.id);
+    const updatedTweets = transformTweets(tweets, likedTweets)
+    res.status(200).json({tweets: updatedTweets});
+  } catch (error) {
+    console.error("Error fetching tweets", error);
+    res.status(500).json({ error: "Error fetching tweets" });
+  }
+};
+
+exports.getLikedTweetsByUsername = async (req, res) => {
+  try {
+    const tweetIds = await tweetModel.getLikedTweets(req.user.id)
+    const extractedIds = tweetIds.map((tweet) => (tweet.tweet_id))
+    const tweets = await tweetModel.getLikedTweetsByTweetIds(extractedIds)
+    const updatedTweets = tweets.map((tweet) => ({
+      ...tweet,
+      image: tweet.image? `http://localhost:8080/uploads/${tweet.image}` : null,
+      liked: true
+    }))
+    res.status(200).json({tweets: updatedTweets});
+  } catch (error) {
+    console.error("Error while fetching liked tweets", error)
+    res.status(500).json({error: "Error while fetching liked tweets"})
+  }
+}
+
+exports.getProfileTweets = async (req, res) => {
+  
+  try {
+    const username  = req.query.username
+    const userTweets = await tweetModel.getTweetsByUsername(username)
+    const likedUserTweets = await tweetModel.getLikedTweets(req.user.id)
+    res.status(200).json({tweets: transformTweets(userTweets, likedUserTweets)})
+  } catch (error) {
+    console.error("Error occured while fetching profile tweets", error)
+    res.status(500).json({error: "Error while fetching profile tweets"})
+  }
+}
+
+exports.likeTweet = async (req, res) => {
+  try {
+    const { tweetId } = req.body;
+    const userId = req.user.id;
+    const result = await tweetModel.toggleLike(tweetId, userId)
+    res.status(200).json({result})
+  } catch (error) {
+    res.status(500).json({error: "An error occured while liking the tweet." })
+  }
+}

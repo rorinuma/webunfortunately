@@ -26,16 +26,14 @@ const Login = ({handleLoginStatus} : Props) => {
       password: password
     }
     try {
-      const response = await axios.post("http://localhost:8080/api/login", data, {
+      const response = await axios.post("http://localhost:8080/api/auth/login", data, {
         headers: {
-          'Content-Type': "application/json"
+          'Content-Type': "application/json",
         }
       })
-      console.log(response)
       if(response.status === 200 && response.statusText === "OK") {
         handleLoginStatus(null)
       } 
-
  
     } catch(err) {
       setShowError(true)

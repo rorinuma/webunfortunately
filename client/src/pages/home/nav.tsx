@@ -24,11 +24,11 @@ function Nav({username, handlePostButtonActive, handleLoginStatus} : Props) {
   const profilePopupOptionsRef = useRef<HTMLDivElement | null>(null)
   const profileButtonRef = useRef<HTMLButtonElement | null>(null)
   const [ menuShown, setMenuShown ] = useState(false)
-  let location = useLocation()
+  const location = useLocation()
   
   const handleLogout = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/logout", {withCredentials: true})
+      const response = await axios.get("http://localhost:8080/api/auth/logout", {withCredentials: true})
       if(response.status === 200 && response.statusText === "OK") {
         handleLoginStatus(null)
       }

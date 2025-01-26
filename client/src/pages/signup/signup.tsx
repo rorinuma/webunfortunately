@@ -64,7 +64,7 @@ function SignUp() {
     };
 
     try {
-      const response = await axios.post("http://localhost:8080/api/register", data, {
+      const response = await axios.post("http://localhost:8080/api/auth/register", data, {
         headers: {
           "Content-Type": "application/json",
         }
@@ -72,18 +72,18 @@ function SignUp() {
       })
       console.log(`Response: ${response.data}`)  
       
-    } catch (error: unknown) {
+    } catch (error) {
         if (axios.isAxiosError(error)) {
           if (error.response?.status === 400) {
             setUsernameTaken(true);
             console.error("Error: Username already exists");
           } else {
-            console.error("Axios Error:", error.message);
+            console.error("Axios Error:", error.stack);
           }
         } else {
           console.error("Unexpected Error:", error);
         }
-      }
+    }
   }
 
   return (

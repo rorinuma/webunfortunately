@@ -17,7 +17,7 @@ const Profile = () => {
   const { username } = useParams()
   const [ loginScreen, setLoginScreen ] = useState<boolean | null>(true)
   const [ isOwner, setIsOwner ] = useState(false)
-  const [ userData, setUserData ] = useState([])
+  const [ userData, setUserData ] = useState()
   const [ btnActive, setBtnActive ] = useState(1)
 
   useEffect(() => {
@@ -28,9 +28,7 @@ const Profile = () => {
           headers: {"Content-Type": 'application/json'}
         }) 
         setUserData(response.data.tweets)
-        if(response.data.username === username) setIsOwner(true)
-
-
+        if(response.data.accessedBy.username === username) setIsOwner(true)
       } catch(err){
         console.error(err)
       } finally {
@@ -65,7 +63,7 @@ const Profile = () => {
               <div><button><Link to="/" className="no-defaults"><FaArrowLeft /></Link></button></div>
               <div>
                 <div>{username}</div> 
-                <div className='post-count'>{userData.length} posts</div>
+                <div className='post-count'>posts</div>
               </div>
             </div>
           </header>

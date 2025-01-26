@@ -29,7 +29,7 @@ const App = () => {
   useEffect(() => {
     const checkLogin = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/protected", {withCredentials: true});
+        const response = await axios.get("http://localhost:8080/api/auth/protected", {withCredentials: true});
         if(response.status === 200) {
           setUsername(response.data.user.username)
           setLoggedIn(true)
@@ -56,7 +56,6 @@ const App = () => {
       {loggedIn === null ? (
         <Route path="*" element={<Loading />} /> 
       ) : loggedIn ? (
-      <>
         <Route path="/" element={<Home
           username={username} handleLoginStatus={handleLoginStatus} />}>
           <Route index element={<HomeContent 
@@ -67,16 +66,15 @@ const App = () => {
             />
           <Route path="/notifications" element={<Notifications />}/>
           <Route path="/profile/:username" element={<Profile />} >
-          <Route path="/profile/:username" index element={<Posts />} />
-          <Route path="/profile/:username/with_replies" element={<Replies />}/>
-          <Route path="/profile/:username/highlights" element={<Hightlights />} />
-          <Route path="/profile/:username/articles" element={<Articles />} />
-          <Route path="/profile/:username/media" element={<Media />} />
-          <Route path="/profile/:username/likes" element={<Likes />} />
+            <Route path="/profile/:username" index element={<Posts />} />
+            <Route path="/profile/:username/with_replies" element={<Replies />}/>
+            <Route path="/profile/:username/highlights" element={<Hightlights />} />
+            <Route path="/profile/:username/articles" element={<Articles />} />
+            <Route path="/profile/:username/media" element={<Media />} />
+            <Route path="/profile/:username/likes" element={<Likes />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/" />} />
         </Route>
-        <Route path="*" element={<Navigate to="/" />} />
-        </Route>
-      </>
       ) : (
         <>
           <Route path="/login" element={<Login handleLoginStatus={handleLoginStatus}/>}/>

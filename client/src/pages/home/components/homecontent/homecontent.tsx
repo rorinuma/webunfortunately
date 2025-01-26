@@ -14,17 +14,17 @@ interface Props {
 const HomeContent = ({forYouActive, handleOnForYouActive, followingActive, handleOnFollowingActive} : Props) => {
   return (
     <>
-    <Header
-      forYouActive={forYouActive}
-      handleOnForYouActive={handleOnForYouActive}
-      followingActive={followingActive}
-      handleOnFollowingActive={handleOnFollowingActive}
-    />
-    <TweetTextArea />
-    <div className="home-content">
-      {forYouActive === 'active' ? <ForYou /> : <Following />}
-    </div>
-  </>
+      <Header
+        forYouActive={forYouActive}
+        handleOnForYouActive={handleOnForYouActive}
+        followingActive={followingActive}
+        handleOnFollowingActive={handleOnFollowingActive}
+      />
+      <TweetTextArea />
+      <div className="home-content">
+        {forYouActive === 'active' ? <ForYou /> : <Following />}
+      </div>
+    </>
   )
 }
 

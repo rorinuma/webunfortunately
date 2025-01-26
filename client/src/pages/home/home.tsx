@@ -125,7 +125,7 @@ const Home = ({username, handleLoginStatus} : Props) => {
 
           </div>
         </div>
-        )}
+      )}
       <div className={postButtonActive ? 'show-post-container' : 'hide-post-container'} ref={tweetPostRef}>
         <div>
           <div><button onClick={() => handlePostButtonActive()}>x</button></div>
