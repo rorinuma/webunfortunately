@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react"
-import { TweetContext } from "../../home"
+import { TweetContext } from "../../pages/home/home"
 import { format, formatDistanceToNow } from "date-fns"
 import axios from "axios"
 import { FaHeart, FaRegComment, FaRegHeart } from "react-icons/fa6"
@@ -9,8 +9,9 @@ import { CiBookmark } from "react-icons/ci"
 import { IoIosMore, IoMdStats } from "react-icons/io"
 import { Link } from "react-router-dom"
 import "./tweet.css"
-import Pfp from "../../../../assets/placeholderpfp.jpg"
-import styles from "../../../../assets/style.module.css"
+import Pfp from "../../assets/placeholderpfp.jpg"
+import styles from "../../assets/style.module.css"
+import { sendLikes } from "../utils/tweetutils"
 
 
 interface Props {
@@ -88,35 +89,11 @@ const Tweet = ({tweetType, username} : Props) => {
       return format(date, 'MMM d, yyyy'); 
     }
   }
-
-  const sendLikes = async (id : number, liked : boolean) => {
-    liked = !liked
-    try {
-      const updatedTweets = tweets.map((tweet) => {
-        return tweet.id === id ? {...tweet, liked: liked, likes: liked ? (tweet.likes ?? 0) + 1 : tweet.likes && tweet.likes - 1 } : tweet
-      })
-      handleSetTweets(updatedTweets);
-      
-      let data = {
-        tweetId: id
-      }
-      await axios.put("http://localhost:8080/api/tweets/likes", data, {
-        headers: {"Content-Type": "application/json"},
-        withCredentials: true
-      })
-    } catch(err) {
-      if(axios.isAxiosError(err)) {
-        console.log(err.stack)
-      } else {
-        console.error(err)
-      }
-    }
-  }
-  
+    
   return (
     <div className="tweets-container">
       {tweets && tweets.map(({text, username, created_at, image, at, replies, retweets, likes, views, liked, id}, index) => (
-        <div key={index} className="tweet" onClick={(e) => handleTweetClick(e, index)}>
+        <div key={index} className="tweet" onClick={(e) => handleTweetClick(e, index, id, at)}>
           <div className="tweet-content-wrapper">
             <div className="tweet-content">
               <div className="tweet-user-info">
@@ -151,7 +128,7 @@ const Tweet = ({tweetType, username} : Props) => {
                   </button>
                 </div>
                 <div className="like">
-                  <button data-title="Like" className={`tweet-action-btn like-btn red`} ref={(el) => getOrCreateButtonRef(index).like = el} onClick={() => sendLikes((Number(id)), liked)}>
+                  <button data-title="Like" className={`tweet-action-btn like-btn red`} ref={(el) => getOrCreateButtonRef(index).like = el} onClick={() => sendLikes((Number(id)), liked, tweets, handleSetTweets)}>
                     <div>{liked ? <FaHeart className="like-icon liked" /> : <FaRegHeart className="like-icon" />}</div>
                     {liked ? <div className="like-text liked">{likes !== 0 && likes}</div> :  <div className="like-text">{likes !== 0 && likes}</div> }
                   </button> 

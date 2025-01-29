@@ -68,3 +68,24 @@ exports.likeTweet = async (req, res) => {
     res.status(500).json({error: "An error occured while liking the tweet." })
   }
 }
+
+exports.getTweetInfoByStatus = async (req, res) => {
+  try {
+    const { statusNumber } = req.params
+    console.log(statusNumber)
+    console.log(req.params)
+    const tweet = await tweetModel.getTweetByStatusNumber(statusNumber)
+    const likedTweet = await tweetModel.getLikedTweets(req.user.id)
+    const updatedTweet = tweet.map((tweet) => ({
+      ...tweet,
+      image: tweet.image? `http://localhost:8080/uploads/${tweet.image}` : null,
+      liked: likedTweet.some((like) => like.tweet_id === tweet.id) ? true : false,
+    })) 
+    console.log("sending the tweet: ", updatedTweet)
+    res.status(200).json({tweet: updatedTweet})
+
+  } catch (error) {
+    console.error('Error occured while fetching tweets by status', error)
+    res.status(500).json({error: "Error occured while fetching tweets by status"})
+  }
+}

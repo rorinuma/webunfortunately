@@ -10,5 +10,7 @@ router.get("/all", authorization, tweetController.getAllTweets);
 router.get('/posts', authorization, tweetController.getProfileTweets)
 router.get('/liked', authorization, tweetController.getLikedTweetsByUsername)
 router.put("/likes", authorization, tweetController.likeTweet)
+router.get('/:username/status/:statusNumber', authorization, tweetController.getTweetInfoByStatus)
+
 
 module.exports = router;

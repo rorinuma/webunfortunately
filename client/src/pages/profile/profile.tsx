@@ -28,6 +28,7 @@ const Profile = () => {
           headers: {"Content-Type": 'application/json'}
         }) 
         setUserData(response.data.tweets)
+        console.log(userData)
         if(response.data.accessedBy.username === username) setIsOwner(true)
       } catch(err){
         console.error(err)
@@ -41,17 +42,17 @@ const Profile = () => {
 
   const tabs = isOwner 
   ? [
-    {id: 1, name: 'Posts', path: `/profile/${username}/`},
-    {id: 2, name: 'Replies', path: `/profile/${username}/with_replies`},
-    {id: 3, name: 'Highlights', path: `/profile/${username}/highlights`},
-    {id: 4, name: 'Articles', path: `/profile/${username}/articles`},
-    {id: 5, name: 'Media', path: `/profile/${username}/media`},
-    {id: 6, name: 'Likes', path: `/profile/${username}/likes`},
+    {id: 1, name: 'Posts', path: `/${username}/`},
+    {id: 2, name: 'Replies', path: `/${username}/with_replies`},
+    {id: 3, name: 'Highlights', path: `/${username}/highlights`},
+    {id: 4, name: 'Articles', path: `/${username}/articles`},
+    {id: 5, name: 'Media', path: `/${username}/media`},
+    {id: 6, name: 'Likes', path: `/${username}/likes`},
   ] :
   [
-    {id: 1, name: 'Posts', path: `/profile/${username}/`},
-    {id: 2, name: 'Replies', path: `/profile/${username}/with_replies`},
-    {id: 3, name: 'Media', path: `/profile/${username}/media`},
+    {id: 1, name: 'Posts', path: `/${username}/`},
+    {id: 2, name: 'Replies', path: `/${username}/with_replies`},
+    {id: 3, name: 'Media', path: `/${username}/media`},
   ]
   
   return (

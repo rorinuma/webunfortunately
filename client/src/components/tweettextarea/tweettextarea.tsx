@@ -94,11 +94,15 @@ const TweetTextArea = ({ postButtonActive} : Props) => {
             onChange={handleTweetValueChange}
           />
           <div className="tweet-post-image-container">
-            {imgUrl && <div className="image-edit"><button>Edit</button></div>}
-            {imgUrl && <div className="image-delete"><button onClick={handleImageRemoval}>X</button></div>}
-            <div> 
-              {imgUrl && (<img src={imgUrl} alt="tweet-post-image" className="tweet-post-image" />)}
-            </div>
+              {imgUrl && 
+              <div>
+                <img src={imgUrl} alt="tweet-post-image" className="tweet-post-image" />
+                <div className="tweet-post-image-buttons">
+                  <div className="image-edit"><button>Edit</button></div>
+                  <div className="image-delete"><button onClick={handleImageRemoval}>X</button></div>
+                </div>
+              </div>
+              }
           </div>
         </div>
         <div className="everyone-can-reply">Everyone can reply</div>

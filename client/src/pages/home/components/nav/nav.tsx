@@ -9,7 +9,7 @@ import { MdPeopleOutline, MdPeople } from "react-icons/md";
 import { FaXTwitter } from "react-icons/fa6";
 import { BsPerson, BsPersonFill } from "react-icons/bs";
 import { CiCircleMore } from "react-icons/ci";
-import Pfp from "../../assets/placeholderpfp.jpg"
+import Pfp from "../../../../assets/placeholderpfp.jpg"
 import { useEffect, useRef, useState } from "react"
 import { IconContext } from "react-icons";
 import { useLocation } from "react-router-dom";
@@ -74,7 +74,7 @@ function Nav({username, handlePostButtonActive, handleLoginStatus} : Props) {
             <Link to="/grok" className="nav-link"><div>{location.pathname === "/grok" ? <RiArmchairFill /> : <RiArmchairLine />}<div className="nav-annotations">Grok</div></div></Link>
             <Link to="/communities" className="nav-link"><div>{location.pathname === "/communities" ? <MdPeople /> : <MdPeopleOutline />}<div className="nav-annotations">Communities</div></div></Link>
             <Link to="/premium" className="nav-link"><div><FaXTwitter /><div className="nav-annotations">Premium</div></div></Link>
-            <Link to={`profile/${username}`} className="nav-link"><div>{location.pathname === `/profile/${username}` ? <BsPersonFill /> : <BsPerson />}<div className="nav-annotations">Profile</div></div></Link>
+            <Link to={`/${username}`} className="nav-link"><div>{location.pathname === `/profile/${username}` ? <BsPersonFill /> : <BsPerson />}<div className="nav-annotations">Profile</div></div></Link>
             <Link to="/more" className="nav-link"><div><CiCircleMore /><div className="nav-annotations">More</div></div></Link>
           </IconContext.Provider>
           <div className="post-btn-container"><button id="nav-post-btn" onClick={handlePostButtonActive}>Post</button></div>

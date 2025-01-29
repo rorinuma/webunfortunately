@@ -1,7 +1,7 @@
 import './App.css'
 import Loading from './pages/loading/loading'
 import Login from './pages/login/login'
-import { Routes, Route, Navigate, useParams } from "react-router-dom"
+import { Routes, Route, Navigate } from "react-router-dom"
 import SignUp from './pages/signup/signup'
 import axios from "axios"
 import Home from './pages/home/home'
@@ -15,6 +15,9 @@ import Hightlights from './pages/profile/components/highlights/hightlights'
 import Articles from './pages/profile/components/articles/articles'
 import Media from './pages/profile/components/media/media'
 import Likes from './pages/profile/components/likes/likes'
+import StatusOverlay from './pages/home/components/statusoverlay/statusoverlay'
+import Status from './pages/home/components/status/status'
+
 
 const App = () => {
   const [ loggedIn, setLoggedIn ] = useState<boolean | null>(null)
@@ -25,6 +28,8 @@ const App = () => {
   const handleLoginStatus = (status: boolean | null)  => {
     setLoggedIn(status)
   }
+
+
 
   useEffect(() => {
     const checkLogin = async () => {
@@ -52,37 +57,38 @@ const App = () => {
   }
 
   return (
-    <Routes>
-      {loggedIn === null ? (
-        <Route path="*" element={<Loading />} /> 
-      ) : loggedIn ? (
-        <Route path="/" element={<Home
-          username={username} handleLoginStatus={handleLoginStatus} />}>
-          <Route index element={<HomeContent 
-              forYouActive={forYouActive}
-              handleOnForYouActive={handleOnForYouActive}
-              followingActive={followingActive}
-              handleOnFollowingActive={handleOnFollowingActive} />} 
-            />
-          <Route path="/notifications" element={<Notifications />}/>
-          <Route path="/profile/:username" element={<Profile />} >
-            <Route path="/profile/:username" index element={<Posts />} />
-            <Route path="/profile/:username/with_replies" element={<Replies />}/>
-            <Route path="/profile/:username/highlights" element={<Hightlights />} />
-            <Route path="/profile/:username/articles" element={<Articles />} />
-            <Route path="/profile/:username/media" element={<Media />} />
-            <Route path="/profile/:username/likes" element={<Likes />} />
+      <Routes>
+        {loggedIn === null ? (
+          <Route path="*" element={<Loading />} /> 
+        ) : loggedIn ? (
+          <Route path="/" element={<Home username={username} handleLoginStatus={handleLoginStatus} />}>
+            <Route path="" element={
+              <HomeContent 
+                forYouActive={forYouActive}
+                handleOnForYouActive={handleOnForYouActive}
+                followingActive={followingActive}
+                handleOnFollowingActive={handleOnFollowingActive} />}
+            ><Route path=":username/status/:statusNumber/photo/1" element={<StatusOverlay />} /></Route>
+            <Route path=":username" element={<Profile />} >
+              <Route index element={<Posts />} />
+              <Route path="with_replies" element={<Replies />}/>
+              <Route path="highlights" element={<Hightlights />} />
+              <Route path="articles" element={<Articles />} />
+              <Route path="media" element={<Media />} />
+              <Route path="likes" element={<Likes />} />
+            </Route>
+            <Route path="/:username/status/:statusNumber" element={<Status />}/>
+            <Route path="notifications" element={<Notifications />}/>
+            <Route path="*" element={<Navigate to="/home" />} />
           </Route>
-          <Route path="*" element={<Navigate to="/" />} />
-        </Route>
-      ) : (
-        <>
-          <Route path="/login" element={<Login handleLoginStatus={handleLoginStatus}/>}/>
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="*" element={<Navigate to="/login" />} />
-        </>
-      )}
-    </Routes>
+        ) : (
+          <>
+            <Route path="/login" element={<Login handleLoginStatus={handleLoginStatus}/>}/>
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="*" element={<Navigate to="/login" />} />
+          </>
+        )}
+      </Routes>
   )
 }
 

@@ -1,5 +1,5 @@
 import "./foryou.css"
-import Tweet from "../tweet/tweet";
+import Tweet from "../../../../components/tweet/tweet";
 
 function ForYou() {
   return (

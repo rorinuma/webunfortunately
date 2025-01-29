@@ -64,3 +64,9 @@ exports.toggleLike = async (tweetId, userId) => {
     }
 };
 
+exports.getTweetByStatusNumber = async (statusNumber) => {
+  const query = "select * from tweets where id = ?"
+  const [tweet] = await db.execute(query, [statusNumber])
+  return tweet
+}
+

@@ -1,5 +1,5 @@
 import "./aside.css"
-import search from "./assets/search.svg"
+import search from "../../assets/search.svg"
 
 const Aside = () => {
 

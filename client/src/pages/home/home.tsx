@@ -1,10 +1,11 @@
 import "./home.css"
-import Nav from "./nav"
+import Nav from "./components/nav/nav"
 import { useEffect, useState, useRef, createContext } from "react"
-import { Outlet } from "react-router-dom"
-import Aside from "./aside"
+import { Outlet, useNavigate } from "react-router-dom"
+import Aside from "./components/aside/aside"
 import TweetTextArea from "../../components/tweettextarea/tweettextarea"
 import styles from "../../assets/style.module.css"
+
 
 interface Props {
   username: string;
@@ -22,10 +23,11 @@ export interface TweetInterface {
   likes: number | null,
   views: number | null,
   liked: boolean,
-  id: number
+  id: number,
+  index: number
 }
 
-interface BtnRefs {
+export interface BtnRefs {
   more: HTMLButtonElement | null,
   reply: HTMLButtonElement | null,
   retweet: HTMLButtonElement | null,
@@ -37,7 +39,7 @@ interface BtnRefs {
 }
 
 interface TweetContextType {
-  handleTweetClick: (e: React.MouseEvent<HTMLDivElement>, index: number) => void,
+  handleTweetClick: (e: React.MouseEvent<HTMLDivElement>, index: number, id: number, username: string) => void,
   handleSetTweets: (tweets: TweetInterface[]) => void,
   tweets: TweetInterface[],
   tweetImgRefs: React.MutableRefObject<(HTMLImageElement | null)[]>,
@@ -46,19 +48,31 @@ interface TweetContextType {
 
 export const TweetContext = createContext<TweetContextType | undefined>(undefined)
 
+export const getOrCreateButtonRef = (index: number, buttonRefs: React.MutableRefObject<BtnRefs[]>) => {
+  if (!buttonRefs.current[index]) {
+    buttonRefs.current[index] = {
+      more: null,
+      reply: null,
+      retweet: null,
+      like: null,
+      view: null,
+      bookmark: null,
+      share: null,
+      link: null,
+    };
+  }
+  return buttonRefs.current[index];
+};
 
 const Home = ({username, handleLoginStatus} : Props) => {
 
   const tweetPostRef = useRef<HTMLDivElement | null>(null)
   const [postButtonActive, setPostButtonActive ] = useState(false)
-  const [ clickedImg, setClickedImg ] = useState<number | null>(null)
-  const [ clickedDiv, setClickedDiv ] = useState<number | null>(null)
   const [ tweets, setTweets ] = useState<TweetInterface[]>([])
   const tweetImgRefs = useRef<(HTMLImageElement | null)[]>([])
-  const presentationImgRef = useRef<HTMLImageElement | null>(null)
-  const presentationCommentsRef = useRef<HTMLDivElement | null>(null)
-  const presentationActionsRef = useRef<HTMLDivElement | null>(null)
+
   const buttonRefs = useRef<BtnRefs[]>([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     const handleTweetPostPopup = (event: MouseEvent) => {
@@ -76,13 +90,21 @@ const Home = ({username, handleLoginStatus} : Props) => {
     }
   }, [postButtonActive])
 
+  useEffect(() => {
+    if(postButtonActive) document.documentElement.style.overflowY = 'hidden'
+
+    return () => {
+      document.documentElement.style.overflowY = ''
+    }
+  }, [postButtonActive])
+
   const handlePostButtonActive = () => {
     setPostButtonActive((prev) => !prev)
   }
 
-  const handleTweetClick = (e: React.MouseEvent<HTMLDivElement>, index : number) => {
+  const handleTweetClick = (e: React.MouseEvent<HTMLDivElement>, index : number, id: number, username: string) => {
     if(tweetImgRefs.current[index] && tweetImgRefs.current[index].contains(e.target as Node)) {
-      setClickedImg(index)
+      navigate(`${username}/status/${id}/photo/1`,)
       return;
     }
     const buttonClicked = Object.values(buttonRefs.current[index] || {}).some(
@@ -91,41 +113,16 @@ const Home = ({username, handleLoginStatus} : Props) => {
     if(buttonClicked) {
       return
     }
-    setClickedDiv(index)
+    navigate(`${username}/status/${id}`)
   }
 
   const handleSetTweets = (tweets: TweetInterface[]) => {
     setTweets(tweets)
   } 
 
-  const handlePresentationImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if(presentationImgRef.current && !presentationImgRef.current.contains(e.target as Node) &&
-      presentationCommentsRef.current && !presentationImgRef.current.contains(e.target as Node) &&
-      presentationActionsRef.current && !presentationActionsRef.current.contains(e.target as Node)
-      ) setClickedImg(null)
-  }
-
   return (
+
     <TweetContext.Provider value={{handleTweetClick, handleSetTweets, tweets, tweetImgRefs, buttonRefs}} >
-      {clickedImg !== null && (
-        <div className="tweet-presentation">
-          <div className="tweet-image-presentation">
-            <div onClick={handlePresentationImageClick}>
-              <div className="tweet-presentation-btn"><button >x</button></div>
-              <div className="presentation-image"><img src={tweets[clickedImg].image} alt="presentation-img" ref={presentationImgRef}/></div>
-              <div><button></button></div>
-            </div>
-            <div>
-              <div className="presentation-actions" ref={presentationActionsRef}>
-
-              </div>
-            </div>
-          </div>
-          <div className="tweet-image-click-comments" ref={presentationCommentsRef}>
-
-          </div>
-        </div>
-      )}
       <div className={postButtonActive ? 'show-post-container' : 'hide-post-container'} ref={tweetPostRef}>
         <div>
           <div><button onClick={() => handlePostButtonActive()}>x</button></div>

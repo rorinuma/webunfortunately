@@ -1,5 +1,5 @@
 import { useOutletContext } from "react-router-dom"
-import Tweet from "../../../home/components/tweet/tweet"
+import Tweet from "../../../../components/tweet/tweet"
 import { ProfileOutletContextType } from "../../profile";
 
 const Likes = () => {
