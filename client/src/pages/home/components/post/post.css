@@ -1,0 +1,106 @@
+.show-post-container {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  overflow-y: auto;
+  top: 5%;
+  left: 31%;
+  min-height: 17rem;  
+  max-height: 90vh;
+  min-width: 37.5rem;
+  max-width: 600px;
+  background-color: black;
+  border-radius: 16px;
+  z-index: 1003;
+}
+
+.show-post-container > div:nth-child(1) {
+  display: flex;
+  padding: 14px 20px 12px 20px;
+  justify-content: space-between;
+}
+
+.post-overlay-reply-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 20px 0 20px;
+}
+
+.post-overlay-reply-container {
+  display: flex;
+}
+
+.post-overlay-reply-tweet-info {
+  display: flex
+}
+
+.post-overlay-reply-tweet-info > div:nth-child(1) {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  gap: 5px;
+}
+
+.post-overlay-reply-tweet-info > div:nth-child(1) > img {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}
+
+.bar {
+  display: flex;
+  width: 2px;
+  height: 10px;
+  background-color: rgb(51, 54, 57);
+  margin: auto;
+}
+
+.post-overlay-reply-tweet-info > div:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+}
+
+.post-overlay-user-info {
+  display: flex;
+  gap: 7px;
+  margin-left: 10px;
+}
+
+.image-text {
+  font-size: 0.75rem;
+  overflow-wrap: break-word;
+  margin-left: 10px;
+}
+
+.post-overlay-reply-container > div:nth-child(2) {
+  display: flex;
+  margin-top: 8px;
+}
+
+.bar2-container {
+  width: 40px;
+}
+
+.bar2 {
+  width: 2px;
+  height: 36px;
+  background-color: rgb(51, 54, 57);
+  margin: auto;
+}
+
+.post-overlay-replying-to {
+  display: flex;
+  align-items: center;
+}
+
+.post-overlay-replying-to > div {
+  font-size: 0.75rem;
+}
+
+.cool-blue-overlay-show {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(91, 112, 131, 0.4);
+  z-index: 1000
+}

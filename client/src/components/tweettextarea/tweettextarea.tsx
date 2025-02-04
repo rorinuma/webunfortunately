@@ -11,19 +11,24 @@ import { useState, useRef, useEffect } from "react";
 import axios from "axios"
 import "./tweettextarea.css"
 import { IconContext } from "react-icons";
+import { useTweetContext } from "../../context/TweetContext";
 
 interface Props {
   postButtonActive?: boolean,
+  placeholder: string,
+  replyClicked?: number | null,
 }
 
-const TweetTextArea = ({ postButtonActive} : Props) => {
+const TweetTextArea = ({ postButtonActive, placeholder, replyClicked} : Props) => {
   const [ tweetValue, setTweetValue ] = useState('')
   const imgInputRef = useRef<HTMLInputElement>(null)
   const [ imgInput, setImgInput ] = useState<File | null>(null)
   const [ imgUrl, setImgUrl] = useState('')
 
+  const { tweet } = useTweetContext()
+
   const handleTweetValueChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setTweetValue(e.target.value)
+    setTweetValue(e.target.value)
   }
 
   useEffect(() => {
@@ -47,7 +52,6 @@ const TweetTextArea = ({ postButtonActive} : Props) => {
       setImgInput(file)
       const fileUrl = URL.createObjectURL(file)
       setImgUrl(fileUrl)
-
     }
   }
 
@@ -56,26 +60,29 @@ const TweetTextArea = ({ postButtonActive} : Props) => {
 
     try {
       const formData = new FormData()
-      formData.append("date", Date.now().toString())
       formData.append("text", tweetValue)
       if(imgInput) {
-          formData.append('tweet_post_image', imgInput)
+        formData.append('tweet_post_image', imgInput)
       }
+      if(replyClicked) {
+        formData.append('id', replyClicked.toString())
+      } else if (tweet && tweet.id) {
+        formData.append('id', tweet.id.toString())
+      }
+
       const response = await axios.post('http://localhost:8080/api/tweets', formData, {
-          withCredentials: true,
-          headers: {
-          "Content-Type": 'multipart/form-data'
-          }
+        withCredentials: true,
+        headers: {
+        "Content-Type": 'multipart/form-data'
+        }
       })
-      console.log('tweet posted successfully', response.data)
-      setTweetValue('')
-      setImgInput(null)
-      setImgUrl('')
+      console.log('tweet/reply sent!', response.data)
 
     } catch (error) {
-    console.error(error)
+      console.error(error)
     }
   }
+
 
   const handleImageRemoval = () => {
     setImgUrl('')
@@ -89,7 +96,7 @@ const TweetTextArea = ({ postButtonActive} : Props) => {
         <div className="tweet-area-container">
           <TextareaAutosize
             className="tweet-area"
-            placeholder="What is happening?!" 
+            placeholder={placeholder}
             value={tweetValue} 
             onChange={handleTweetValueChange}
           />
@@ -136,7 +143,7 @@ const TweetTextArea = ({ postButtonActive} : Props) => {
           <div><button className="tweet-post-btn" disabled={isBtnDisabled}>Post</button></div>
         </div>
       </div>
-  </form>
+    </form>
   )
 }
 

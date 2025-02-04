@@ -1,18 +1,18 @@
-import { useContext, useEffect } from "react"
-import { TweetContext } from "../../pages/home/home"
-import { format, formatDistanceToNow } from "date-fns"
+import { useEffect, useRef, useState } from "react"
 import axios from "axios"
 import { FaHeart, FaRegComment, FaRegHeart } from "react-icons/fa6"
 import { AiOutlineRetweet } from "react-icons/ai"
 import { IoShareOutline } from "react-icons/io5"
 import { CiBookmark } from "react-icons/ci"
 import { IoIosMore, IoMdStats } from "react-icons/io"
-import { Link } from "react-router-dom"
+import { Link, matchPath, useLocation, useParams } from "react-router-dom"
 import "./tweet.css"
 import Pfp from "../../assets/placeholderpfp.jpg"
 import styles from "../../assets/style.module.css"
-import { sendLikes } from "../utils/tweetutils"
-
+import { formatTweetDate, sendLikes } from "../utils/tweetutils"
+import Loading from "../../pages/loading/loading"
+import { useTweetContext } from "../../context/TweetContext"
+import { useUIContext } from "../../context/UIContext"
 
 interface Props {
   tweetType: string,
@@ -21,33 +21,62 @@ interface Props {
 
 const Tweet = ({tweetType, username} : Props) => {
   
-  const tweetContext = useContext(TweetContext)
-  
-  if(!tweetContext) {
-    throw new Error('context must be within TweetContext.Provider')
-  }
-  
-  const { handleTweetClick, handleSetTweets, tweets, tweetImgRefs, buttonRefs } = tweetContext 
-  
-  const doFetch = async (location: string) => {
+  const { statusNumber } = useParams()
+  const [ loading, setLoading] = useState(true)
+  const [ page, setPage ] = useState(1)
+  const { handleTweetClick, handleSetTweets, tweets, tweetImgRefs, buttonRefs, handleSetReplies, replies} = useTweetContext() 
+  const { handleReplyClick } = useUIContext()
+  const observerRef = useRef<IntersectionObserver | undefined>()
+  const location = useLocation()
+
+  const dataToRender = statusNumber ? replies : tweets;
+
+  const doFetch = async (location: string, status? : string | undefined) => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/tweets/${location}`, {
+      const params: Record<string, string | undefined> = { username: username }
+
+      if(status) params.statusNumber = status
+
+      const response = await axios.get(`http://localhost:8080/api/tweets/${location}?page=${page}`, {
         withCredentials: true,
-        params: {username: username}
+        params: params
       });
-      handleSetTweets(response.data.tweets);
+
+      if(status) handleSetReplies((prev) => [...prev, ...response.data.tweets]);
+      else handleSetTweets((prev) => [...prev, ...response.data.tweets]) 
+
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        console.log(err.stack);
+        console.error(err.stack);
       } else {
-        console.log('unknown error', err);
+        console.error('unknown error', err);
       }
+    } finally {
+      setLoading(false)
     }
   };
-  
+
+  useEffect(() => {
+
+      const pathsToExclude = [
+        "/compose/post",
+        '/:username/status/:statusNumber',
+        "/:username/status/:statusNumber/photo/:photoId"
+      ];
+      
+      const shouldResetTweets = !pathsToExclude.some((path) =>
+        matchPath(path, location.pathname)
+      );
+
+      if(shouldResetTweets) {
+        handleSetTweets([])
+      }
+      
+  }, [location.pathname])
+
   useEffect(() => {
     if (tweetType === "all") {
-      doFetch("all");
+      doFetch("all", statusNumber);
     }
     if(tweetType === 'posts' && username) {
       doFetch("posts")
@@ -55,7 +84,33 @@ const Tweet = ({tweetType, username} : Props) => {
     if (tweetType === 'liked' && username) {
       doFetch("liked")
     }
-  }, [tweetType]);
+
+  }, [tweetType, username, page, statusNumber]);
+
+  useEffect(() => {
+
+    if(dataToRender && dataToRender.length < 3) return
+
+    const observer = new IntersectionObserver((entries) => {
+      if(entries[0].isIntersecting) {
+        setPage((prev) => prev + 1)
+      }
+    })  
+
+    const dataElements = document.querySelectorAll('.tweet')
+    const thirdLastTweet = dataElements[dataElements.length - 6]
+    
+    if(thirdLastTweet) {
+      observer.observe(thirdLastTweet)
+      observerRef.current = observer
+    }
+
+    return () => {
+      observerRef.current?.disconnect()
+    }
+
+  }, [page, replies, tweets])
+
 
   const getOrCreateButtonRef = (index: number) => {
     if (!buttonRefs.current[index]) {
@@ -73,26 +128,16 @@ const Tweet = ({tweetType, username} : Props) => {
     return buttonRefs.current[index];
   };
 
-  const formatTweetDate = (created_at: string) => {
-    const date = new Date(created_at);
-    const now = new Date();
-  
-    const diffInDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
-  
-    if (diffInDays === 0) {
-      return formatDistanceToNow(date, { addSuffix: true });
-    } else if (diffInDays < 7) {
-      return format(date, 'EEE');
-    } else if (date.getFullYear() === now.getFullYear()) {
-      return format(date, 'MMM d');
-    } else {
-      return format(date, 'MMM d, yyyy'); 
-    }
+  if (loading) {
+    return <div><Loading /></div>
   }
+
+
+  
     
   return (
     <div className="tweets-container">
-      {tweets && tweets.map(({text, username, created_at, image, at, replies, retweets, likes, views, liked, id}, index) => (
+      {dataToRender && dataToRender.map(({text, username, created_at, image, at, replies, retweets, likes, views, liked, id}, index) => (
         <div key={index} className="tweet" onClick={(e) => handleTweetClick(e, index, id, at)}>
           <div className="tweet-content-wrapper">
             <div className="tweet-content">
@@ -116,7 +161,7 @@ const Tweet = ({tweetType, username} : Props) => {
             <div className="tweet-actions-wrapper">
               <div className="tweet-actions">
                 <div className="comment">
-                  <button data-title="Reply" className={`tweet-action-btn reply-btn blue`}  ref={(el) => getOrCreateButtonRef(index).reply = el} >
+                  <button data-title="Reply" className={`tweet-action-btn reply-btn blue`}  ref={(el) => getOrCreateButtonRef(index).reply = el} onClick={() => handleReplyClick(id)}>
                     <div><FaRegComment className='reply-icon' /></div>
                     <div className="reply-text">{replies !== 0 && replies}</div>
                   </button>
@@ -128,7 +173,7 @@ const Tweet = ({tweetType, username} : Props) => {
                   </button>
                 </div>
                 <div className="like">
-                  <button data-title="Like" className={`tweet-action-btn like-btn red`} ref={(el) => getOrCreateButtonRef(index).like = el} onClick={() => sendLikes((Number(id)), liked, tweets, handleSetTweets)}>
+                  <button data-title="Like" className={`tweet-action-btn like-btn red`} ref={(el) => getOrCreateButtonRef(index).like = el} onClick={() => sendLikes((Number(id)), liked, dataToRender, statusNumber ? handleSetReplies : handleSetTweets)}>
                     <div>{liked ? <FaHeart className="like-icon liked" /> : <FaRegHeart className="like-icon" />}</div>
                     {liked ? <div className="like-text liked">{likes !== 0 && likes}</div> :  <div className="like-text">{likes !== 0 && likes}</div> }
                   </button> 

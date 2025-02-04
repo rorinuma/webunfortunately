@@ -1,7 +1,7 @@
 import './App.css'
 import Loading from './pages/loading/loading'
 import Login from './pages/login/login'
-import { Routes, Route, Navigate } from "react-router-dom"
+import { Routes, Route, Navigate, useLocation, useParams } from "react-router-dom"
 import SignUp from './pages/signup/signup'
 import axios from "axios"
 import Home from './pages/home/home'
@@ -17,6 +17,11 @@ import Media from './pages/profile/components/media/media'
 import Likes from './pages/profile/components/likes/likes'
 import StatusOverlay from './pages/home/components/statusoverlay/statusoverlay'
 import Status from './pages/home/components/status/status'
+import { TweetProvider } from './context/TweetContext'
+import { UIProvider } from './context/UIContext'
+import Post from './pages/home/components/post/Post'
+import NotFound from './pages/home/components/notfound/NotFound'
+import PhotoRedirect from './components/photoComponent/photocomponent'
 
 
 const App = () => {
@@ -24,13 +29,13 @@ const App = () => {
   const [ username, setUsername ] = useState('')
   const [forYouActive, setForYouActive] = useState('active')
   const [followingActive, setFollowingActive] = useState('disabled')
+  const location = useLocation()
+  const previousLocation = location.state?.background
 
   const handleLoginStatus = (status: boolean | null)  => {
     setLoggedIn(status)
   }
-
-
-
+  
   useEffect(() => {
     const checkLogin = async () => {
       try {
@@ -56,40 +61,54 @@ const App = () => {
     setFollowingActive('active')
   }
 
-  return (
-      <Routes>
-        {loggedIn === null ? (
-          <Route path="*" element={<Loading />} /> 
-        ) : loggedIn ? (
-          <Route path="/" element={<Home username={username} handleLoginStatus={handleLoginStatus} />}>
-            <Route path="" element={
-              <HomeContent 
-                forYouActive={forYouActive}
-                handleOnForYouActive={handleOnForYouActive}
-                followingActive={followingActive}
-                handleOnFollowingActive={handleOnFollowingActive} />}
-            ><Route path=":username/status/:statusNumber/photo/1" element={<StatusOverlay />} /></Route>
-            <Route path=":username" element={<Profile />} >
-              <Route index element={<Posts />} />
-              <Route path="with_replies" element={<Replies />}/>
-              <Route path="highlights" element={<Hightlights />} />
-              <Route path="articles" element={<Articles />} />
-              <Route path="media" element={<Media />} />
-              <Route path="likes" element={<Likes />} />
-            </Route>
-            <Route path="/:username/status/:statusNumber" element={<Status />}/>
-            <Route path="notifications" element={<Notifications />}/>
-            <Route path="*" element={<Navigate to="/home" />} />
-          </Route>
-        ) : (
-          <>
-            <Route path="/login" element={<Login handleLoginStatus={handleLoginStatus}/>}/>
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="*" element={<Navigate to="/login" />} />
-          </>
-        )}
-      </Routes>
-  )
-}
-
-export default App
+    return (
+      <TweetProvider>
+        <UIProvider>
+          <Routes location={previousLocation || location}>
+            {loggedIn === null ? (
+              <Route path="*" element={<Loading />} />
+            ) : loggedIn ? (
+              <>
+                <Route path="/" element={<Home username={username} handleLoginStatus={handleLoginStatus} />}>
+                  <Route index element={
+                    <HomeContent 
+                      forYouActive={forYouActive}
+                      handleOnForYouActive={handleOnForYouActive}
+                      followingActive={followingActive}
+                      handleOnFollowingActive={handleOnFollowingActive}
+                    />
+                  } />
+                  <Route path=":username" element={<Profile />} >
+                    <Route index element={<Posts />} />
+                    <Route path="with_replies" element={<Replies />} />
+                    <Route path="highlights" element={<Hightlights />} />
+                    <Route path="articles" element={<Articles />} />
+                    <Route path="media" element={<Media />} />
+                    <Route path="likes" element={<Likes />} />
+                  </Route>
+                  {!previousLocation && <Route path="/:username/status/:statusNumber/photo/:photoId" element={<PhotoRedirect />} />}
+                  <Route path="/:username/status/:statusNumber" element={<Status />} />
+                  <Route path="notifications" element={<Notifications />} />
+                  <Route path="*" element={<NotFound />} />
+                </Route>
+              </>
+            ) : (
+              <>
+                <Route path="/login" element={<Login handleLoginStatus={handleLoginStatus} />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="*" element={<NotFound />} />
+              </>
+            )}
+          </Routes>
+          {previousLocation && (
+            <Routes>
+              <Route path="/:username/status/:statusNumber/photo/:photoId" element={<StatusOverlay />} />
+              <Route path="/compose/post" element={<Post />} />
+            </Routes>
+          )}
+        </UIProvider>
+      </TweetProvider>
+    );
+  };
+  
+  export default App;

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import "./nav.css"
 import { GoHome, GoHomeFill} from "react-icons/go";
 import { IoNotifications, IoNotificationsOutline, IoSearch, IoSearchOutline, IoMail, IoMailOutline } from "react-icons/io5";
@@ -13,18 +13,21 @@ import Pfp from "../../../../assets/placeholderpfp.jpg"
 import { useEffect, useRef, useState } from "react"
 import { IconContext } from "react-icons";
 import { useLocation } from "react-router-dom";
+import { useUIContext } from "../../../../context/UIContext";
 
 interface Props {
   username: string,
-  handlePostButtonActive: () => void,
   handleLoginStatus: (status : boolean | null) => void
 }
 
-function Nav({username, handlePostButtonActive, handleLoginStatus} : Props) {
+function Nav({username, handleLoginStatus} : Props) {
   const profilePopupOptionsRef = useRef<HTMLDivElement | null>(null)
   const profileButtonRef = useRef<HTMLButtonElement | null>(null)
   const [ menuShown, setMenuShown ] = useState(false)
   const location = useLocation()
+  const navigate = useNavigate()
+
+  const { handlePostButtonActive } = useUIContext()
   
   const handleLogout = async () => {
     try {
@@ -61,6 +64,11 @@ function Nav({username, handlePostButtonActive, handleLoginStatus} : Props) {
     }
   }, [menuShown]);
 
+  const handlePostButtonClick = () => {
+    handlePostButtonActive(true)
+    navigate('/compose/post', {state: {background: location}})
+  }
+
   return (
     <nav id="nav-element">
       <div className="title-nav" id="title-nav">
@@ -77,7 +85,7 @@ function Nav({username, handlePostButtonActive, handleLoginStatus} : Props) {
             <Link to={`/${username}`} className="nav-link"><div>{location.pathname === `/profile/${username}` ? <BsPersonFill /> : <BsPerson />}<div className="nav-annotations">Profile</div></div></Link>
             <Link to="/more" className="nav-link"><div><CiCircleMore /><div className="nav-annotations">More</div></div></Link>
           </IconContext.Provider>
-          <div className="post-btn-container"><button id="nav-post-btn" onClick={handlePostButtonActive}>Post</button></div>
+          <div className="post-btn-container"><button id="nav-post-btn" onClick={handlePostButtonClick}>Post</button></div>
         </div>
         <div className="profile">
           {menuShown &&  (

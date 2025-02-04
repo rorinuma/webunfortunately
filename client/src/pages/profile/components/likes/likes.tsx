@@ -4,11 +4,10 @@ import { ProfileOutletContextType } from "../../profile";
 
 const Likes = () => {
 
-  const { username } = useOutletContext<ProfileOutletContextType>();
-    
+  const { username} = useOutletContext<ProfileOutletContextType>();
 
   return (
-    <Tweet tweetType="liked" username={username} />
+    <Tweet tweetType="liked" username={username}  />
   )
 }
 

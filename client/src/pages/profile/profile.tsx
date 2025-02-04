@@ -8,16 +8,19 @@ import { Link } from "react-router-dom"
 import pfp from "../../assets/placeholderpfp.jpg"
 
 export interface ProfileOutletContextType {
-  username: string;
+  username: string,
+  loadingScreen: boolean,
+  handleLoadingScreen: (value: boolean) => void,
+
 }
 
 const Profile = () => {
 
   const navigate = useNavigate()
   const { username } = useParams()
-  const [ loginScreen, setLoginScreen ] = useState<boolean | null>(true)
+  const [ loadingScreen, setLoadingScreen ] = useState<boolean | null>(true)
   const [ isOwner, setIsOwner ] = useState(false)
-  const [ userData, setUserData ] = useState()
+  const [ userData, setUserData ] = useState({username: '', tweetsCount: 0})
   const [ btnActive, setBtnActive ] = useState(1)
 
   useEffect(() => {
@@ -27,18 +30,21 @@ const Profile = () => {
           withCredentials: true,
           headers: {"Content-Type": 'application/json'}
         }) 
-        setUserData(response.data.tweets)
-        console.log(userData)
+        setUserData(response.data.user)
         if(response.data.accessedBy.username === username) setIsOwner(true)
       } catch(err){
         console.error(err)
       } finally {
-        setLoginScreen(false)
+        setLoadingScreen(false)
       }
     } 
     usernameFetch()
 
   }, [])
+
+  const handleLoadingScreen = (value: boolean) => {
+    setLoadingScreen(value)
+  }
 
   const tabs = isOwner 
   ? [
@@ -57,14 +63,14 @@ const Profile = () => {
   
   return (
     <>
-      {loginScreen ? <Loading /> : 
+      {loadingScreen ? <Loading /> : 
         <div className="profile-container">
           <header>
             <div className="sticky">
               <div><button><Link to="/" className="no-defaults"><FaArrowLeft /></Link></button></div>
               <div>
                 <div>{username}</div> 
-                <div className='post-count'>posts</div>
+                <div className='post-count'>{userData.tweetsCount} posts</div>
               </div>
             </div>
           </header>
@@ -97,7 +103,7 @@ const Profile = () => {
             ))}
           </div>
           <div>
-            <Outlet context={{username}} />
+            <Outlet context={{username, loadingScreen, handleLoadingScreen }} />
           </div>
         </div>
       }

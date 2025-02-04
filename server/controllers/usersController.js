@@ -5,11 +5,10 @@ const tweetModel = require('../models/tweetModel')
 exports.getProfileInfo = async (req, res) => {
   try {
     const { username } = req.params
-    console.log("Get profile info params", username)
+    
     const userInfo = await userModel.findUser(username, username)
-    console.log(userInfo)
     if(userInfo.length > 0 ) {
-      const userTweets = await tweetModel.getTweetsByUsername(username)
+      const userTweets = await tweetModel.tweetsByUsername(username)
       res.status(200).json({user: {username: userInfo.username, tweetsCount: userTweets.length}, accessedBy: {username: req.user.username}})
     } 
   } catch (error) {

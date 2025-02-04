@@ -1,0 +1,204 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.headerContainer {
+  height: 53px;
+}
+
+.header {
+  display: flex;
+  position: fixed;
+  width: 600px;
+  top: 0;
+  justify-content: space-between;
+}
+
+@media (max-width: 1200px) {
+  .header {
+    width: 500px;
+  }
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 8px 0 0 8px;
+}
+
+.headerBtn {
+  padding: 8px 12px;
+  border-radius: 64px;
+}
+
+.headerBtn:hover {
+  background-color: var(--hover);
+  transition: 0.3s
+}
+
+.postHeader {
+  font-size: 1.25rem;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 8px 8px 0 0;
+}
+
+.headerReplyBtn {
+  padding: 5px 16px;
+  border: 1px solid rgb(83, 100, 113);
+  border-radius: 64px;
+  font-size: 0.75rem;
+}
+
+.headerReplyBtn:hover {
+  background-color: var(--hover);
+  transition: 0.3s
+}
+
+.article {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 6px 0 0 14px
+}
+
+.articleLeft {
+  display: flex;
+}
+
+.articlePfp {
+  margin-top: 5px;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  margin-left: 5px;
+}
+
+.at {
+  color: rgb(113, 118, 123);
+  margin-top: -4px;
+}
+
+.moreBtn {
+  padding: 6px 9px;
+  border-radius: 50%;
+  margin-right: 3px;
+}
+
+.moreBtn:hover {
+  background-color: var(--blue-hover);
+  color: var(--blue);
+  transition: 0.3s;
+}
+
+.tweetText {
+  margin: 8px 0 0 15px;
+}
+
+.tweetImage {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.tweetImage > img {
+  max-width: 95%;
+  max-height: 100%;
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.createdAt {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0 0 15px;
+}
+
+.dateLink {
+  color: rgb(113, 118, 123);
+  text-decoration: none;
+}
+
+.dateLink:hover {
+  text-decoration: underline;
+}
+
+.dot {
+  color: rgb(113, 118, 123)
+}
+
+.actionsContainer {
+  display: flex;
+  width: 100%;
+  margin-top: 10px;
+  justify-content: center;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  width: 95%;
+  padding: 6px 0;
+  color: grey;
+  border: 1px solid var(--grey-border);
+  border-width: 1px 0;
+}
+
+.action {
+  display: flex;
+  align-items: center;
+}
+
+.actionImg {
+  padding: 6px 6px;
+  border-radius: 50%
+}
+
+.actionBlue:hover .blueImg {
+  color: var(--blue);
+  background-color: var(--blue-hover);
+  transition: 0.3s;
+}
+
+.actionBlue:hover .blueAmount {
+  color: var(--blue);
+  transition: 0.3s;
+}
+
+.actionGreen:hover .greenImg {
+  color: rgb(0, 186, 124);
+  background-color: rgba(0, 186, 124, 0.1);
+  transition: 0.3s
+}
+
+.actionGreen:hover .greenAmount {
+  color: rgb(0, 186, 124);
+  transition: 0.3s;
+}
+
+.actionRed:hover .redImg {
+  background-color: rgba(249, 24, 128, 0.1);
+  transition: 0.3s
+}
+
+.actionRed:hover .redAmount {
+  color: rgb(249, 24, 128);
+  transition: 0.3s;
+}
+
+.redFill {
+  color: rgb(249, 24, 128)
+}

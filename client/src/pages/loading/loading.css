@@ -4,9 +4,11 @@
   justify-content: center;
   align-items: center;
   width: 100vw;
-  height: 100vh
+  height: 100vh;
+  z-index: 10000;
 }
 
 .twitter-loading-logo {
   font-size: 70px;
+  z-index: 10000;
 }

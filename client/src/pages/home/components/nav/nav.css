@@ -132,6 +132,7 @@ nav {
   align-items: center;
   justify-content: center;
   position: relative;
+  margin-bottom: 8px;
 }
 
 .profile-popup-options {

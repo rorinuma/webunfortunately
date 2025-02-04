@@ -4,8 +4,8 @@ button {
 
 .tweet-post-container {
   display: flex;
-  min-height: 40px;
-  width: 100%;
+  min-height: 119px;
+  width: 93%;
   padding: 20px 20px 0.75rem 20px;
   border-bottom: 1px solid rgb(50, 50, 50);
 }
@@ -21,8 +21,7 @@ button {
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  margin-top: 8px;
-  margin-left: 10px;
+  margin: 8px 10px;
 }
 
 .tweet-area-container {
@@ -112,6 +111,7 @@ button {
   position: sticky;
   background-color: black;
   z-index: 100;
+  min-height: 50px;
   justify-content: space-between;
   margin-top: 1.25rem;
 }

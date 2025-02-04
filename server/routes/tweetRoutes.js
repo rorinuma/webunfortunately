@@ -6,11 +6,11 @@ const upload = require('../config/multer')
 
 
 router.post("/", authorization, upload.single("tweet_post_image"), tweetController.createTweet);
-router.get("/all", authorization, tweetController.getAllTweets);
-router.get('/posts', authorization, tweetController.getProfileTweets)
-router.get('/liked', authorization, tweetController.getLikedTweetsByUsername)
+router.get("/all", authorization, tweetController.allTweets);
+router.get('/posts', authorization, tweetController.profileTweets)
+router.get('/liked', authorization, tweetController.likedTweets)
 router.put("/likes", authorization, tweetController.likeTweet)
-router.get('/:username/status/:statusNumber', authorization, tweetController.getTweetInfoByStatus)
+router.get('/:username/status/:statusNumber', authorization, tweetController.tweetInfoByStatus)
 
 
 module.exports = router;

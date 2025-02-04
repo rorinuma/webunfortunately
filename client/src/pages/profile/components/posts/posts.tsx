@@ -4,7 +4,7 @@ import { ProfileOutletContextType } from "../../profile";
 
 const Posts = () => {
 
-const { username } = useOutletContext<ProfileOutletContextType>();
+  const { username } = useOutletContext<ProfileOutletContextType>();
 
   return (
     <Tweet tweetType="posts" username={username}/>
