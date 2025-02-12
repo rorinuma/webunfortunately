@@ -1,0 +1,190 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  font-family:
+    "TwitterChirpExtendedHeavy",
+    "Verdana",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+  height: calc(100% + 10px);
+  width: 100vw;
+  align-items: center;
+  letter-spacing: -1.2px;
+}
+
+.mainContainer {
+  display: flex;
+  height: 96%;
+  width: 95%;
+}
+
+.logoContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-basis: 55%;
+  margin: 0 0 5px 0;
+}
+
+.logo {
+  font-size: 330px;
+}
+
+.optionsContainer {
+  flex-basis: 45%;
+  font-weight: 700;
+  line-height: 84px;
+  color: rgb(231, 233, 234);
+  padding: 85px 30px 30px 20px;
+}
+
+.mainText {
+  font-family: inherit;
+  font-size: 4rem;
+  margin-top: 40px;
+}
+
+.join {
+  font-size: 1.75rem;
+}
+
+.optionsBtn {
+  display: flex;
+  height: 40px;
+  width: 300px;
+  border-radius: 64px;
+  font-weight: 300;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.google {
+  color: #3c4043;
+  background-color: #fff;
+  font-weight: 300;
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  font-size: 21px;
+}
+
+.apple {
+  background-color: #fff;
+  color: black;
+  margin-top: 10px;
+}
+
+.apple:hover {
+  background-color: rgb(230, 230, 230);
+  transition: 0.2s;
+}
+
+.br {
+  display: flex;
+  width: 300px;
+}
+
+.brLineContainer {
+  display: flex;
+  flex-basis: 45%;
+  align-items: center;
+}
+
+.brLine {
+  width: 100%;
+  height: 1px;
+  background-color: rgb(47, 51, 54);
+}
+
+.brText {
+  text-align: center;
+  flex-basis: 10%;
+  line-height: 2rem;
+  font-weight: 300;
+  padding-bottom: 3px;
+}
+
+.createAccount {
+  color: #fff;
+  background-color: var(--blue);
+}
+
+.createAccount:hover {
+  background-color: rgb(26, 140, 216);
+  transition: 0.2s;
+}
+
+.tos {
+  line-height: 13px;
+  color: rgb(113, 118, 123);
+  font-weight: 300;
+  font-size: 0.75rem;
+  width: 300px;
+  margin-top: 10px;
+  word-wrap: break-word;
+}
+
+.tosLink {
+  color: var(--blue);
+  text-decoration: none;
+}
+
+.tosLink:hover {
+  text-decoration: underline;
+}
+
+.question {
+  font-weight: 500;
+  margin-top: 30px;
+  line-height: 58px;
+  letter-spacing: normal;
+}
+
+.signIn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgb(83, 100, 113);
+  color: var(--blue);
+}
+
+.signIn:hover {
+  background-color: var(--blue-hover);
+  transition: 0.2s;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 35px;
+  gap: 10px;
+  width: 95%;
+  height: 4%;
+}
+
+.footer > div {
+  color: rgb(113, 118, 123);
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: normal;
+  line-height: normal;
+}
+
+.footer > div > a:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}

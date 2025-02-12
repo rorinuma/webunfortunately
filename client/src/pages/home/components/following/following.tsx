@@ -1,25 +1,7 @@
-import "./following.css"
-
-
-
+import "./following.css";
 
 function Following() {
-  // const [ tweetData, setTweetData ] = useState([])
-
-
-  // useEffect(() => {
-  //   const tweets = localStorage.getItem('tweet')
-  //   if(tweets) {
-  //     setTweetData(tweets)
-  //   }
-  // }, [])
-  return (
-    <>
-      {/* {tweetData.map((item) => (
-      
-      ))} */}
-    </>
-  )
+  return <></>;
 }
 
-export default Following
+export default Following;

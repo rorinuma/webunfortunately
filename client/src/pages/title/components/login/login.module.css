@@ -1,0 +1,113 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 15px;
+  width: 570px;
+  height: 90vh;
+  background-color: black;
+  border-radius: 16px;
+}
+
+.container > div:nth-child(1) {
+  display: flex;
+  align-items: center;
+  width: 300px;
+  width: 50%;
+  justify-content: space-between;
+}
+
+.container > div:nth-child(1) > div {
+  display: flex;
+  align-items: center;
+}
+
+.formContent {
+  display: flex;
+  flex-direction: column;
+  padding: 32px 32px 0 32px;
+  margin: 0 100px;
+}
+
+.socialMedia {
+  margin-top: 30px;
+}
+
+.button {
+  margin-top: 20px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 64px;
+  width: 100%;
+}
+
+.button > button {
+  width: 100%;
+  height: 36px;
+  border-radius: 64px;
+}
+
+.white:hover {
+  background-color: rgb(215, 219, 220);
+  transition: 0.3s;
+}
+
+.white {
+  background-color: #fff;
+  color: black
+}
+
+.black {
+  border: 1px solid rgb(83, 100, 113);
+}
+
+.black:hover {
+  background-color: rgba(239, 243, 244, 0.1);
+  transition: 0.3s
+}
+
+.showPasswordContainer {
+  position: absolute;
+  z-index: 1000;
+  right: 5px;
+  bottom: 5px;
+}
+
+.showPasswordBtn {
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.showPasswordBtn:hover {
+  background-color: var(--hover);
+  transform: 0.2s;
+}
+
+.signUpContainer {
+  margin-top: 30px;
+  font-size: 0.875rem;
+  letter-spacing: normal;
+}
+
+.yes {
+  color: rgb(113, 118, 123);
+  
+}
+
+.signUp {
+  color: var(--blue);
+  cursor: pointer;
+
+}
+
+.signUp:hover {
+  text-decoration: underline;
+}
+
+.disabledInput {
+  background-color: rgb(32, 35, 39);
+  opacity: 0.5;
+}

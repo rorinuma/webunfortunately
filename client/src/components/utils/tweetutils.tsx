@@ -3,8 +3,6 @@ import axios from "axios"
 import { toZonedTime } from "date-fns-tz";
 import { BtnRefs, TweetInterface } from "../../context/types";
 
-
-
 export const sendLikes = async (id : number, liked : boolean, tweets: TweetInterface[], handleSetTweets: (value : TweetInterface[]) => void) => {
   liked = !liked
   try {

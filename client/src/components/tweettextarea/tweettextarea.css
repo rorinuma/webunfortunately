@@ -93,7 +93,11 @@ button {
 }
 
 .image-delete > button {
-  padding: 0.25rem 11px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
   background-color: rgba(15, 20, 25, 0.75);
   border-radius: 4rem;
   backdrop-filter: blur(4px);
