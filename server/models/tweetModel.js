@@ -21,6 +21,7 @@ exports.allTweets = async (id, limit, offset) => {
     const query =
       "SELECT * FROM tweets WHERE reply_to IS NULL ORDER BY created_at DESC limit ? offset ?";
     const [tweets] = await db.query(query, [limit, offset]);
+
     return tweets;
   }
 };
@@ -58,35 +59,34 @@ exports.likedTweetsByTweetIds = async (tweetIds) => {
   const placeholders = tweetIds.map(() => "?").join(",");
   const query = `SELECT * FROM tweets WHERE id IN (${placeholders}) order by created_at desc`;
 
-  try {
-    const [tweets] = await db.execute(query, tweetIds);
-    return tweets;
-  } catch (error) {
-    console.error("Error fetching liked tweets:", error);
-    throw new Error("Database query failed");
-  }
+  const [tweets] = await db.execute(query, tweetIds);
+  return tweets;
 };
 
-exports.toggleLike = async (tweetId, userId) => {
-  const checkQuery = "select * from likes where tweet_id = ? and user_id = ?";
-  const [existingLikes] = await db.execute(checkQuery, [tweetId, userId]);
+exports.toggleAction = async (actionType, tweetId, userId) => {
+  const checkQuery = "select * from ?? where tweet_id = ? and user_id = ?";
+  const [existingAction] = await db.query(checkQuery, [
+    actionType,
+    tweetId,
+    userId,
+  ]);
 
-  if (existingLikes.length === 0) {
-    const addQuery = "insert into likes (tweet_id, user_id) values (?, ?)";
-    await db.execute(addQuery, [tweetId, userId]);
+  if (existingAction.length === 0) {
+    const addQuery = "insert into ?? (tweet_id, user_id) values (?, ?)";
+    await db.query(addQuery, [actionType, tweetId, userId]);
 
-    const updateLikes = "update tweets set likes = likes + 1 where id = ?";
-    await db.execute(updateLikes, [tweetId]);
+    const updateQuery = "update tweets set ?? = ?? + 1 where id = ?";
+    await db.query(updateQuery, [actionType, actionType, tweetId]);
 
-    return { message: "Like added" };
+    return { message: "Action added" };
   } else {
-    const removeQuery = "delete from likes where tweet_id = ? and user_id = ?";
-    await db.execute(removeQuery, [tweetId, userId]);
+    const removeQuery = "delete from ?? where tweet_id = ? and user_id = ?";
+    await db.query(removeQuery, [actionType, tweetId, userId]);
 
-    const updateLikes = "update tweets set likes = likes - 1 where id = ?";
-    await db.execute(updateLikes, [tweetId]);
+    const updateQuery = "update tweets set ?? = ?? - 1 where id = ?";
+    await db.query(updateQuery, [actionType, actionType, tweetId]);
 
-    return { message: "Like removed" };
+    return { message: "Action removed" };
   }
 };
 

@@ -24,7 +24,7 @@ exports.createTweet = async (req, res) => {
 exports.allTweets = async (req, res) => {
   try {
     const statusNumber = req.query.statusNumber;
-    const page = parseInt(req.query.page) | 1;
+    const page = parseInt(req.query.page);
     const limit = 10; // should be 20 but because of the strict mode
     const offset = (page - 1) * limit;
     let tweets;
@@ -70,7 +70,7 @@ exports.likedTweets = async (req, res) => {
 
 exports.profileTweets = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) | 1;
+    const page = parseInt(req.query.page);
     const limit = 10; // should be 20 but because of the strict mode
     const offset = (page - 1) * limit;
     const username = req.query.username;
@@ -81,7 +81,6 @@ exports.profileTweets = async (req, res) => {
       offset
     );
     const likedUserTweets = await tweetModel.likedTweets(req.user.id);
-    console.log(transformTweets(userTweets, likedUserTweets).length);
     res
       .status(200)
       .json({ tweets: transformTweets(userTweets, likedUserTweets) });
@@ -91,14 +90,18 @@ exports.profileTweets = async (req, res) => {
   }
 };
 
-exports.likeTweet = async (req, res) => {
+exports.tweetAction = async (req, res) => {
   try {
     const { tweetId } = req.body;
+    const tweetAction = req.query.tweetAction;
     const userId = req.user.id;
-    const result = await tweetModel.toggleLike(tweetId, userId);
+    const result = await tweetModel.toggleAction(tweetAction, tweetId, userId);
     res.status(200).json({ result });
   } catch (error) {
-    res.status(500).json({ error: "An error occured while liking the tweet." });
+    console.error("Error occured while doing the tweet action", error);
+    res
+      .status(500)
+      .json({ error: "An error occured while doing the tweet action" });
   }
 };
 

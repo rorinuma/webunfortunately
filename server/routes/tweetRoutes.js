@@ -13,7 +13,11 @@ router.post(
 router.get("/all", authorization, tweetController.allTweets);
 router.get("/posts", authorization, tweetController.profileTweets);
 router.get("/liked", authorization, tweetController.likedTweets);
-router.put("/likes", authorization, tweetController.likeTweet);
-router.get("/:username/status/:statusNumber", authorization, tweetController.tweetInfoByStatus);
+router.put("/action", authorization, tweetController.tweetAction);
+router.get(
+  "/:username/status/:statusNumber",
+  authorization,
+  tweetController.tweetInfoByStatus
+);
 
 module.exports = router;

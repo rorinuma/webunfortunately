@@ -1,7 +1,7 @@
 :root {
   --grey-border: rgb(50, 50, 50);
   --hover: rgba(25, 25, 25, 0.9);
-  --grey-color: rgb(113, 118, 123)
+  --grey-color: rgb(113, 118, 123);
 }
 
 .no-defaults {
@@ -15,18 +15,25 @@
   height: 100%;
 }
 
-button {
-  all: unset;
+.home-screen-overlay {
+  position: fixed;
+  top: 0;
+  height: 100%;
+  width: 100vw;
+  z-index: 1005;
 }
 
+button {
+  all: unset;
+  cursor: pointer;
+}
 
 .overlay-text-area-container {
   display: flex;
   width: 100%;
   min-height: 185px;
-  flex: 1
+  flex: 1;
 }
-
 
 .home-container {
   display: flex;
@@ -65,7 +72,7 @@ button {
   flex-direction: column;
   flex-grow: 1;
   flex-shrink: 1;
-} 
+}
 
 .main {
   display: flex;
@@ -83,7 +90,3 @@ button {
   flex-grow: 1;
   flex-wrap: wrap;
 }
-
-
-
-

@@ -68,8 +68,6 @@ export const TweetProvider = ({ children }: { children: React.ReactNode }) => {
           newTweet = response.data.tweet[0];
           handleSetTweet(newTweet);
         }
-
-        console.log("navigating to overlay with tweet", newTweet);
         navigate(`${username}/status/${id}/photo/1`, {
           state: { background: location, tweet: newTweet },
         });
@@ -78,6 +76,7 @@ export const TweetProvider = ({ children }: { children: React.ReactNode }) => {
       }
       return;
     }
+    console.log(buttonRefs);
     const buttonClicked = Object.values(buttonRefs.current[index] || {}).some(
       (ref) => ref.contains(e.target as Node)
     );

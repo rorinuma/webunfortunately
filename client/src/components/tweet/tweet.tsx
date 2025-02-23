@@ -8,8 +8,9 @@ import { IoIosMore, IoMdStats } from "react-icons/io";
 import { Link, matchPath, useLocation, useParams } from "react-router-dom";
 import "./tweet.css";
 import Pfp from "../../assets/placeholderpfp.jpg";
-import styles from "../../assets/style.module.css";
-import { formatTweetDate, sendLikes } from "../utils/tweetutils";
+import globalStyles from "../../assets/style.module.css";
+import styles from "./tweet.module.css";
+import { formatTweetDate, sendAction } from "../utils/tweetutils";
 import Loading from "../../pages/loading/loading";
 import { useTweetContext } from "../../context/TweetContext";
 import { useUIContext } from "../../context/UIContext";
@@ -34,7 +35,13 @@ const Tweet = ({ tweetType, username }: Props) => {
   } = useTweetContext();
   const [newTweetsAvailable, setNewTweetsAvailable] = useState(false);
   const [fetchNewTweets, setFetchNewTweets] = useState(false);
-  const { handleReplyClick } = useUIContext();
+
+  const {
+    handleReplyClick,
+    setHomeScreenOverlayShown,
+    retweetOverlayActive,
+    setRetweetOverlayActive,
+  } = useUIContext();
   const observerRef = useRef<IntersectionObserver | undefined>();
   const location = useLocation();
 
@@ -49,7 +56,6 @@ const Tweet = ({ tweetType, username }: Props) => {
       const params: Record<string, string | undefined> = { username: username };
 
       if (status) params.statusNumber = status;
-
       // reset the page if the button has been clicked idk
       if (reset) {
         setPage(1);
@@ -61,12 +67,13 @@ const Tweet = ({ tweetType, username }: Props) => {
           params: params,
         }
       );
-
-      if (status)
+      if (status) {
         handleSetReplies((prev) => [...prev, ...response.data.tweets]);
-      else {
+      } else {
         if (reset) {
           handleSetTweets(response.data.tweets);
+          setFetchNewTweets(false);
+          setNewTweetsAvailable(false);
         } else {
           handleSetTweets((prev) => [...prev, ...response.data.tweets]);
         }
@@ -98,12 +105,10 @@ const Tweet = ({ tweetType, username }: Props) => {
     }
   }, [location.pathname]);
 
+  // since the tweet component is also for replies the statusNumber is included too
+  // for status update
   useEffect(() => {
-    doTweetsFetch(
-      `${tweetType}`,
-      statusNumber && statusNumber,
-      fetchNewTweets && true
-    );
+    doTweetsFetch(`${tweetType}`, statusNumber && statusNumber, fetchNewTweets);
   }, [tweetType, username, page, statusNumber, fetchNewTweets]);
 
   // websocket connection
@@ -134,7 +139,7 @@ const Tweet = ({ tweetType, username }: Props) => {
     });
 
     const dataElements = document.querySelectorAll(".tweet");
-    const thirdLastTweet = dataElements[dataElements.length - 6];
+    const thirdLastTweet = dataElements[dataElements.length - 3];
 
     if (thirdLastTweet) {
       observer.observe(thirdLastTweet);
@@ -170,12 +175,20 @@ const Tweet = ({ tweetType, username }: Props) => {
     );
   }
 
+  const handleRetweetPopUpActive = (index: number) => {
+    setRetweetOverlayActive(index);
+    setHomeScreenOverlayShown((prev) => !prev);
+  };
+
   return (
     <div className="tweets-container">
-      {newTweetsAvailable && (
-        <div>
-          <button onClick={handleUpdateTweetsButtonClick}>
-            new tweets available
+      {newTweetsAvailable && location.pathname == "/" && (
+        <div className="new-tweets-button-container">
+          <button
+            onClick={handleUpdateTweetsButtonClick}
+            className="new-tweets-button"
+          >
+            new posts
           </button>
         </div>
       )}
@@ -216,11 +229,11 @@ const Tweet = ({ tweetType, username }: Props) => {
                             getOrCreateButtonRef(index).link = el;
                           }}
                         >
-                          <Link to={`/${at}`} className={styles.dimFont}>
+                          <Link to={`/${at}`} className={globalStyles.dimFont}>
                             @{at}
                           </Link>
                         </div>
-                        <div className={styles.dimFont}>
+                        <div className={globalStyles.dimFont}>
                           {formatTweetDate(created_at)}
                         </div>
                       </div>
@@ -252,47 +265,55 @@ const Tweet = ({ tweetType, username }: Props) => {
                     <div className="comment">
                       <button
                         data-title="Reply"
-                        className={`tweet-action-btn reply-btn blue`}
+                        className={`tweet-action-btn reply-btn`}
                         ref={(el) => (getOrCreateButtonRef(index).reply = el)}
                         onClick={() => handleReplyClick(id)}
                       >
-                        <div>
+                        <div className={"blue tweet-icon"}>
                           <FaRegComment className="reply-icon" />
                         </div>
-                        <div className="reply-text">
-                          {replies !== 0 && replies}
-                        </div>
+                        <div className="reply-text"></div>
+                        {replies !== 0 && replies}
                       </button>
                     </div>
                     <div className="repost">
                       <button
                         data-title="Repost"
-                        className={`tweet-action-btn repost-btn green`}
+                        className={`tweet-action-btn repost-btn`}
                         ref={(el) => (getOrCreateButtonRef(index).retweet = el)}
+                        onClick={() => handleRetweetPopUpActive(index)}
                       >
-                        <div>
+                        <div className="green tweet-icon">
                           <AiOutlineRetweet className="repost-icon" />
                         </div>
                         <div className="repost-text">
                           {retweets !== 0 && retweets}
                         </div>
                       </button>
+                      {retweetOverlayActive === index && (
+                        <div className={styles.popUp}>
+                          <div className={styles.popUpContent}>
+                            Popup Content Here
+                          </div>
+                        </div>
+                      )}
                     </div>
                     <div className="like">
                       <button
                         data-title="Like"
-                        className={`tweet-action-btn like-btn red`}
+                        className={`tweet-action-btn like-btn`}
                         ref={(el) => (getOrCreateButtonRef(index).like = el)}
                         onClick={() =>
-                          sendLikes(
+                          sendAction(
                             Number(id),
                             liked,
+                            "likes",
                             dataToRender,
                             statusNumber ? handleSetReplies : handleSetTweets
                           )
                         }
                       >
-                        <div>
+                        <div className="red tweet-icon">
                           {liked ? (
                             <FaHeart className="like-icon liked" />
                           ) : (
@@ -316,7 +337,7 @@ const Tweet = ({ tweetType, username }: Props) => {
                         className={`tweet-action-btn view-btn blue`}
                         ref={(el) => (getOrCreateButtonRef(index).view = el)}
                       >
-                        <div>
+                        <div className="blue tweet-icon">
                           <IoMdStats className="view-icon" />
                         </div>
                         <div className="view-text">{views !== 0 && views}</div>
@@ -326,7 +347,7 @@ const Tweet = ({ tweetType, username }: Props) => {
                       <div>
                         <button
                           data-title="Bookmark"
-                          className={`tweet-action-btn bookmark-btn blue`}
+                          className={`tweet-action-btn bookmark-btn`}
                           ref={(el) =>
                             (getOrCreateButtonRef(index).bookmark = el)
                           }

@@ -1,0 +1,9 @@
+.popUp {
+  position: absolute;
+  top: 0;
+  background-color: black;
+  box-sizing: border-box;
+  height: 114px;
+  width: 88px;
+  z-index: 1010;
+}

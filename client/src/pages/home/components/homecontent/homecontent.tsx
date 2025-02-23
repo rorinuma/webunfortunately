@@ -1,17 +1,22 @@
-import Header from "../header/header"
-import ForYou from "../foryou/foryou"
-import Following from "../following/following"
-import TweetTextArea from "../../../../components/tweettextarea/tweettextarea"
-import "./homecontent.css"
+import Header from "../header/header";
+import ForYou from "../foryou/foryou";
+import Following from "../following/following";
+import TweetTextArea from "../../../../components/tweettextarea/tweettextarea";
+import "./homecontent.css";
 
 interface Props {
-  forYouActive: string,
-  handleOnForYouActive: () => void,
-  followingActive: string,
-  handleOnFollowingActive: () => void
+  forYouActive: string;
+  handleOnForYouActive: () => void;
+  followingActive: string;
+  handleOnFollowingActive: () => void;
 }
 
-const HomeContent = ({forYouActive, handleOnForYouActive, followingActive, handleOnFollowingActive} : Props) => {
+const HomeContent = ({
+  forYouActive,
+  handleOnForYouActive,
+  followingActive,
+  handleOnFollowingActive,
+}: Props) => {
   return (
     <>
       <Header
@@ -20,12 +25,12 @@ const HomeContent = ({forYouActive, handleOnForYouActive, followingActive, handl
         followingActive={followingActive}
         handleOnFollowingActive={handleOnFollowingActive}
       />
-      <TweetTextArea placeholder="What is happening?!"/>
+      <TweetTextArea placeholder="What is happening?!" />
       <div className="home-content">
-        {forYouActive === 'active' ? <ForYou /> : <Following />}
+        {forYouActive === "active" ? <ForYou /> : <Following />}
       </div>
     </>
-  )
-}
+  );
+};
 
-export default HomeContent
+export default HomeContent;

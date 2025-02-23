@@ -19,10 +19,8 @@ const InitializeWebSocket = (server) => {
 
 const notifyNewTweet = () => {
   if (wss) {
-    console.log("balls? does it even fucking work");
     wss.clients.forEach((client) => {
       if (client.readyState === 1) {
-        console.log("does it even fucking work 2");
         client.send(JSON.stringify({ type: "NEW_TWEET_AVAILABLE" }));
       }
     });
