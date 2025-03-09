@@ -1,11 +1,20 @@
+.cool-blue-overlay-show {
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(91, 112, 131, 0.4);
+  z-index: 1000;
+}
+
 .show-post-container {
   display: flex;
-  flex-direction: column;
   position: fixed;
-  overflow-y: auto;
   top: 5%;
-  left: 31%;
-  min-height: 17rem;  
+  flex-direction: column;
+  overflow-y: auto;
+  min-height: 17rem;
   max-height: 90vh;
   min-width: 37.5rem;
   max-width: 600px;
@@ -31,7 +40,7 @@
 }
 
 .post-overlay-reply-tweet-info {
-  display: flex
+  display: flex;
 }
 
 .post-overlay-reply-tweet-info > div:nth-child(1) {
@@ -95,12 +104,4 @@
 
 .post-overlay-replying-to > div {
   font-size: 0.75rem;
-}
-
-.cool-blue-overlay-show {
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(91, 112, 131, 0.4);
-  z-index: 1000
 }

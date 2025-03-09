@@ -8,18 +8,9 @@
   all: unset;
 }
 
-.home-screen {
-  display: flex;
-  flex-shrink: 1;
-  width: 100vw;
-  height: 100%;
-}
-
 .home-screen-overlay {
   position: fixed;
   top: 0;
-  height: 100%;
-  width: 100vw;
   z-index: 1005;
 }
 
@@ -37,56 +28,26 @@ button {
 
 .home-container {
   display: flex;
-  flex-shrink: 1;
-  flex-grow: 1;
-  height: 100%;
+  position: relative;
+  justify-content: center;
   border-radius: 10px;
-}
-
-@media (max-width: 1200px) {
-  #wrapuwu {
-    max-width: 500px;
-  }
-}
-
-@media (max-width: 1105px) {
-  #main {
-    width: 800px;
-  }
-}
-
-@media (max-width: 1024px) {
-  #main {
-    width: 640px;
-  }
-}
-
-@media (max-width: 720px) {
-  #main {
-    width: 500px;
-  }
 }
 
 .main-container {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
-  flex-shrink: 1;
 }
 
 .main {
   display: flex;
-  width: 1050px;
-  flex-shrink: 1;
-  flex-grow: 1;
 }
 
 .wrapuwu {
   display: flex;
   border: 1px solid rgb(50, 50, 50);
-  height: calc(100% + 120rem);
   max-width: 600px;
-  flex-shrink: 1;
-  flex-grow: 1;
+  min-width: 415px;
+  width: 100%;
+  box-sizing: border-box;
   flex-wrap: wrap;
 }

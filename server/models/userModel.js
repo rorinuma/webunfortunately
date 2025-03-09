@@ -6,6 +6,12 @@ exports.findUser = async (username, email) => {
   return result;
 };
 
+exports.findUserGoogle = async (googleId) => {
+  const query = "select * from users where google_id = ?";
+  const [result] = await db.execute(query, [googleId]);
+  return result;
+};
+
 exports.createUser = async (email, username, password, phone, birthday) => {
   const query =
     "insert into users (email, username, at, password,  phone_number, birthday ) values (?, ?, ?, ?, ?, ?)";
@@ -17,6 +23,12 @@ exports.createUser = async (email, username, password, phone, birthday) => {
     phone,
     birthday,
   ]);
+};
+
+exports.createUserGoogle = async (email, username, googleId) => {
+  const query =
+    "insert into users (email, username, google_id) values (?, ?, ?)";
+  await db.execute(query, [email, username, googleId]);
 };
 
 exports.checkPhone = async (phone) => {
@@ -41,7 +53,7 @@ exports.checkLogin = async (userDataType, userData) => {
   return result;
 };
 
-// when the column has to be declared
+// when the column has to be specified
 exports.findUserCustom = async (dataType, data, password) => {
   const query = "select * from users where ?? = ? and password = ?";
   console.log(dataType, data, password);

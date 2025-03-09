@@ -18,7 +18,6 @@ import { IconContext } from "react-icons";
 import { CiBookmark } from "react-icons/ci";
 import TweetTextArea from "../../../../components/tweettextarea/tweettextarea";
 import Tweet from "../../../../components/tweet/tweet";
-import { useUIContext } from "../../../../context/UIContext";
 import { useTweetContext } from "../../../../context/TweetContext";
 
 const Status = () => {
@@ -31,8 +30,11 @@ const Status = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { handleReplyOnStatusComponentClick } = useUIContext();
-  const { handleSetReplies } = useTweetContext();
+  const {
+    handleSetReplies,
+    handleReplyOnStatusComponentClick,
+    handleReplyClick,
+  } = useTweetContext();
 
   useEffect(() => {
     handleSetReplies([]);
@@ -83,7 +85,12 @@ const Status = () => {
             </div>
             <div className={styles.headerRight}>
               <div>
-                <button className={styles.headerReplyBtn}>Reply</button>
+                <button
+                  className={styles.headerReplyBtn}
+                  onClick={() => handleReplyClick(Number(statusNumber))}
+                >
+                  Reply
+                </button>
               </div>
               <div>
                 <button className={styles.headerBtn}>

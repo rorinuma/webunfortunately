@@ -13,7 +13,6 @@ import styles from "./tweet.module.css";
 import { formatTweetDate, sendAction } from "../utils/tweetutils";
 import Loading from "../../pages/loading/loading";
 import { useTweetContext } from "../../context/TweetContext";
-import { useUIContext } from "../../context/UIContext";
 
 interface Props {
   tweetType: string;
@@ -32,16 +31,19 @@ const Tweet = ({ tweetType, username }: Props) => {
     buttonRefs,
     handleSetReplies,
     replies,
+    retweetOverlayRef,
   } = useTweetContext();
   const [newTweetsAvailable, setNewTweetsAvailable] = useState(false);
   const [fetchNewTweets, setFetchNewTweets] = useState(false);
+  const [retweetOverlayActiveState, setRetweetOverlayActiveState] =
+    useState(false);
 
   const {
     handleReplyClick,
     setHomeScreenOverlayShown,
     retweetOverlayActive,
     setRetweetOverlayActive,
-  } = useUIContext();
+  } = useTweetContext();
   const observerRef = useRef<IntersectionObserver | undefined>();
   const location = useLocation();
 
@@ -177,6 +179,7 @@ const Tweet = ({ tweetType, username }: Props) => {
 
   const handleRetweetPopUpActive = (index: number) => {
     setRetweetOverlayActive(index);
+    setRetweetOverlayActiveState((prev) => !prev);
     setHomeScreenOverlayShown((prev) => !prev);
   };
 
@@ -291,7 +294,12 @@ const Tweet = ({ tweetType, username }: Props) => {
                         </div>
                       </button>
                       {retweetOverlayActive === index && (
-                        <div className={styles.popUp}>
+                        <div
+                          className={styles.popUp}
+                          ref={
+                            retweetOverlayActiveState ? retweetOverlayRef : null
+                          }
+                        >
                           <div className={styles.popUpContent}>
                             Popup Content Here
                           </div>

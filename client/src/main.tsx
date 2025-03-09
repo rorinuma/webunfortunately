@@ -6,7 +6,6 @@ import { BrowserRouter } from "react-router-dom";
 
 document.body.style.margin = "0";
 document.body.style.padding = "0";
-document.body.style.height = "100%";
 document.body.style.display = "flex";
 document.getElementById("root")!.style.display = "flex";
 

@@ -1,7 +1,6 @@
 const userModel = require('../models/userModel')
 const tweetModel = require('../models/tweetModel')
 
-
 exports.getProfileInfo = async (req, res) => {
   try {
     const { username } = req.params

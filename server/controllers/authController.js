@@ -151,3 +151,25 @@ exports.checkLogin = async (req, res) => {
     res.status(500).json({ error: "error occured while checking login info" });
   }
 };
+
+exports.googleCallback = async (req, res) => {
+  try {
+    const token = jwt.sign(
+      { userId: req.user.id, username: req.user.username },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: "7d",
+      }
+    );
+
+    res.cookie("access_token", token, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.redirect(`http://localhost:5173`);
+  } catch (err) {
+    console.error("Error generating JWT", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

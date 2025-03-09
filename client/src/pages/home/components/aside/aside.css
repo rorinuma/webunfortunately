@@ -8,15 +8,9 @@ aside {
   margin-left: 1.125rem;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1250px) {
   #aside {
     display: none;
-  }
-}
-
-@media (max-width: 1105px) {
-  #search-input {
-    width: 15rem;
   }
 }
 
@@ -28,7 +22,7 @@ aside {
 
 .search-bar > input {
   height: 2.75rem;
-  width: 19.5rem;
+  width: 21rem;
   padding-left: 2rem;
   font-family: inherit;
   border-radius: 4rem;
@@ -37,7 +31,7 @@ aside {
   caret-color: var(--blue);
   color: inherit;
   outline: none;
-  border: 1px solid rgb(50, 50, 50)
+  border: 1px solid rgb(50, 50, 50);
 }
 
 .search-bar > input:focus {

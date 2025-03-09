@@ -1,54 +1,54 @@
-import pfp from "../../../../assets/placeholderpfp.jpg"
-import { formatTweetDate } from "../../../../components/utils/tweetutils"
-import { useTweetContext } from "../../../../context/TweetContext"
-import styles from "../../../../assets/style.module.css"
-import { useUIContext } from "../../../../context/UIContext"
-import TweetTextArea from "../../../../components/tweettextarea/tweettextarea"
-import { useEffect, useRef } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
-import "./post.css"
-
+import pfp from "../../../../assets/placeholderpfp.jpg";
+import { formatTweetDate } from "../../../../components/utils/tweetutils";
+import { useTweetContext } from "../../../../context/TweetContext";
+import styles from "../../../../assets/style.module.css";
+import TweetTextArea from "../../../../components/tweettextarea/tweettextarea";
+import { useEffect, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import "./post.css";
+import { createPortal } from "react-dom";
 
 const Post = () => {
-  const { tweet } = useTweetContext()
-  const { replyClicked, handleSetReplyClick } = useUIContext()
-  const tweetPostRef = useRef<HTMLDivElement | null>(null)
-  const navigate = useNavigate()
-  const location = useLocation()
+  const { tweet } = useTweetContext();
+  const { replyClicked, handleSetReplyClick } = useTweetContext();
+  const tweetPostRef = useRef<HTMLDivElement | null>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const type = location.state?.type; // WIP
 
   useEffect(() => {
     const handleTweetPostPopup = (event: MouseEvent) => {
-      if(
+      if (
         location.pathname === "/compose/post" &&
         tweetPostRef.current &&
         !tweetPostRef.current.contains(event.target as Node)
       ) {
-        handleSetReplyClick(null)
-        navigate(-1)
+        handleSetReplyClick(null);
+        navigate(-1);
       }
     };
-    document.body.addEventListener('mousedown', handleTweetPostPopup)
+    document.body.addEventListener("mousedown", handleTweetPostPopup);
     return () => {
-      document.body.removeEventListener('mousedown', handleTweetPostPopup)
-      document.documentElement.style.overflowY = ""
-    }
-  }, [location])
-
+      document.body.removeEventListener("mousedown", handleTweetPostPopup);
+      document.documentElement.style.overflowY = "";
+    };
+  }, [location]);
 
   const handleClosePost = () => {
-    handleSetReplyClick(null)
-    navigate(-1)
-  }
+    handleSetReplyClick(null);
+    navigate(-1);
+  };
 
-
-  return (
-    <>
-      <div className='show-post-container' ref={tweetPostRef}>
+  return createPortal(
+    <div className="cool-blue-overlay-show">
+      <div className="show-post-container" ref={tweetPostRef}>
         <div>
-          <div><button onClick={handleClosePost}>x</button></div>
+          <div>
+            <button onClick={handleClosePost}>x</button>
+          </div>
           <div className={styles.blueFont}>Drafts</div>
         </div>
-        {tweet && replyClicked &&
+        {tweet && replyClicked && (
           <div className="post-overlay-reply-container">
             <div className="post-overlay-reply-tweet-info">
               <div>
@@ -61,7 +61,9 @@ const Post = () => {
                   <div className={styles.dimFont}>@{tweet.at}</div>
                   <div>{formatTweetDate(tweet.created_at)}</div>
                 </div>
-                <div className="image-text">{tweet.text ? tweet.text : tweet.image}</div>
+                <div className="image-text">
+                  {tweet.text ? tweet.text : tweet.image}
+                </div>
               </div>
             </div>
             <div>
@@ -69,21 +71,26 @@ const Post = () => {
                 <div className="bar2"></div>
               </div>
               <div className="post-overlay-replying-to">
-                <div className={styles.dimFont}>Replying to <span className={styles.blueFont}>@{tweet.at}</span></div>
+                <div className={styles.dimFont}>
+                  Replying to{" "}
+                  <span className={styles.blueFont}>@{tweet.at}</span>
+                </div>
               </div>
             </div>
           </div>
-        }
+        )}
         <div className="overlay-text-area-container">
           <TweetTextArea
-              placeholder={replyClicked ? "Post your reply" : "What is happening?!"}
-              replyClicked={replyClicked}
-            />
+            placeholder={
+              replyClicked ? "Post your reply" : "What is happening?!"
+            }
+            replyClicked={replyClicked}
+          />
         </div>
       </div>
-      <div className="cool-blue-overlay-show"></div>
-    </>
-  )
-}
+    </div>,
+    document.body
+  );
+};
 
-export default Post
+export default Post;

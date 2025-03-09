@@ -9,6 +9,7 @@ const { InitializeWebSocket } = require("./config/websocket");
 const tweetRoutes = require("./routes/tweetRoutes");
 const authRoutes = require("./routes/authRoutes");
 const usersRoutes = require("./routes/usersRoutes");
+require("./config/auth");
 
 const server = createServer(app);
 

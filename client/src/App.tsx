@@ -18,7 +18,6 @@ import Likes from "./pages/profile/components/likes/likes";
 import StatusOverlay from "./pages/home/components/statusoverlay/statusoverlay";
 import Status from "./pages/home/components/status/status";
 import { TweetProvider } from "./context/TweetContext";
-import { UIProvider } from "./context/UIContext";
 import Post from "./pages/home/components/post/Post";
 import NotFound from "./pages/home/components/notfound/NotFound";
 import PhotoRedirect from "./components/photoComponent/photocomponent";
@@ -66,80 +65,78 @@ const App = () => {
 
   return (
     <TweetProvider>
-      <UIProvider>
-        <Routes location={previousLocation || location}>
-          {loggedIn === null ? (
-            <Route path="*" element={<Loading />} />
-          ) : loggedIn ? (
-            <>
+      <Routes location={previousLocation || location}>
+        {loggedIn === null ? (
+          <Route path="*" element={<Loading />} />
+        ) : loggedIn ? (
+          <>
+            <Route
+              path="/"
+              element={
+                <Home
+                  username={username}
+                  handleLoginStatus={handleLoginStatus}
+                />
+              }
+            >
               <Route
-                path="/"
+                index
                 element={
-                  <Home
-                    username={username}
-                    handleLoginStatus={handleLoginStatus}
+                  <HomeContent
+                    forYouActive={forYouActive}
+                    handleOnForYouActive={handleOnForYouActive}
+                    followingActive={followingActive}
+                    handleOnFollowingActive={handleOnFollowingActive}
                   />
                 }
-              >
-                <Route
-                  index
-                  element={
-                    <HomeContent
-                      forYouActive={forYouActive}
-                      handleOnForYouActive={handleOnForYouActive}
-                      followingActive={followingActive}
-                      handleOnFollowingActive={handleOnFollowingActive}
-                    />
-                  }
-                />
-                <Route path=":username" element={<Profile />}>
-                  <Route index element={<Posts />} />
-                  <Route path="with_replies" element={<Replies />} />
-                  <Route path="highlights" element={<Hightlights />} />
-                  <Route path="articles" element={<Articles />} />
-                  <Route path="media" element={<Media />} />
-                  <Route path="likes" element={<Likes />} />
-                </Route>
-                {!previousLocation && (
-                  <Route
-                    path="/:username/status/:statusNumber/photo/:photoId"
-                    element={<PhotoRedirect />}
-                  />
-                )}
-                <Route
-                  path="/:username/status/:statusNumber"
-                  element={<Status />}
-                />
-                <Route path="notifications" element={<Notifications />} />
-                <Route path="*" element={<NotFound />} />
+              />
+              <Route path=":username" element={<Profile />}>
+                <Route index element={<Posts />} />
+                <Route path="with_replies" element={<Replies />} />
+                <Route path="highlights" element={<Hightlights />} />
+                <Route path="articles" element={<Articles />} />
+                <Route path="media" element={<Media />} />
+                <Route path="likes" element={<Likes />} />
               </Route>
-            </>
-          ) : (
-            <>
-              <Route path="*" element={<Navigate to="/" />} />
-              <Route path="/" element={<Title />} />
-            </>
-          )}
+              {!previousLocation && (
+                <Route
+                  path="/:username/status/:statusNumber/photo/:photoId"
+                  element={<PhotoRedirect />}
+                />
+              )}
+              <Route
+                path="/:username/status/:statusNumber"
+                element={<Status />}
+              />
+              <Route path="notifications" element={<Notifications />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
+          </>
+        ) : (
+          <>
+            <Route path="*" element={<Navigate to="/" />} />
+            <Route path="/" element={<Title />} />
+          </>
+        )}
+      </Routes>
+      {!loggedIn && (
+        <Routes>
+          <Route
+            path="/login"
+            element={<Login handleLoginStatus={handleLoginStatus} />}
+          />
+          <Route path="/signup" element={<SignUp />} />
         </Routes>
-        {!loggedIn && (
-          <Routes>
-            <Route
-              path="/login"
-              element={<Login handleLoginStatus={handleLoginStatus} />}
-            />
-            <Route path="/signup" element={<SignUp />} />
-          </Routes>
-        )}
-        {previousLocation && (
-          <Routes>
-            <Route
-              path="/:username/status/:statusNumber/photo/:photoId"
-              element={<StatusOverlay />}
-            />
-            <Route path="/compose/post" element={<Post />} />
-          </Routes>
-        )}
-      </UIProvider>
+      )}
+      {previousLocation && (
+        <Routes>
+          <Route
+            path="/:username/status/:statusNumber/photo/:photoId"
+            element={<StatusOverlay />}
+          />
+          <Route path="/compose/post" element={<Post />} />
+        </Routes>
+      )}
     </TweetProvider>
   );
 };

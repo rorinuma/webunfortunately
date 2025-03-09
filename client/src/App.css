@@ -1,10 +1,10 @@
 :root {
   --blue: rgb(29, 155, 240);
-  --blue-hover: rgba(29, 155, 240, 0.1)
+  --blue-hover: rgba(29, 155, 240, 0.1);
 }
 
-
-
-
-
-
+body {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}

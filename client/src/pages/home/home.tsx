@@ -2,7 +2,7 @@ import "./home.css";
 import Nav from "./components/nav/nav";
 import { Outlet } from "react-router-dom";
 import Aside from "./components/aside/aside";
-import { useUIContext } from "../../context/UIContext";
+import { useTweetContext } from "../../context/TweetContext";
 
 interface Props {
   username: string;
@@ -10,21 +10,19 @@ interface Props {
 }
 
 const Home = ({ username, handleLoginStatus }: Props) => {
-  const { homeScreenOverlayShown } = useUIContext();
+  const { homeScreenOverlayShown } = useTweetContext();
 
   return (
     <>
-      <div className="home-screen">
-        {homeScreenOverlayShown && <div className="home-screen-overlay"></div>}
-        <div className="home-container">
-          <Nav username={username} handleLoginStatus={handleLoginStatus} />
-          <div className="main-container">
-            <div className="main" id="main">
-              <div className="wrapuwu" id="wrapuwu">
-                <Outlet />
-              </div>
-              <Aside />
+      {homeScreenOverlayShown && <div className="home-screen-overlay"></div>}
+      <div className="home-container">
+        <Nav username={username} handleLoginStatus={handleLoginStatus} />
+        <div className="main-container">
+          <div className="main" id="main">
+            <div className="wrapuwu" id="wrapuwu">
+              <Outlet />
             </div>
+            <Aside />
           </div>
         </div>
       </div>

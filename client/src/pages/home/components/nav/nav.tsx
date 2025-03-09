@@ -20,7 +20,8 @@ import Pfp from "../../../../assets/placeholderpfp.jpg";
 import { useEffect, useRef, useState } from "react";
 import { IconContext } from "react-icons";
 import { useLocation } from "react-router-dom";
-import { useUIContext } from "../../../../context/UIContext";
+import { useTweetContext } from "../../../../context/TweetContext";
+import { BsFeather } from "react-icons/bs";
 
 interface Props {
   username: string;
@@ -34,7 +35,7 @@ function Nav({ username, handleLoginStatus }: Props) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { handlePostButtonActive } = useUIContext();
+  const { handlePostButtonActive } = useTweetContext();
 
   const handleLogout = async () => {
     try {
@@ -84,7 +85,7 @@ function Nav({ username, handleLoginStatus }: Props) {
       <div className="title-nav" id="title-nav">
         <div className="nav" id="nav">
           <IconContext.Provider value={{ className: "nav-icons" }}>
-            <Link to="/" className="nav-twitter-link">
+            <Link to="/" className="nav-twitter-link" id="x-icon-link">
               <div>
                 <FaXTwitter />
               </div>
@@ -145,13 +146,13 @@ function Nav({ username, handleLoginStatus }: Props) {
                 <div className="nav-annotations">Communities</div>
               </div>
             </Link>
-            <Link to="/premium" className="nav-link">
+            <Link to="/premium" className="nav-link" id="premium-link">
               <div>
                 <FaXTwitter />
                 <div className="nav-annotations">Premium</div>
               </div>
             </Link>
-            <Link to={`/${username}`} className="nav-link">
+            <Link to={`/${username}`} className="nav-link" id="profile-link">
               <div>
                 {location.pathname === `/profile/${username}` ? (
                   <BsPersonFill />
@@ -161,20 +162,21 @@ function Nav({ username, handleLoginStatus }: Props) {
                 <div className="nav-annotations">Profile</div>
               </div>
             </Link>
-            <Link to="/more" className="nav-link">
+            <Link to="/more" className="nav-link" id="more-link">
               <div>
                 <CiCircleMore />
                 <div className="nav-annotations">More</div>
               </div>
             </Link>
           </IconContext.Provider>
-          <div className="post-btn-container">
+          <div className="post-btn-container" id="post-btn-container">
             <button id="nav-post-btn" onClick={handlePostButtonClick}>
-              Post
+              <span className="post-text">Post</span>
+              <BsFeather id="post-img" className="post-img" />
             </button>
           </div>
         </div>
-        <div className="profile">
+        <div className="profile" id="profile">
           {menuShown && (
             <div
               className="profile-popup-options"
@@ -199,6 +201,7 @@ function Nav({ username, handleLoginStatus }: Props) {
           )}
           <button
             className="profile-btn"
+            id="profile-btn"
             type="button"
             onClick={toggleProfileMenu}
             ref={profileButtonRef}

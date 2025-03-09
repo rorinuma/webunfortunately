@@ -16,12 +16,6 @@
   justify-content: space-between;
 }
 
-@media (max-width: 1200px) {
-  .header {
-    width: 500px;
-  }
-}
-
 .headerLeft {
   display: flex;
   align-items: center;
@@ -36,7 +30,7 @@
 
 .headerBtn:hover {
   background-color: var(--hover);
-  transition: 0.3s
+  transition: 0.3s;
 }
 
 .postHeader {
@@ -59,14 +53,14 @@
 
 .headerReplyBtn:hover {
   background-color: var(--hover);
-  transition: 0.3s
+  transition: 0.3s;
 }
 
 .article {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 6px 0 0 14px
+  margin: 6px 0 0 14px;
 }
 
 .articleLeft {
@@ -137,7 +131,7 @@
 }
 
 .dot {
-  color: rgb(113, 118, 123)
+  color: rgb(113, 118, 123);
 }
 
 .actionsContainer {
@@ -164,7 +158,7 @@
 
 .actionImg {
   padding: 6px 6px;
-  border-radius: 50%
+  border-radius: 50%;
 }
 
 .actionBlue:hover .blueImg {
@@ -181,7 +175,7 @@
 .actionGreen:hover .greenImg {
   color: rgb(0, 186, 124);
   background-color: rgba(0, 186, 124, 0.1);
-  transition: 0.3s
+  transition: 0.3s;
 }
 
 .actionGreen:hover .greenAmount {
@@ -191,7 +185,7 @@
 
 .actionRed:hover .redImg {
   background-color: rgba(249, 24, 128, 0.1);
-  transition: 0.3s
+  transition: 0.3s;
 }
 
 .actionRed:hover .redAmount {
@@ -200,5 +194,5 @@
 }
 
 .redFill {
-  color: rgb(249, 24, 128)
+  color: rgb(249, 24, 128);
 }
