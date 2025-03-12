@@ -183,29 +183,30 @@ const SignUp = () => {
   const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedYear(e.target.value);
   };
-
   const handleUserDataSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    try {
+      const formattedMonth = selectedMonth.toString().padStart(2, "0");
+      const formattedDay = selectedDay.toString().padStart(2, "0");
 
-    const formattedMonth = selectedMonth.toString().padStart(2, "0");
-    const formattedDay = selectedDay.toString().padStart(2, "0");
-
-    const birthDate = `${selectedYear}-${formattedMonth}-${formattedDay}`;
-    let data = {
-      username: nameInputValue,
-      phone: phoneInput,
-      email: emailInput,
-      password: passwordValue,
-      birthday: birthDate,
-    };
-
-    const response = await axios.post(
-      "http://localhost:8080/api/auth/register",
-      data
-    );
-    if (response.status === 201) navigate("/");
-  };
-
+      const birthDate = `${selectedYear}-${formattedMonth}-${formattedDay}`;
+      const data = {
+        username: nameInputValue,
+        phone: phoneInput,
+        email: emailInput,
+        password: passwordValue,
+        birthday: birthDate,
+      };
+      const response = await axios.post(
+        "http://localhost:8080/api/auth/signup",
+        data
+      );
+      if (response.status === 201) navigate("/");
+    } catch (error) {
+      console.error(error)
+    }
+    
+  }
   const handleNextClick = () => {
     setSecondStage(true);
     setDisplay("none");
@@ -404,8 +405,6 @@ const SignUp = () => {
         >
           <button
             disabled={submitDisabled}
-            type="button"
-            onClick={handleNextClick}
           >
             Sign Up
           </button>

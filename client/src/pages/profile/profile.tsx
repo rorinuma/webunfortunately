@@ -87,7 +87,7 @@ const Profile = () => {
               </div>
             </div>
           </header>
-          <section>
+          <section className="profile-section">
             <div className="profile-header">
               <div className="profile-bg-img"></div>
             </div>
@@ -95,7 +95,7 @@ const Profile = () => {
               <div className="profile-actions">
                 <div>
                   <div className="profile-img">
-                    <img src={pfp} alt="" />
+                    <img src={pfp} alt="profile-pfp" />
                   </div>
                 </div>
                 <div className="profile-actions-container">

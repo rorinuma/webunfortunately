@@ -16,7 +16,6 @@
   align-items: center;
   letter-spacing: -1.2px;
 }
-
 .mainContainer {
   display: flex;
   height: 96%;
@@ -43,6 +42,20 @@
   padding: 85px 30px 30px 20px;
 }
 
+@media (max-width: 1080px) {
+  .mainContainer {
+    flex-direction: column;
+  }
+  .logoContainer {
+    flex-basis: 5%;
+  }
+  .logo {
+    font-size: 2rem;
+  }
+  .optionsContainer {
+    padding-top: 0;
+  }
+}
 .mainText {
   font-family: inherit;
   font-size: 4rem;

@@ -1,105 +1,152 @@
-const db = require("../config/db");
+const pool = require("../config/db");
 
+// Create a tweet or update replies count if it's a reply
 exports.createTweet = async (userId, username, tweetId, text, image) => {
   if (tweetId) {
-    await db.execute("update tweets set replies = replies + 1 where id = ?", [
+    await pool.query("UPDATE tweets SET replies = replies + 1 WHERE id = $1", [
       tweetId,
     ]);
   } else tweetId = null;
-  const query =
-    "INSERT INTO tweets (user_id, username, at, reply_to, text, image) VALUES (?, ?, ?, ?, ?, ?)";
-  await db.execute(query, [userId, username, username, tweetId, text, image]);
+
+  const query = `
+    INSERT INTO tweets (user_id, username, at, reply_to, text, image) 
+    VALUES ($1, $2, $3, $4, $5, $6)
+  `;
+  await pool.query(query, [userId, username, username, tweetId, text, image]);
 };
 
+// Fetch tweets (all or replies to a specific tweet)
 exports.allTweets = async (id, limit, offset) => {
+  let query;
+  let params;
+
   if (id) {
-    const query =
-      "select * from tweets where reply_to = ? order by created_at desc limit ? offset ?";
-    const [tweets] = await db.query(query, [id, limit, offset]);
-    return tweets;
+    query = `
+      SELECT * FROM tweets 
+      WHERE reply_to = $1 
+      ORDER BY created_at DESC 
+      LIMIT $2 OFFSET $3
+    `;
+    params = [id, limit, offset];
   } else {
-    const query =
-      "SELECT * FROM tweets WHERE reply_to IS NULL ORDER BY created_at DESC limit ? offset ?";
-    const [tweets] = await db.query(query, [limit, offset]);
-
-    return tweets;
+    query = `
+      SELECT * FROM tweets 
+      WHERE reply_to IS NULL 
+      ORDER BY created_at DESC 
+      LIMIT $1 OFFSET $2
+    `;
+    params = [limit, offset];
   }
+
+  const { rows } = await pool.query(query, params);
+  return rows;
 };
 
+// Fetch tweets liked by a user
 exports.likedTweets = async (userId, limit, offset) => {
-  if (limit) {
-    const query =
-      "select likes.* from likes join users on likes.user_id = users.id where users.username = ? limit ? offset ?";
-    const [tweets] = await db.query(query, [userId, limit, offset]);
-    return tweets;
-  }
-  const query = "SELECT * FROM likes WHERE user_id = ?";
-  const [tweets] = await db.execute(query, [userId]);
-  return tweets;
+  const query = `
+    SELECT tweets.* 
+    FROM likes 
+    JOIN tweets ON likes.tweet_id = tweets.id 
+    WHERE likes.user_id = $1 
+    ORDER BY tweets.created_at DESC 
+    LIMIT $2 OFFSET $3
+  `;
+
+  const { rows } = await pool.query(query, [userId, limit, offset]);
+  return rows;
 };
 
+// Fetch tweets by username
 exports.tweetsByUsername = async (username, limit, offset) => {
+  let query;
+  let params;
+
   if (limit) {
-    const query =
-      "select * from tweets where username = ? order by created_at desc limit ? offset ?";
-    const [tweets] = await db.query(query, [username, limit, offset]);
-    return tweets;
+    query = `
+      SELECT * FROM tweets 
+      WHERE username = $1 
+      ORDER BY created_at DESC 
+      LIMIT $2 OFFSET $3
+    `;
+    params = [username, limit, offset];
+  } else {
+    query = `
+      SELECT * FROM tweets 
+      WHERE username = $1 
+      ORDER BY created_at DESC
+    `;
+    params = [username];
   }
-  const query =
-    "select * from tweets where username = ? order by created_at desc";
-  const [tweets] = await db.execute(query, [username]);
-  return tweets;
+
+  const { rows } = await pool.query(query, params);
+  return rows;
 };
 
+// Fetch tweets by a list of tweet IDs
 exports.likedTweetsByTweetIds = async (tweetIds) => {
   if (!Array.isArray(tweetIds) || tweetIds.length === 0) {
     return [];
   }
 
-  const placeholders = tweetIds.map(() => "?").join(",");
-  const query = `SELECT * FROM tweets WHERE id IN (${placeholders}) order by created_at desc`;
+  const placeholders = tweetIds.map((_, i) => `$${i + 1}`).join(",");
+  const query = `SELECT * FROM tweets WHERE id IN (${placeholders}) ORDER BY created_at DESC`;
 
-  const [tweets] = await db.execute(query, tweetIds);
-  return tweets;
+  const { rows } = await pool.query(query, tweetIds);
+  return rows;
 };
 
+// Toggle action (like/retweet) on a tweet
 exports.toggleAction = async (actionType, tweetId, userId) => {
-  const checkQuery = "select * from ?? where tweet_id = ? and user_id = ?";
-  const [existingAction] = await db.query(checkQuery, [
-    actionType,
-    tweetId,
-    userId,
-  ]);
+  // Validate column name to prevent SQL injection
+  const allowedActions = ["likes", "retweets"];
+  if (!allowedActions.includes(actionType)) {
+    throw new Error("Invalid action type");
+  }
+
+  // Check if the action already exists
+  const checkQuery = `SELECT * FROM ${actionType} WHERE tweet_id = $1 AND user_id = $2`;
+  const { rows: existingAction } = await pool.query(checkQuery, [tweetId, userId]);
 
   if (existingAction.length === 0) {
-    const addQuery = "insert into ?? (tweet_id, user_id) values (?, ?)";
-    await db.query(addQuery, [actionType, tweetId, userId]);
+    // Add action
+    const addQuery = `INSERT INTO ${actionType} (tweet_id, user_id) VALUES ($1, $2)`;
+    await pool.query(addQuery, [tweetId, userId]);
 
-    const updateQuery = "update tweets set ?? = ?? + 1 where id = ?";
-    await db.query(updateQuery, [actionType, actionType, tweetId]);
+    // Update tweet count
+    const updateQuery = `UPDATE tweets SET ${actionType} = ${actionType} + 1 WHERE id = $1`;
+    await pool.query(updateQuery, [tweetId]);
 
     return { message: "Action added" };
   } else {
-    const removeQuery = "delete from ?? where tweet_id = ? and user_id = ?";
-    await db.query(removeQuery, [actionType, tweetId, userId]);
+    // Remove action
+    const removeQuery = `DELETE FROM ${actionType} WHERE tweet_id = $1 AND user_id = $2`;
+    await pool.query(removeQuery, [tweetId, userId]);
 
-    const updateQuery = "update tweets set ?? = ?? - 1 where id = ?";
-    await db.query(updateQuery, [actionType, actionType, tweetId]);
+    // Decrease tweet count
+    const updateQuery = `UPDATE tweets SET ${actionType} = ${actionType} - 1 WHERE id = $1`;
+    await pool.query(updateQuery, [tweetId]);
 
     return { message: "Action removed" };
   }
 };
 
+// Fetch a single tweet by its ID
 exports.tweetByStatusNumber = async (statusNumber) => {
-  const query = "select * from tweets where id = ?";
-  const [tweet] = await db.execute(query, [statusNumber]);
-  return tweet;
+  const query = "SELECT * FROM tweets WHERE id = $1";
+  const { rows } = await pool.query(query, [statusNumber]);
+  return rows;
 };
 
+// Create a reply to a tweet
 exports.createReply = async (userId, tweetId, text, image) => {
-  const query =
-    "insert into tweet_replies (user_id, tweet_id, reply_text, reply_image) values (?, ?, ?, ?)";
-  await db.execute(query, [userId, tweetId, text, image]);
-  const updateQuery = "update tweets set replies = replies + 1 where id = ?";
-  await db.execute(updateQuery, [tweetId]);
+  const query = `
+    INSERT INTO tweet_replies (user_id, tweet_id, reply_text, reply_image) 
+    VALUES ($1, $2, $3, $4)
+  `;
+  await pool.query(query, [userId, tweetId, text, image]);
+
+  const updateQuery = "UPDATE tweets SET replies = replies + 1 WHERE id = $1";
+  await pool.query(updateQuery, [tweetId]);
 };
+

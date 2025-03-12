@@ -1,5 +1,6 @@
 .profile-container {
   display: flex;
+  position: relative;
   flex-direction: column;
   width: 100%;
 }
@@ -40,8 +41,8 @@ header {
   font-size: 0.75rem
 }
 
-article {
-  position: relative;
+.profile-section {
+  position: relative
 }
 
 .profile-header {
@@ -68,6 +69,7 @@ article {
 .profile-actions {
   display: flex;
   justify-content: space-between;
+  position: relative
 }
 
 .profile-actions > div:nth-child(1) {
@@ -77,7 +79,7 @@ article {
 
 .profile-img {
   position: absolute;
-  top: 28%;
+  top: -120%;
   width: 130px;
   height: 130px;
   border-radius: 50%;

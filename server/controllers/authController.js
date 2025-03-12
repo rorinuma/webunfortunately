@@ -15,7 +15,6 @@ exports.registerUser = async (req, res) => {
         .status(400)
         .json({ error: "Username or email already exists" });
     }
-
     await userModel.createUser(email, username, password, phone, birthday);
 
     res.status(201).json({ message: "User registered successfully" });
@@ -28,9 +27,7 @@ exports.registerUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   try {
     const { inputName, password } = req.query.data;
-
     let userDataType;
-
     if (inputName) {
       const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       const phoneRegex =
@@ -109,7 +106,6 @@ exports.checkEmail = async (req, res) => {
 
     const check = await userModel.checkEmail(email);
 
-    console.log(check);
     if (check.length > 0) {
       res.status(409).json({ exists: true });
     } else {
@@ -139,10 +135,8 @@ exports.checkLogin = async (req, res) => {
     }
 
     const check = await userModel.checkLogin(userDataType, userData);
-
     if (check.length > 0) {
-      console.log(check[0]);
-      res.status(200).json(check[0]);
+     res.status(200).json(check[0]);
     } else {
       res.status(400).json({ error: "user not found" });
     }

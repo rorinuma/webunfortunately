@@ -16,13 +16,13 @@ import { RxCross2 } from "react-icons/rx";
 
 interface Props {
   postButtonActive?: boolean;
-  placeholder: string;
   replyClicked?: number | null;
+  reply: boolean;
 }
 
 const TweetTextArea = ({
   postButtonActive,
-  placeholder,
+  reply,
   replyClicked,
 }: Props) => {
   const [tweetValue, setTweetValue] = useState("");
@@ -71,7 +71,7 @@ const TweetTextArea = ({
       if (imgInput) {
         formData.append("tweet_post_image", imgInput);
       }
-      if (placeholder !== "What is happening?!") {
+      if (!reply) {
         if (replyClicked) {
           formData.append("id", replyClicked.toString());
         } else if (tweet && tweet.id) {
@@ -109,7 +109,7 @@ const TweetTextArea = ({
         <div className="tweet-area-container">
           <TextareaAutosize
             className="tweet-area"
-            placeholder={placeholder}
+            placeholder={reply ? "Post your reply" : "What is happening?!"}
             value={tweetValue}
             onChange={handleTweetValueChange}
           />

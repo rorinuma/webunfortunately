@@ -22,6 +22,7 @@ import { IconContext } from "react-icons";
 import { useLocation } from "react-router-dom";
 import { useTweetContext } from "../../../../context/TweetContext";
 import { BsFeather } from "react-icons/bs";
+import { motion } from "motion/react";
 
 interface Props {
   username: string;
@@ -81,7 +82,7 @@ function Nav({ username, handleLoginStatus }: Props) {
   };
 
   return (
-    <nav id="nav-element">
+    <motion.nav id="nav-element">
       <div className="title-nav" id="title-nav">
         <div className="nav" id="nav">
           <IconContext.Provider value={{ className: "nav-icons" }}>
@@ -219,7 +220,7 @@ function Nav({ username, handleLoginStatus }: Props) {
           </button>
         </div>
       </div>
-    </nav>
+    </motion.nav>
   );
 }
 

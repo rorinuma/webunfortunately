@@ -14,7 +14,7 @@ const Post = () => {
   const tweetPostRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const type = location.state?.type; // WIP
+  const reply = location.state?.reply; // WIP
 
   useEffect(() => {
     const handleTweetPostPopup = (event: MouseEvent) => {
@@ -81,10 +81,7 @@ const Post = () => {
         )}
         <div className="overlay-text-area-container">
           <TweetTextArea
-            placeholder={
-              replyClicked ? "Post your reply" : "What is happening?!"
-            }
-            replyClicked={replyClicked}
+            reply={reply}
           />
         </div>
       </div>

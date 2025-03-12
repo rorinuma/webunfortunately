@@ -8,6 +8,7 @@ import { IoMdStats } from "react-icons/io";
 import "./statusoverlay.css";
 import Loading from "../../../loading/loading";
 import Status from "../status/status";
+import { createPortal } from "react-dom";
 
 const StatusOverlay = () => {
   const { username, statusNumber } = useParams();
@@ -51,7 +52,7 @@ const StatusOverlay = () => {
       navigate(-1);
   };
 
-  return (
+  return createPortal(
     <div className="tweet-presentation">
       <div
         className="tweet-image-presentation"
@@ -130,7 +131,7 @@ const StatusOverlay = () => {
       >
         <Status />
       </div>
-    </div>
+    </div>, document.body
   );
 };
 

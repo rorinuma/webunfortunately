@@ -27,7 +27,7 @@ const App = () => {
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
   const [username, setUsername] = useState("");
   const [forYouActive, setForYouActive] = useState("active");
-  const [followingActive, setFollowingActive] = useState("disabled");
+  const [followingActive, setFollowingActive] = useState("disablied");
   const location = useLocation();
   const previousLocation = location.state?.background;
 
@@ -47,6 +47,7 @@ const App = () => {
           setLoggedIn(true);
         }
       } catch (err) {
+      	console.error("an error ocurred while checking the login", err)
         setLoggedIn(false);
       }
     };

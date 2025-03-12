@@ -40,21 +40,19 @@ const Login = ({ handleLoginStatus }: Props) => {
           },
         }
       );
+      console.log(response)
       if (response.status === 200 && response.data.username) {
         setUserData(response.data.username);
         setInputName("Username");
-        console.log(response.data);
       }
 
       if (response.status === 200 && response.data.email) {
         setUserData(response.data.email);
         setInputName("Email");
-        console.log(response.data);
       }
       if (response.status === 200 && response.data.phone_number) {
         setUserData(response.data.phone_number);
         setInputName("Phone");
-        console.log(response.data);
       }
 
       if (response.status === 200) setSecondStep(true);
@@ -66,18 +64,16 @@ const Login = ({ handleLoginStatus }: Props) => {
   const handlePasswordSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
-    let data = {
+    const data = {
       inputName: userData,
       password: passwordValue,
     };
-
     try {
       const response = await axios.get("http://localhost:8080/api/auth/login", {
         params: { data },
         withCredentials: true,
       });
-
-      console.log(response);
+      
       if (response.status === 200) {
         handleLoginStatus(true);
         navigate("/");

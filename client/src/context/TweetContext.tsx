@@ -144,10 +144,11 @@ export const TweetProvider = ({ children }: { children: React.ReactNode }) => {
   ) => {
     handleSetTweet(tweet);
     let state;
+    // i don't know how this shit works, like at all lol
     if (photoId) {
-      state = { background: location.state?.background };
+      state = { background: location.state?.background, reply: true };
     } else {
-      state = { background: location };
+      state = { background: location, reply: true };
     }
     setReplyClicked(tweet.id);
     setReplyOverlayActive(true);
@@ -164,7 +165,7 @@ export const TweetProvider = ({ children }: { children: React.ReactNode }) => {
     const updatedTweet = tweets.filter((tweet) => tweet.id === value);
     handleSetTweet(updatedTweet[0]);
     setReplyOverlayActive(true);
-    navigate("/compose/post", { state: { background: location } });
+    navigate("/compose/post", { state: { background: location, reply: true } });
   };
 
   const handleSetReplyClick = (value: number | null) => {
