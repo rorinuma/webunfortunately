@@ -14,7 +14,7 @@ const Post = () => {
   const tweetPostRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const reply = location.state?.reply; // WIP
+  const reply = location.state?.postType; // WIP
 
   useEffect(() => {
     const handleTweetPostPopup = (event: MouseEvent) => {

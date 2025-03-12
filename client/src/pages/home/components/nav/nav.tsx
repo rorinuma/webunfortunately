@@ -20,7 +20,6 @@ import Pfp from "../../../../assets/placeholderpfp.jpg";
 import { useEffect, useRef, useState } from "react";
 import { IconContext } from "react-icons";
 import { useLocation } from "react-router-dom";
-import { useTweetContext } from "../../../../context/TweetContext";
 import { BsFeather } from "react-icons/bs";
 import { motion } from "motion/react";
 
@@ -35,8 +34,6 @@ function Nav({ username, handleLoginStatus }: Props) {
   const [menuShown, setMenuShown] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-
-  const { handlePostButtonActive } = useTweetContext();
 
   const handleLogout = async () => {
     try {
@@ -77,7 +74,6 @@ function Nav({ username, handleLoginStatus }: Props) {
   }, [menuShown]);
 
   const handlePostButtonClick = () => {
-    handlePostButtonActive(true);
     navigate("/compose/post", { state: { background: location } });
   };
 

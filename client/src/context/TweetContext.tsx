@@ -1,4 +1,4 @@
-import { createContext, useContext, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { TweetInterface, BtnRefs } from "./types";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -30,15 +30,14 @@ interface TweetContextType {
     tweet: TweetInterface,
     photoId: string | undefined
   ) => void;
-  handlePostButtonActive: (value: boolean) => void;
   replyClicked: number | null;
   handleReplyClick: (value: number) => void;
-  replyOverlayActive: boolean;
   handleSetReplyClick: (value: number | null) => void;
   homeScreenOverlayShown: boolean;
   setHomeScreenOverlayShown: React.Dispatch<React.SetStateAction<boolean>>;
   retweetOverlayActive: number | null;
   setRetweetOverlayActive: React.Dispatch<React.SetStateAction<number | null>>;
+  setReplyClicked: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 export const TweetContext = createContext<TweetContextType | undefined>(
@@ -61,7 +60,6 @@ export const TweetProvider = ({ children }: { children: React.ReactNode }) => {
   const [tweet, setTweet] = useState<TweetInterface>();
   const [tweets, setTweets] = useState<TweetInterface[]>([]);
   const [replies, setReplies] = useState<TweetInterface[]>([]);
-  const [replyOverlayActive, setReplyOverlayActive] = useState<boolean>(false);
   const [replyClicked, setReplyClicked] = useState<number | null>(null);
   const [homeScreenOverlayShown, setHomeScreenOverlayShown] = useState(false);
   const [retweetOverlayActive, setRetweetOverlayActive] = useState<
@@ -151,20 +149,12 @@ export const TweetProvider = ({ children }: { children: React.ReactNode }) => {
       state = { background: location, reply: true };
     }
     setReplyClicked(tweet.id);
-    setReplyOverlayActive(true);
-    navigate("/compose/post", { state });
-  };
-
-  const handlePostButtonActive = (value: boolean) => {
-    setReplyOverlayActive(!value);
-    setReplyClicked(null);
   };
 
   const handleReplyClick = (value: number) => {
     setReplyClicked(value);
     const updatedTweet = tweets.filter((tweet) => tweet.id === value);
     handleSetTweet(updatedTweet[0]);
-    setReplyOverlayActive(true);
     navigate("/compose/post", { state: { background: location, reply: true } });
   };
 
@@ -186,15 +176,14 @@ export const TweetProvider = ({ children }: { children: React.ReactNode }) => {
         tweet,
         retweetOverlayRef,
         handleReplyOnStatusComponentClick,
-        handlePostButtonActive,
         replyClicked,
         handleReplyClick,
-        replyOverlayActive,
         handleSetReplyClick,
         homeScreenOverlayShown,
         setHomeScreenOverlayShown,
         retweetOverlayActive,
         setRetweetOverlayActive,
+        setReplyClicked,
       }}
     >
       {children}

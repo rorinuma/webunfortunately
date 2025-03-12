@@ -32,18 +32,15 @@ const Tweet = ({ tweetType, username }: Props) => {
     handleSetReplies,
     replies,
     retweetOverlayRef,
-  } = useTweetContext();
-  const [newTweetsAvailable, setNewTweetsAvailable] = useState(false);
-  const [fetchNewTweets, setFetchNewTweets] = useState(false);
-  const [retweetOverlayActiveState, setRetweetOverlayActiveState] =
-    useState(false);
-
-  const {
     handleReplyClick,
     setHomeScreenOverlayShown,
     retweetOverlayActive,
     setRetweetOverlayActive,
   } = useTweetContext();
+  const [newTweetsAvailable, setNewTweetsAvailable] = useState(false);
+  const [fetchNewTweets, setFetchNewTweets] = useState(false);
+  const [retweetOverlayActiveState, setRetweetOverlayActiveState] =
+    useState(false);
   const observerRef = useRef<IntersectionObserver | undefined>();
   const location = useLocation();
 
@@ -69,29 +66,31 @@ const Tweet = ({ tweetType, username }: Props) => {
           params: params,
         }
       );
-      if (status) {
-        handleSetReplies((prev) => [...prev, ...response.data.tweets]);
-      } else {
-        if (reset) {
-          handleSetTweets(response.data.tweets);
-          setFetchNewTweets(false);
-          setNewTweetsAvailable(false);
+      if(response.data.tweets.length !== 0) {
+        if (status) {
+          handleSetReplies((prev) => [...prev, ...response.data.tweets]);
         } else {
-          handleSetTweets((prev) => [...prev, ...response.data.tweets]);
+          if (reset) {
+            handleSetTweets(response.data.tweets);
+            setFetchNewTweets(false);
+            setNewTweetsAvailable(false);
+          } else {
+            handleSetTweets((prev) => [...prev, ...response.data.tweets]);
+          }
         }
       }
+      setLoading(false);
+
     } catch (err) {
       if (axios.isAxiosError(err)) {
         console.error(err.stack);
       } else {
         console.error("unknown error", err);
       }
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
-
-  useEffect(() => {
+  // idk what this for
+    useEffect(() => {
     const pathsToExclude = [
       "/compose/post",
       "/:username/status/:statusNumber",
@@ -106,7 +105,7 @@ const Tweet = ({ tweetType, username }: Props) => {
       handleSetTweets([]);
     }
   }, [location.pathname]);
-
+  
   // since the tweet component is also for replies the statusNumber is included too
   // for status update
   useEffect(() => {

@@ -25,7 +25,7 @@ const HomeContent = ({
         followingActive={followingActive}
         handleOnFollowingActive={handleOnFollowingActive}
       />
-      <TweetTextArea placeholder="What is happening?!" />
+      <TweetTextArea reply={false} />
       <div className="home-content">
         {forYouActive === "active" ? <ForYou /> : <Following />}
       </div>

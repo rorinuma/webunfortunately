@@ -206,7 +206,7 @@ const Status = () => {
           </div>
         </IconContext.Provider>
       </div>
-      <TweetTextArea placeholder="Post your reply" />
+      <TweetTextArea reply={true} />
       <Tweet tweetType="all" />
     </section>
   ) : (
