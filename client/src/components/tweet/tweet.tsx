@@ -179,8 +179,8 @@ const Tweet = ({ tweetType, username }: Props) => {
 
   const handleRetweetPopUpActive = (index: number) => {
     setRetweetOverlayActive(index);
-    setRetweetOverlayActiveState((prev) => !prev);
-    setHomeScreenOverlayShown((prev) => !prev);
+    setRetweetOverlayActiveState(prev => !prev);
+    setHomeScreenOverlayShown(prev => !prev);
   };
 
   return (

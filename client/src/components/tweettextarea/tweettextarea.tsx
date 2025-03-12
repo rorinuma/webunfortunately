@@ -13,6 +13,7 @@ import "./tweettextarea.css";
 import { IconContext } from "react-icons";
 import { useTweetContext } from "../../context/TweetContext";
 import { RxCross2 } from "react-icons/rx";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   postButtonActive?: boolean;
@@ -29,7 +30,7 @@ const TweetTextArea = ({
   const imgInputRef = useRef<HTMLInputElement>(null);
   const [imgInput, setImgInput] = useState<File | null>(null);
   const [imgUrl, setImgUrl] = useState("");
-
+  const navigate = useNavigate();
   const { tweet } = useTweetContext();
 
   const handleTweetValueChange = (
@@ -85,6 +86,9 @@ const TweetTextArea = ({
           "Content-Type": "multipart/form-data",
         },
       });
+
+      navigate(-1)
+
     } catch (error) {
       console.error(error);
     }
