@@ -40,7 +40,6 @@ const Login = ({ handleLoginStatus }: Props) => {
           },
         }
       );
-      console.log(response)
       if (response.status === 200 && response.data.username) {
         setUserData(response.data.username);
         setInputName("Username");
@@ -73,7 +72,7 @@ const Login = ({ handleLoginStatus }: Props) => {
         params: { data },
         withCredentials: true,
       });
-      
+
       if (response.status === 200) {
         handleLoginStatus(true);
         navigate("/");

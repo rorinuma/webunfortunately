@@ -76,8 +76,9 @@ const Header = ({
     return () => document.body.removeEventListener("mousedown", handleOutsideNavClick);
   }, [showMobileNav]);
 
-  const handleLogoutLinkClick = async () => {
+  const handleLogoutBtnClick = async () => {
     await axios.get("http://localhost:8080/api/auth/logout")
+    window.location.reload();
   }
 
   return (
@@ -95,7 +96,7 @@ const Header = ({
                   <span>{userData.user.username}</span>
                 </div>
                 <div>
-                  <span>@{userData.user.username}</span>
+                  <span className={styles.mobileNavAt}>@{userData.user.username}</span>
                 </div>
                 <div className={styles.followStatsContainer}>
                   <div className={styles.followStats}>
@@ -145,10 +146,10 @@ const Header = ({
                       <span><IoIosSettings /></span>
                       <Link className={styles.mobileNavLink} to={`${userData.user.username}`}>Settings And Privacy</Link>
                     </div>
-                    <div onClick={handleLogoutLinkClick} className={styles.linkContainer}>
+                    <button onClick={handleLogoutBtnClick} className={styles.linkContainer}>
                       <span><IoLogOutOutline /></span>
-                      <Link className={styles.mobileNavLink} to="/" replace>Log Out</Link>
-                    </div>
+                      <span className={styles.mobileNavLink}>Log out</span>
+                    </button>
                   </IconContext.Provider>
                 </div>
               </div>

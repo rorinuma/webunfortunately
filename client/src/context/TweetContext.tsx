@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useRef, useState } from "react";
 import { TweetInterface, BtnRefs } from "./types";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -8,40 +8,39 @@ interface TweetContextType {
     e: React.MouseEvent<HTMLDivElement>,
     index: number,
     id: number,
-    username: string
+    username: string,
   ) => void;
   handleSetTweets: (
     tweets:
       | TweetInterface[]
       | ((prev: TweetInterface[]) => TweetInterface[])
-      | undefined
+      | undefined,
   ) => void;
   tweets: TweetInterface[];
   tweetImgRefs: React.MutableRefObject<(HTMLImageElement | null)[]>;
   buttonRefs: React.MutableRefObject<BtnRefs[]>;
   handleSetReplies: (
-    replies: TweetInterface[] | ((prev: TweetInterface[]) => TweetInterface[])
+    replies: TweetInterface[] | ((prev: TweetInterface[]) => TweetInterface[]),
   ) => void;
   replies: TweetInterface[] | undefined;
   tweet: TweetInterface | undefined;
   handleSetTweet: (tweet: TweetInterface | undefined) => void;
-  retweetOverlayRef: React.MutableRefObject<HTMLDivElement | null>;
   handleReplyOnStatusComponentClick: (
     tweet: TweetInterface,
-    photoId: string | undefined
+    photoId: string | undefined,
   ) => void;
   replyClicked: number | null;
   handleReplyClick: (value: number) => void;
   handleSetReplyClick: (value: number | null) => void;
-  homeScreenOverlayShown: boolean;
-  setHomeScreenOverlayShown: React.Dispatch<React.SetStateAction<boolean>>;
-  retweetOverlayActive: number | null;
-  setRetweetOverlayActive: React.Dispatch<React.SetStateAction<number | null>>;
   setReplyClicked: React.Dispatch<React.SetStateAction<number | null>>;
+  retweetPopupRef: React.MutableRefObject<HTMLDivElement | null>;
+  retweetOverlayRef: React.MutableRefObject<HTMLDivElement | null>;
+  retweetActive: number | null;
+  setRetweetActive: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 export const TweetContext = createContext<TweetContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const useTweetContext = () => {
@@ -55,23 +54,21 @@ export const TweetProvider = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
   const tweetImgRefs = useRef<(HTMLImageElement | null)[]>([]);
   const buttonRefs = useRef<BtnRefs[]>([]);
-  const retweetOverlayRef = useRef<HTMLDivElement | null>(null);
-  // the tweet is for the status page. other things are incomprehensible.
+  // the tweet is for the status page, also for the status overlay. other things are incomprehensible.
   const [tweet, setTweet] = useState<TweetInterface>();
   const [tweets, setTweets] = useState<TweetInterface[]>([]);
   const [replies, setReplies] = useState<TweetInterface[]>([]);
   const [replyClicked, setReplyClicked] = useState<number | null>(null);
-  const [homeScreenOverlayShown, setHomeScreenOverlayShown] = useState(false);
-  const [retweetOverlayActive, setRetweetOverlayActive] = useState<
-    number | null
-  >(null);
+  const retweetOverlayRef = useRef<HTMLDivElement | null>(null);
+  const retweetPopupRef = useRef<HTMLDivElement | null>(null);
+  const [retweetActive, setRetweetActive] = useState<number | null>(null);
   const location = useLocation();
 
   const handleTweetClick = async (
     e: React.MouseEvent<HTMLDivElement>,
     index: number,
     id: number,
-    username: string
+    username: string,
   ) => {
     if (
       tweetImgRefs.current[index] &&
@@ -83,7 +80,7 @@ export const TweetProvider = ({ children }: { children: React.ReactNode }) => {
         if ((tweet && tweet.id !== id) || !tweet) {
           const response = await axios.get(
             `http://localhost:8080/api/tweets/placeholder/status/${id}`,
-            { withCredentials: true }
+            { withCredentials: true },
           );
           newTweet = response.data.tweet[0];
           handleSetTweet(newTweet);
@@ -96,19 +93,24 @@ export const TweetProvider = ({ children }: { children: React.ReactNode }) => {
       }
       return;
     }
+    // idk why but the retweet overlay above everything works like it's a tweet child even though it's fucking not
+    const buttonClicked = Object.values(buttonRefs.current[index] || {}).some(
+      (ref) => ref.contains(e.target as Node),
+    );
 
-    const buttonClicked =
-      Object.values(buttonRefs.current[index] || {}).some((ref) =>
-        ref.contains(e.target as Node)
-      ) ||
+    if (
+      (retweetPopupRef.current &&
+        retweetPopupRef.current.contains(e.target as Node)) ||
       (retweetOverlayRef.current &&
-        retweetOverlayRef.current.contains(e.target as Node));
+        retweetOverlayRef.current.contains(e.target as Node))
+    ) {
+      retweetOverlayRef.current === null;
+      retweetPopupRef.current === null;
+      setRetweetActive(null);
+      return;
+    }
+
     if (buttonClicked) {
-      if (homeScreenOverlayShown && retweetOverlayActive !== null) {
-        setRetweetOverlayActive(null);
-        setHomeScreenOverlayShown(false);
-        retweetOverlayRef.current = null;
-      }
       return;
     }
     navigate(`${username}/status/${id}`);
@@ -122,7 +124,7 @@ export const TweetProvider = ({ children }: { children: React.ReactNode }) => {
     replies:
       | TweetInterface[]
       | ((prev: TweetInterface[]) => TweetInterface[])
-      | undefined
+      | undefined,
   ) => {
     replies && setReplies(replies);
   };
@@ -131,14 +133,14 @@ export const TweetProvider = ({ children }: { children: React.ReactNode }) => {
     tweets:
       | TweetInterface[]
       | ((prev: TweetInterface[]) => TweetInterface[])
-      | undefined
+      | undefined,
   ) => {
     tweets && setTweets(tweets);
   };
 
   const handleReplyOnStatusComponentClick = (
     tweet: TweetInterface,
-    photoId: string | undefined
+    photoId: string | undefined,
   ) => {
     handleSetTweet(tweet);
     let state;
@@ -174,15 +176,14 @@ export const TweetProvider = ({ children }: { children: React.ReactNode }) => {
         buttonRefs,
         handleSetTweet,
         tweet,
+        retweetPopupRef,
         retweetOverlayRef,
+        retweetActive,
+        setRetweetActive,
         handleReplyOnStatusComponentClick,
         replyClicked,
         handleReplyClick,
         handleSetReplyClick,
-        homeScreenOverlayShown,
-        setHomeScreenOverlayShown,
-        retweetOverlayActive,
-        setRetweetOverlayActive,
         setReplyClicked,
       }}
     >

@@ -5,5 +5,7 @@
   --grey-border: rgb(50, 50, 50);
   --hover: rgba(25, 25, 25, 0.9);
   --grey-color: rgb(113, 118, 123);
+  --box-shadow:
+    rgba(255, 255, 255, 0.2) 0px 0px 15px,
+    rgba(255, 255, 255, 0.15) 0px 0px 3px 1px;
 }
-

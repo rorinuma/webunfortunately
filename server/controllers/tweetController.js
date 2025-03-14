@@ -11,7 +11,7 @@ exports.createTweet = async (req, res) => {
       req.user.username,
       id,
       text,
-      image
+      image,
     );
     notifyNewTweet();
     res.status(201).json({ message: "Tweet posted successfully" });
@@ -23,18 +23,23 @@ exports.createTweet = async (req, res) => {
 
 exports.allTweets = async (req, res) => {
   try {
-    const statusNumber = req.query.statusNumber;
     const page = parseInt(req.query.page);
     const limit = 10; // should be 20 but because of the strict mode
     const offset = (page - 1) * limit;
+    const { statusNumber } = req.query;
     let tweets;
     if (statusNumber) {
       tweets = await tweetModel.allTweets(statusNumber, limit, offset);
     } else {
       tweets = await tweetModel.allTweets(null, limit, offset);
     }
-    const likedTweets = await tweetModel.likedTweets(req.user.id);
-    const updatedTweets = transformTweets(tweets, likedTweets);
+    const updatedTweets = await transformTweets(
+      tweets,
+      req.user.id,
+      limit,
+      offset,
+      statusNumber,
+    );
     res.status(200).json({ tweets: updatedTweets });
   } catch (error) {
     console.error("Error fetching tweets", error);
@@ -78,7 +83,7 @@ exports.profileTweets = async (req, res) => {
     const userTweets = await tweetModel.tweetsByUsername(
       username,
       limit,
-      offset
+      offset,
     );
     const likedUserTweets = await tweetModel.likedTweets(req.user.id);
     res

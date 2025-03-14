@@ -9,6 +9,8 @@ export interface TweetInterface {
   likes: number | null;
   views: number | null;
   liked: boolean;
+  retweeted: boolean;
+  viewed: boolean;
   id: number;
   index: number;
 }

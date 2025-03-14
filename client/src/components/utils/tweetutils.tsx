@@ -34,10 +34,12 @@ export const sendAction = async (
     let data = {
       tweetId: id,
     };
+
     await axios.put("http://localhost:8080/api/tweets/action", data, {
       params: { tweetAction: action },
       withCredentials: true,
     });
+
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.error(error.stack);

@@ -1,11 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { FaHeart, FaRegComment, FaRegHeart } from "react-icons/fa6";
+import { FaHeart, FaRegComment, FaRegHeart, FaRetweet } from "react-icons/fa6";
 import { AiOutlineRetweet } from "react-icons/ai";
 import { IoShareOutline } from "react-icons/io5";
 import { CiBookmark } from "react-icons/ci";
 import { IoIosMore, IoMdStats } from "react-icons/io";
-import { Link, matchPath, useLocation, useParams } from "react-router-dom";
+import {
+  Link,
+  matchPath,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import "./tweet.css";
 import Pfp from "../../assets/placeholderpfp.jpg";
 import globalStyles from "../../assets/style.module.css";
@@ -13,6 +19,8 @@ import styles from "./tweet.module.css";
 import { formatTweetDate, sendAction } from "../utils/tweetutils";
 import Loading from "../../pages/loading/loading";
 import { useTweetContext } from "../../context/TweetContext";
+import { createPortal } from "react-dom";
+import { LuPencilLine } from "react-icons/lu";
 
 interface Props {
   tweetType: string;
@@ -31,31 +39,30 @@ const Tweet = ({ tweetType, username }: Props) => {
     buttonRefs,
     handleSetReplies,
     replies,
+    retweetPopupRef,
     retweetOverlayRef,
+    retweetActive,
+    setRetweetActive,
     handleReplyClick,
-    setHomeScreenOverlayShown,
-    retweetOverlayActive,
-    setRetweetOverlayActive,
   } = useTweetContext();
   const [newTweetsAvailable, setNewTweetsAvailable] = useState(false);
   const [fetchNewTweets, setFetchNewTweets] = useState(false);
-  const [retweetOverlayActiveState, setRetweetOverlayActiveState] =
-    useState(false);
+  // wip
   const observerRef = useRef<IntersectionObserver | undefined>();
   const location = useLocation();
-
+  const navigate = useNavigate();
   const dataToRender = statusNumber ? replies : tweets;
 
   const doTweetsFetch = async (
     location: string,
     status?: string | undefined,
-    reset = false
+    reset = false,
   ) => {
     try {
       const params: Record<string, string | undefined> = { username: username };
 
       if (status) params.statusNumber = status;
-      // reset the page if the button has been clicked idk
+      // reset the page if the button to update the tweets from the websocket has been clicked
       if (reset) {
         setPage(1);
       }
@@ -64,9 +71,9 @@ const Tweet = ({ tweetType, username }: Props) => {
         {
           withCredentials: true,
           params: params,
-        }
+        },
       );
-      if(response.data.tweets.length !== 0) {
+      if (response.data.tweets.length !== 0) {
         if (status) {
           handleSetReplies((prev) => [...prev, ...response.data.tweets]);
         } else {
@@ -80,17 +87,16 @@ const Tweet = ({ tweetType, username }: Props) => {
         }
       }
       setLoading(false);
-
     } catch (err) {
       if (axios.isAxiosError(err)) {
         console.error(err.stack);
       } else {
         console.error("unknown error", err);
       }
-    } 
+    }
   };
-  // idk what this for
-    useEffect(() => {
+  // idk what this for sorry uwu
+  useEffect(() => {
     const pathsToExclude = [
       "/compose/post",
       "/:username/status/:statusNumber",
@@ -98,14 +104,14 @@ const Tweet = ({ tweetType, username }: Props) => {
     ];
 
     const shouldResetTweets = !pathsToExclude.some((path) =>
-      matchPath(path, location.pathname)
+      matchPath(path, location.pathname),
     );
 
     if (shouldResetTweets) {
       handleSetTweets([]);
     }
   }, [location.pathname]);
-  
+
   // since the tweet component is also for replies the statusNumber is included too
   // for status update
   useEffect(() => {
@@ -168,6 +174,13 @@ const Tweet = ({ tweetType, username }: Props) => {
     return buttonRefs.current[index];
   };
 
+  const handleRetweetBtnClick = (index: number) => {
+    setRetweetActive(index);
+  };
+
+  const handleQuoteClick = (index: number) => {
+    navigate("compose/post", { state: { quote: true, tweet: tweets[index] } });
+  };
   if (loading) {
     return (
       <div>
@@ -175,12 +188,6 @@ const Tweet = ({ tweetType, username }: Props) => {
       </div>
     );
   }
-
-  const handleRetweetPopUpActive = (index: number) => {
-    setRetweetOverlayActive(index);
-    setRetweetOverlayActiveState(prev => !prev);
-    setHomeScreenOverlayShown(prev => !prev);
-  };
 
   return (
     <div className="tweets-container">
@@ -207,10 +214,12 @@ const Tweet = ({ tweetType, username }: Props) => {
               retweets,
               likes,
               views,
+              retweeted,
               liked,
+              viewed,
               id,
             },
-            index
+            index,
           ) => (
             <div
               key={index}
@@ -283,7 +292,7 @@ const Tweet = ({ tweetType, username }: Props) => {
                         data-title="Repost"
                         className={`tweet-action-btn repost-btn`}
                         ref={(el) => (getOrCreateButtonRef(index).retweet = el)}
-                        onClick={() => handleRetweetPopUpActive(index)}
+                        onClick={() => handleRetweetBtnClick(index)}
                       >
                         <div className="green tweet-icon">
                           <AiOutlineRetweet className="repost-icon" />
@@ -292,17 +301,46 @@ const Tweet = ({ tweetType, username }: Props) => {
                           {retweets !== 0 && retweets}
                         </div>
                       </button>
-                      {retweetOverlayActive === index && (
-                        <div
-                          className={styles.popUp}
-                          ref={
-                            retweetOverlayActiveState ? retweetOverlayRef : null
-                          }
-                        >
-                          <div className={styles.popUpContent}>
-                            Popup Content Here
+                      {retweetActive === index && (
+                        <>
+                          {createPortal(
+                            <div
+                              className={styles.fullscreenOverlay}
+                              ref={retweetOverlayRef}
+                            ></div>,
+                            document.body,
+                          )}
+                          <div className={styles.popUp} ref={retweetPopupRef}>
+                            <button
+                              className={styles.popUpContent}
+                              onClick={() =>
+                                sendAction(
+                                  Number(id),
+                                  retweeted,
+                                  "retweets",
+                                  dataToRender,
+                                  statusNumber
+                                    ? handleSetReplies
+                                    : handleSetTweets,
+                                )
+                              }
+                            >
+                              <div>
+                                <FaRetweet />
+                              </div>
+                              <div>Repost</div>
+                            </button>
+                            <button
+                              className={styles.popUpContent}
+                              onClick={() => handleQuoteClick(index)}
+                            >
+                              <div>
+                                <LuPencilLine />
+                              </div>
+                              <div>Quote</div>
+                            </button>
                           </div>
-                        </div>
+                        </>
                       )}
                     </div>
                     <div className="like">
@@ -316,7 +354,7 @@ const Tweet = ({ tweetType, username }: Props) => {
                             liked,
                             "likes",
                             dataToRender,
-                            statusNumber ? handleSetReplies : handleSetTweets
+                            statusNumber ? handleSetReplies : handleSetTweets,
                           )
                         }
                       >
@@ -376,7 +414,7 @@ const Tweet = ({ tweetType, username }: Props) => {
                 </div>
               </div>
             </div>
-          )
+          ),
         )}
     </div>
   );

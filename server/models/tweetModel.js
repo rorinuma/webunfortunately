@@ -1,16 +1,17 @@
 const pool = require("../config/db");
 
-// Create a tweet or update replies count if it's a reply
+// Create a tweet or update replies count if it's a reply (tweetId exists = reply)
 exports.createTweet = async (userId, username, tweetId, text, image) => {
   if (tweetId) {
     await pool.query("UPDATE tweets SET replies = replies + 1 WHERE id = $1", [
       tweetId,
     ]);
-  } else tweetId = null;
-
+  } else {
+    tweetId = null;
+  }
   const query = `
     INSERT INTO tweets (user_id, username, at, reply_to, text, image) 
-    VALUES ($1, $2, $3, $4, $5, $6)
+    VALUES ($1, $2, $3, $4, $5, $6) 
   `;
   await pool.query(query, [userId, username, username, tweetId, text, image]);
 };
@@ -22,17 +23,17 @@ exports.allTweets = async (id, limit, offset) => {
 
   if (id) {
     query = `
-      SELECT * FROM tweets 
-      WHERE reply_to = $1 
+      SELECT * FROM tweets
+      WHERE reply_to = $1
       ORDER BY created_at DESC 
       LIMIT $2 OFFSET $3
     `;
     params = [id, limit, offset];
   } else {
     query = `
-      SELECT * FROM tweets 
-      WHERE reply_to IS NULL 
-      ORDER BY created_at DESC 
+      SELECT * FROM tweets
+      WHERE reply_to is NULL
+      ORDER BY created_at DESC
       LIMIT $1 OFFSET $2
     `;
     params = [limit, offset];
@@ -46,7 +47,7 @@ exports.allTweets = async (id, limit, offset) => {
 exports.likedTweets = async (userId, limit, offset) => {
   const query = `
     SELECT tweets.* 
-    FROM likes 
+    FROM likes
     JOIN tweets ON likes.tweet_id = tweets.id 
     WHERE likes.user_id = $1 
     ORDER BY tweets.created_at DESC 
@@ -57,6 +58,33 @@ exports.likedTweets = async (userId, limit, offset) => {
   return rows;
 };
 
+exports.retweetedTweets = async (userId, limit, offset) => {
+  const query = `
+    SELECT tweets.* 
+    FROM retweets 
+    JOIN tweets ON retweets.tweet_id = tweets.id 
+    WHERE retweets.user_id = $1 
+    ORDER BY tweets.created_at DESC 
+    LIMIT $2 OFFSET $3
+  `;
+
+  const { rows } = await pool.query(query, [userId, limit, offset]);
+  return rows;
+};
+
+exports.viewedTweets = async (userId, limit, offset) => {
+  const query = `
+    SELECT tweets.* 
+    FROM views 
+    JOIN tweets ON views.tweet_id = tweets.id 
+    WHERE views.user_id = $1 
+    ORDER BY tweets.created_at DESC 
+    LIMIT $2 OFFSET $3
+  `;
+
+  const { rows } = await pool.query(query, [userId, limit, offset]);
+  return rows;
+};
 // Fetch tweets by username
 exports.tweetsByUsername = async (username, limit, offset) => {
   let query;
@@ -106,7 +134,10 @@ exports.toggleAction = async (actionType, tweetId, userId) => {
 
   // Check if the action already exists
   const checkQuery = `SELECT * FROM ${actionType} WHERE tweet_id = $1 AND user_id = $2`;
-  const { rows: existingAction } = await pool.query(checkQuery, [tweetId, userId]);
+  const { rows: existingAction } = await pool.query(checkQuery, [
+    tweetId,
+    userId,
+  ]);
 
   if (existingAction.length === 0) {
     // Add action
@@ -149,4 +180,3 @@ exports.createReply = async (userId, tweetId, text, image) => {
   const updateQuery = "UPDATE tweets SET replies = replies + 1 WHERE id = $1";
   await pool.query(updateQuery, [tweetId]);
 };
-

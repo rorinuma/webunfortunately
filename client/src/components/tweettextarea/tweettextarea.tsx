@@ -72,7 +72,7 @@ const TweetTextArea = ({
       if (imgInput) {
         formData.append("tweet_post_image", imgInput);
       }
-      if (!reply) {
+      if (reply) {
         if (replyClicked) {
           formData.append("id", replyClicked.toString());
         } else if (tweet && tweet.id) {

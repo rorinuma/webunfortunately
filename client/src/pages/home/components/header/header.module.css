@@ -43,6 +43,11 @@
   font-size: 2.5em;
 }
 
+.mobileNavAt {
+  color: var(--grey-color);
+  font-weight: 300;
+}
+
 .followStatsContainer {
   display: flex;
   gap: 0.5rem;
