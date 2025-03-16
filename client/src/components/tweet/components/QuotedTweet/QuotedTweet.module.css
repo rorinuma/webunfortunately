@@ -30,7 +30,12 @@
   font-weight: 300;
 }
 
+.quotedTweetText {
+  margin-bottom: 0.125rem;
+}
+
 .quotedImage {
   max-width: 100%;
   object-fit: contain;
+  border-radius: 0.75rem;
 }

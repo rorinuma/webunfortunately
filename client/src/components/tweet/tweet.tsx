@@ -96,7 +96,7 @@ const Tweet = ({ tweetType, username }: Props) => {
       }
     }
   };
-  // idk what this for sorry uwu
+
   useEffect(() => {
     const pathsToExclude = [
       "/compose/post",

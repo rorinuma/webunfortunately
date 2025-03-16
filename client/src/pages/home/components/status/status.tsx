@@ -19,6 +19,7 @@ import { CiBookmark } from "react-icons/ci";
 import TweetTextArea from "../../../../components/tweettextarea/tweettextarea";
 import Tweet from "../../../../components/tweet/tweet";
 import { useTweetContext } from "../../../../context/TweetContext";
+import QuotedTweet from "../../../../components/tweet/components/QuotedTweet/QuotedTweet";
 
 const Status = () => {
   const { username, statusNumber, photoId } = useParams();
@@ -29,6 +30,8 @@ const Status = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
+
+  const quotedTweet = location.state?.quotedTweet
 
   const {
     handleSetReplies,
@@ -63,7 +66,7 @@ const Status = () => {
         const data = {
           tweetId: statusNumber,
         };
-        const response = await axios.put(
+        await axios.put(
           "http://localhost:8080/api/tweets/action",
           data,
           {
@@ -71,7 +74,6 @@ const Status = () => {
             withCredentials: true,
           },
         );
-        console.log(response);
       } catch (error) {
         console.error(
           "An error occured while sending the tweet view action",
@@ -174,6 +176,7 @@ const Status = () => {
           {tweet.views} <span>Views</span>
         </div>
       </div>
+      {quotedTweet && <QuotedTweet quotedTweet={quotedTweet} />}
       <div className={styles.actionsContainer}>
         <IconContext.Provider value={{ size: "20px" }}>
           <div className={styles.actions}>

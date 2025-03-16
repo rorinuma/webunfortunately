@@ -37,6 +37,8 @@ interface TweetContextType {
   retweetOverlayRef: React.MutableRefObject<HTMLDivElement | null>;
   retweetActive: number | null;
   setRetweetActive: React.Dispatch<React.SetStateAction<number | null>>;
+  quotedTweetRef: React.MutableRefObject<HTMLDivElement | null>;
+  quotedTweetImageRef: React.MutableRefObject<HTMLImageElement | null>;
 }
 
 export const TweetContext = createContext<TweetContextType | undefined>(
@@ -64,12 +66,25 @@ export const TweetProvider = ({ children }: { children: React.ReactNode }) => {
   const [retweetActive, setRetweetActive] = useState<number | null>(null);
   const location = useLocation();
 
+  // to check if the quoted tweet has been clicked or not to proceed with its own logic
+  const quotedTweetRef = useRef<HTMLDivElement | null>(null);
+  const quotedTweetImageRef = useRef<HTMLImageElement | null>(null);
+
   const handleTweetClick = async (
     e: React.MouseEvent<HTMLDivElement>,
     index: number,
     id: number,
     username: string,
   ) => {
+
+    // why why why why why why it doesn't work i don't get it
+    // whatever it doesn't work and i'm not trying to debug this shit
+    // this is cancer.....
+    if (quotedTweetRef.current && quotedTweetRef.current.contains(e.target as Node) ||
+      quotedTweetImageRef.current && quotedTweetImageRef.current.contains(e.target as Node)) {
+      return;
+    }
+
     if (
       tweetImgRefs.current[index] &&
       tweetImgRefs.current[index].contains(e.target as Node)
@@ -94,6 +109,7 @@ export const TweetProvider = ({ children }: { children: React.ReactNode }) => {
       return;
     }
     // idk why but the retweet overlay above everything works like it's a tweet child even though it's fucking not
+    // i guess react portal gift
     const buttonClicked = Object.values(buttonRefs.current[index] || {}).some(
       (ref) => ref.contains(e.target as Node),
     );
@@ -186,6 +202,8 @@ export const TweetProvider = ({ children }: { children: React.ReactNode }) => {
         handleReplyClick,
         handleSetReplyClick,
         setReplyClicked,
+        quotedTweetRef,
+        quotedTweetImageRef,
       }}
     >
       {children}
