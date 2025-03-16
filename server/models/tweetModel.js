@@ -1,18 +1,27 @@
 const pool = require("../config/db");
 
 // Create a tweet or update replies count if it's a reply (tweetId exists = reply)
-exports.createTweet = async (userId, username, tweetId, text, image) => {
+exports.createTweet = async (userId, username, tweetId, text, image, actionTableName) => {
   if (tweetId) {
-    await pool.query("UPDATE tweets SET replies = replies + 1 WHERE id = $1", [
+    await pool.query(`UPDATE tweets SET ${actionTableName} = ${actionTableName} + 1 WHERE id = $1`, [
       tweetId,
     ]);
   } else {
     tweetId = null;
   }
-  const query = `
-    INSERT INTO tweets (user_id, username, at, reply_to, text, image) 
-    VALUES ($1, $2, $3, $4, $5, $6) 
-  `;
+  let query
+  if (actionTableName === "replies") {
+    query = `
+      INSERT INTO tweets (user_id, username, at, reply_to, text, image) 
+      VALUES ($1, $2, $3, $4, $5, $6) 
+    `;
+  } else if (actionTableName === "retweets") {
+    query = `
+      INSERT INTO tweets (user_id, username, at, quote_to, text, image)
+      VALUES ($1, $2, $3, $4, $5, $6)
+    `
+  }
+
   await pool.query(query, [userId, username, username, tweetId, text, image]);
 };
 
@@ -49,14 +58,27 @@ exports.likedTweets = async (userId, limit, offset) => {
     SELECT tweets.* 
     FROM likes
     JOIN tweets ON likes.tweet_id = tweets.id 
-    WHERE likes.user_id = $1 
+    WHERE likes.user_id = $1   
     ORDER BY tweets.created_at DESC 
     LIMIT $2 OFFSET $3
   `;
-
   const { rows } = await pool.query(query, [userId, limit, offset]);
   return rows;
 };
+
+exports.profileLikedTweets = async (username, limit, offset) => {
+  // i don't understand how this query works, like at all
+  const query = `
+    SELECT tweets.*
+    FROM tweets
+    JOIN likes ON tweets.id = likes.tweet_id
+    JOIN users ON likes.user_id = users.id
+    WHERE users.username = $1
+    LIMIT $2 OFFSET $3
+  `
+  const { rows } = await pool.query(query, [username, limit, offset]);
+  return rows;
+}
 
 exports.retweetedTweets = async (userId, limit, offset) => {
   const query = `
@@ -85,6 +107,7 @@ exports.viewedTweets = async (userId, limit, offset) => {
   const { rows } = await pool.query(query, [userId, limit, offset]);
   return rows;
 };
+
 // Fetch tweets by username
 exports.tweetsByUsername = async (username, limit, offset) => {
   let query;
@@ -124,26 +147,30 @@ exports.likedTweetsByTweetIds = async (tweetIds) => {
   return rows;
 };
 
-// Toggle action (like/retweet) on a tweet
 exports.toggleAction = async (actionType, tweetId, userId) => {
-  // Validate column name to prevent SQL injection
-  const allowedActions = ["likes", "retweets"];
+  const allowedActions = ["likes", "retweets", "views"];
   if (!allowedActions.includes(actionType)) {
-    throw new Error("Invalid action type");
+    console.error("Invalid action type");
+    return
   }
-
-  // Check if the action already exists
+  // if its only a retweet we for sure know that the retweet_type is retweet
+  // so we have to insert the "retweet" retweet_type
   const checkQuery = `SELECT * FROM ${actionType} WHERE tweet_id = $1 AND user_id = $2`;
   const { rows: existingAction } = await pool.query(checkQuery, [
     tweetId,
     userId,
   ]);
-
+  if (existingAction.length > 0 && actionType === "views")
+    return { message: "Tweet already viewed" };
   if (existingAction.length === 0) {
     // Add action
-    const addQuery = `INSERT INTO ${actionType} (tweet_id, user_id) VALUES ($1, $2)`;
-    await pool.query(addQuery, [tweetId, userId]);
-
+    if (actionType === "retweets") {
+      const addQuery = "INSERT INTO retweets (tweet_id, user_id, retweet_type) VALUES ($1, $2, $3)"
+      await pool.query(addQuery, [tweetId, userId, "retweet"])
+    } else {
+      const addQuery = `INSERT INTO ${actionType} (tweet_id, user_id) VALUES ($1, $2)`;
+      await pool.query(addQuery, [tweetId, userId]);
+    }
     // Update tweet count
     const updateQuery = `UPDATE tweets SET ${actionType} = ${actionType} + 1 WHERE id = $1`;
     await pool.query(updateQuery, [tweetId]);
@@ -151,9 +178,14 @@ exports.toggleAction = async (actionType, tweetId, userId) => {
     return { message: "Action added" };
   } else {
     // Remove action
-    const removeQuery = `DELETE FROM ${actionType} WHERE tweet_id = $1 AND user_id = $2`;
-    await pool.query(removeQuery, [tweetId, userId]);
+    if (actionType === "retweets") {
+      const removeQuery = "DELETE FROM retweets WHERE tweet_id = $1 AND user_id = $2 AND retweet_type = $3"
+      await pool.query(removeQuery, [tweetId, userId, retweet])
+    } else {
 
+      const removeQuery = `DELETE FROM ${actionType} WHERE tweet_id = $1 AND user_id = $2`;
+      await pool.query(removeQuery, [tweetId, userId]);
+    }
     // Decrease tweet count
     const updateQuery = `UPDATE tweets SET ${actionType} = ${actionType} - 1 WHERE id = $1`;
     await pool.query(updateQuery, [tweetId]);

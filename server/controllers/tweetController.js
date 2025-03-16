@@ -6,12 +6,15 @@ exports.createTweet = async (req, res) => {
   try {
     const { text, id } = req.body;
     const image = req.file ? req.file.filename : null;
+    const actionTableName = req.query.actionTableName
+
     await tweetModel.createTweet(
       req.user.id,
       req.user.username,
       id,
       text,
       image,
+      actionTableName
     );
     notifyNewTweet();
     res.status(201).json({ message: "Tweet posted successfully" });
@@ -47,17 +50,14 @@ exports.allTweets = async (req, res) => {
   }
 };
 
-exports.likedTweets = async (req, res) => {
+exports.profileLikedTweets = async (req, res) => {
   try {
     const username = req.query.username;
     const page = parseInt(req.query.page) | 1;
     const limit = 10; // should be 20 but because of the strict mode
     const offset = (page - 1) * limit;
 
-    const tweetIds = await tweetModel.likedTweets(username, limit, offset);
-    const extractedIds = tweetIds.map((tweet) => tweet.tweet_id);
-
-    const tweets = await tweetModel.likedTweetsByTweetIds(extractedIds);
+    const tweets = await tweetModel.profileLikedTweets(username, limit, offset);
 
     const updatedTweets = tweets.map((tweet) => ({
       ...tweet,
@@ -85,10 +85,10 @@ exports.profileTweets = async (req, res) => {
       limit,
       offset,
     );
-    const likedUserTweets = await tweetModel.likedTweets(req.user.id);
+    const updatedTweets = await transformTweets(userTweets, req.user.id, limit, offset)
     res
       .status(200)
-      .json({ tweets: transformTweets(userTweets, likedUserTweets) });
+      .json({ tweets: updatedTweets });
   } catch (error) {
     console.error("Error occured while fetching profile tweets", error);
     res.status(500).json({ error: "Error while fetching profile tweets" });
@@ -100,13 +100,14 @@ exports.tweetAction = async (req, res) => {
     const { tweetId } = req.body;
     const tweetAction = req.query.tweetAction;
     const userId = req.user.id;
+
     const result = await tweetModel.toggleAction(tweetAction, tweetId, userId);
     res.status(200).json({ result });
   } catch (error) {
-    console.error("Error occured while doing the tweet action", error);
+    console.error("An error occured while performing the tweet action", error);
     res
       .status(500)
-      .json({ error: "An error occured while doing the tweet action" });
+      .json({ error: "An error occured while performing the tweet action" });
   }
 };
 
@@ -122,7 +123,7 @@ exports.tweetInfoByStatus = async (req, res) => {
       image: tweet.image
         ? `http://localhost:8080/uploads/${tweet.image}`
         : null,
-      liked: likedTweet.some((like) => like.tweet_id === tweet.id)
+      liked: likedTweet.some((like) => like.id === tweet.id)
         ? true
         : false,
     }));

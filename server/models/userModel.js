@@ -44,7 +44,7 @@ exports.checkEmail = async (email) => {
 };
 
 exports.checkLogin = async (userDataType, userData) => {
-  const query = `SELECT ${userDataType} FROM users WHERE ${userDataType} = $1`;  
+  const query = `SELECT ${userDataType} FROM users WHERE ${userDataType} = $1`;
   const { rows } = await pool.query(query, [userData]);
   return rows;
 };

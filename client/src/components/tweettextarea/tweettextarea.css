@@ -10,7 +10,7 @@ button {
   border-bottom: 1px solid rgb(50, 50, 50);
 }
 
-.tweet-post-pfp > img {
+.tweet-post-pfp>img {
   height: 40px;
   width: 40px;
   border-radius: 50%;
@@ -28,13 +28,13 @@ button {
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
-  -ms-overflow-style: none; 
+  -ms-overflow-style: none;
   scrollbar-width: none;
   max-height: 100vh;
 }
 
 .tweet-area-container::-webkit-scrollbar {
-  display: none
+  display: none;
 }
 
 .tweet-area {
@@ -67,7 +67,7 @@ button {
   justify-content: space-between;
   width: 100%;
   padding: 8px;
-  position: absolute
+  position: absolute;
 }
 
 .image-edit,
@@ -80,7 +80,7 @@ button {
   top: 0.75rem;
 }
 
-.image-edit > button {
+.image-edit>button {
   padding: 0.25rem 1rem;
   background-color: rgba(15, 20, 25, 0.75);
   border-radius: 4rem;
@@ -89,10 +89,10 @@ button {
 
 .image-delete {
   left: 81%;
-  top: 0.75rem
+  top: 0.75rem;
 }
 
-.image-delete > button {
+.image-delete>button {
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -161,6 +161,5 @@ button {
 
 .tweet-post-btn:disabled {
   background-color: rgb(110, 110, 110);
-  cursor: default
+  cursor: default;
 }
-  

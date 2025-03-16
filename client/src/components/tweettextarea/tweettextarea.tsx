@@ -14,16 +14,24 @@ import { IconContext } from "react-icons";
 import { useTweetContext } from "../../context/TweetContext";
 import { RxCross2 } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
+import { TweetInterface } from "../../context/types";
+import styles from "./tweettextarea.module.css";
+import { formatTweetDate } from "../utils/tweetutils";
+import QuotedTweet from "../tweet/components/QuotedTweet/QuotedTweet";
 
 interface Props {
   postButtonActive?: boolean;
   replyClicked?: number | null;
   reply: boolean;
+  quote: boolean;
+  quotedTweet: TweetInterface;
 }
 
 const TweetTextArea = ({
   postButtonActive,
   reply,
+  quote,
+  quotedTweet,
   replyClicked,
 }: Props) => {
   const [tweetValue, setTweetValue] = useState("");
@@ -34,7 +42,7 @@ const TweetTextArea = ({
   const { tweet } = useTweetContext();
 
   const handleTweetValueChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     setTweetValue(e.target.value);
   };
@@ -72,23 +80,34 @@ const TweetTextArea = ({
       if (imgInput) {
         formData.append("tweet_post_image", imgInput);
       }
+
+      let actionTableName;
+
       if (reply) {
         if (replyClicked) {
           formData.append("id", replyClicked.toString());
+          actionTableName = "replies";
         } else if (tweet && tweet.id) {
           formData.append("id", tweet.id.toString());
+          actionTableName = "replies";
         }
+      } else if (quote) {
+        formData.append("id", quotedTweet.id.toString());
+        actionTableName = "retweets";
       }
 
-      await axios.post("http://localhost:8080/api/tweets", formData, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "multipart/form-data",
+      await axios.post(
+        `http://localhost:8080/api/tweets?actionTableName=${actionTableName}`,
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         },
-      });
+      );
 
-      navigate(-1)
-
+      navigate(-1);
     } catch (error) {
       console.error(error);
     }
@@ -98,6 +117,15 @@ const TweetTextArea = ({
     setImgUrl("");
     setImgInput(null);
   };
+
+  let placeholder;
+  if (quote) {
+    placeholder = "Add a comment";
+  } else if (reply) {
+    placeholder = "Post your reply";
+  } else {
+    placeholder = "What is happening?!";
+  }
 
   return (
     <form
@@ -113,7 +141,7 @@ const TweetTextArea = ({
         <div className="tweet-area-container">
           <TextareaAutosize
             className="tweet-area"
-            placeholder={reply ? "Post your reply" : "What is happening?!"}
+            placeholder={placeholder}
             value={tweetValue}
             onChange={handleTweetValueChange}
           />
@@ -139,7 +167,10 @@ const TweetTextArea = ({
             )}
           </div>
         </div>
-        <div className="everyone-can-reply">Everyone can reply</div>
+        {quotedTweet && (
+          <QuotedTweet quotedTweet={quotedTweet} />
+        )}
+        {/* <div className="everyone-can-reply">Everyone can reply</div> */}
         <div className="post-insert-data">
           <div className="post-insert-data-select">
             <IconContext.Provider value={{ className: "tweet-area-images" }}>

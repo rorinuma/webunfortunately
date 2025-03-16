@@ -1,7 +1,7 @@
 import pfp from "../../../../assets/placeholderpfp.jpg";
 import { formatTweetDate } from "../../../../components/utils/tweetutils";
 import { useTweetContext } from "../../../../context/TweetContext";
-import styles from "../../../../assets/style.module.css";
+import globalStyles from "../../../../assets/style.module.css";
 import TweetTextArea from "../../../../components/tweettextarea/tweettextarea";
 import { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -14,7 +14,9 @@ const Post = () => {
   const tweetPostRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const reply = location.state?.reply; // WIP
+  const reply = location.state?.reply;
+  const quote = location.state?.quote;
+  const quotedTweet = location.state?.tweet;
 
   useEffect(() => {
     const handleTweetPostPopup = (event: MouseEvent) => {
@@ -46,7 +48,7 @@ const Post = () => {
           <div>
             <button onClick={handleClosePost}>x</button>
           </div>
-          <div className={styles.blueFont}>Drafts</div>
+          <div className={globalStyles.blueFont}>Drafts</div>
         </div>
         {tweet && replyClicked && (
           <div className="post-overlay-reply-container">
@@ -58,7 +60,7 @@ const Post = () => {
               <div>
                 <div className="post-overlay-user-info">
                   <div>{tweet.username}</div>
-                  <div className={styles.dimFont}>@{tweet.at}</div>
+                  <div className={globalStyles.dimFont}>@{tweet.at}</div>
                   <div>{formatTweetDate(tweet.created_at)}</div>
                 </div>
                 <div className="image-text">
@@ -71,9 +73,9 @@ const Post = () => {
                 <div className="bar2"></div>
               </div>
               <div className="post-overlay-replying-to">
-                <div className={styles.dimFont}>
+                <div className={globalStyles.dimFont}>
                   Replying to{" "}
-                  <span className={styles.blueFont}>@{tweet.at}</span>
+                  <span className={globalStyles.blueFont}>@{tweet.at}</span>
                 </div>
               </div>
             </div>
@@ -82,11 +84,13 @@ const Post = () => {
         <div className="overlay-text-area-container">
           <TweetTextArea
             reply={reply}
+            quote={quote}
+            quotedTweet={quotedTweet}
           />
         </div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 };
 

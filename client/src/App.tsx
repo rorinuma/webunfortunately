@@ -40,14 +40,14 @@ const App = () => {
       try {
         const response = await axios.get(
           "http://localhost:8080/api/auth/protected",
-          { withCredentials: true }
+          { withCredentials: true },
         );
         if (response.status === 200) {
           setUsername(response.data.user.username);
           setLoggedIn(true);
         }
       } catch (err) {
-      	console.error("an error ocurred while checking the login", err)
+        console.error("an error ocurred while checking the login", err);
         setLoggedIn(false);
       }
     };

@@ -104,8 +104,8 @@ export const TweetProvider = ({ children }: { children: React.ReactNode }) => {
       (retweetOverlayRef.current &&
         retweetOverlayRef.current.contains(e.target as Node))
     ) {
-      retweetOverlayRef.current === null;
-      retweetPopupRef.current === null;
+      retweetOverlayRef.current = null;
+      retweetPopupRef.current = null;
       setRetweetActive(null);
       return;
     }
@@ -126,7 +126,7 @@ export const TweetProvider = ({ children }: { children: React.ReactNode }) => {
       | ((prev: TweetInterface[]) => TweetInterface[])
       | undefined,
   ) => {
-    replies && setReplies(replies);
+    setReplies(replies ? replies : []);
   };
 
   const handleSetTweets = (
@@ -135,7 +135,7 @@ export const TweetProvider = ({ children }: { children: React.ReactNode }) => {
       | ((prev: TweetInterface[]) => TweetInterface[])
       | undefined,
   ) => {
-    tweets && setTweets(tweets);
+    setTweets(tweets ? tweets : []);
   };
 
   const handleReplyOnStatusComponentClick = (
@@ -150,6 +150,7 @@ export const TweetProvider = ({ children }: { children: React.ReactNode }) => {
     } else {
       state = { background: location, reply: true };
     }
+    navigate("compose/post", { state: state })
     setReplyClicked(tweet.id);
   };
 

@@ -46,17 +46,41 @@ const Status = () => {
       try {
         const response = await axios.get(
           `http://localhost:8080/api/tweets/placeholder/status/${statusNumber}`,
-          { withCredentials: true }
+          { withCredentials: true },
         );
         handleSetTweet(response.data.tweet[0]);
-      } catch (erorr) {
-        setLoading(true);
-        console.error("Error occured while fetching tweets by statusNumber");
-      } finally {
         setLoading(false);
+      } catch (error) {
+        setLoading(true);
+        console.error(
+          "Error occured while fetching tweets by statusNumber",
+          error,
+        );
+      }
+    };
+    const viewActionFetch = async () => {
+      try {
+        const data = {
+          tweetId: statusNumber,
+        };
+        const response = await axios.put(
+          "http://localhost:8080/api/tweets/action",
+          data,
+          {
+            params: { tweetAction: "views" },
+            withCredentials: true,
+          },
+        );
+        console.log(response);
+      } catch (error) {
+        console.error(
+          "An error occured while sending the tweet view action",
+          error,
+        );
       }
     };
     statusNumberFetch();
+    viewActionFetch();
   }, [statusNumber]);
 
   const handleImageClick = () => {
@@ -138,9 +162,9 @@ const Status = () => {
             {format(
               toZonedTime(
                 tweet.created_at,
-                Intl.DateTimeFormat().resolvedOptions().timeZone
+                Intl.DateTimeFormat().resolvedOptions().timeZone,
               ),
-              "h:mm a · MMM d, yyyy "
+              "h:mm a · MMM d, yyyy ",
             )}
           </Link>
         </div>

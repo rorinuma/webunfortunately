@@ -21,6 +21,7 @@ import Loading from "../../pages/loading/loading";
 import { useTweetContext } from "../../context/TweetContext";
 import { createPortal } from "react-dom";
 import { LuPencilLine } from "react-icons/lu";
+import QuotedTweet from "./components/QuotedTweet/QuotedTweet";
 
 interface Props {
   tweetType: string;
@@ -179,8 +180,9 @@ const Tweet = ({ tweetType, username }: Props) => {
   };
 
   const handleQuoteClick = (index: number) => {
-    navigate("compose/post", { state: { quote: true, tweet: tweets[index] } });
+    navigate("compose/post", { state: { quote: true, background: location, tweet: tweets[index] } });
   };
+
   if (loading) {
     return (
       <div>
@@ -218,6 +220,7 @@ const Tweet = ({ tweetType, username }: Props) => {
               liked,
               viewed,
               id,
+              quote_to,
             },
             index,
           ) => (
@@ -258,6 +261,9 @@ const Tweet = ({ tweetType, username }: Props) => {
                           />
                         </div>
                       )}
+                      {quote_to &&
+                        <QuotedTweet quotedTweet={dataToRender.find(data => data.id === quote_to)!} />
+                      }
                     </div>
                   </div>
                   <div>
@@ -276,7 +282,7 @@ const Tweet = ({ tweetType, username }: Props) => {
                     <div className="comment">
                       <button
                         data-title="Reply"
-                        className={`tweet-action-btn reply-btn`}
+                        className={`tweet-action-btn reply-btn `}
                         ref={(el) => (getOrCreateButtonRef(index).reply = el)}
                         onClick={() => handleReplyClick(id)}
                       >
@@ -290,7 +296,7 @@ const Tweet = ({ tweetType, username }: Props) => {
                     <div className="repost">
                       <button
                         data-title="Repost"
-                        className={`tweet-action-btn repost-btn`}
+                        className={`tweet-action-btn repost-btn ${retweeted && styles.retweetedGreen}`}
                         ref={(el) => (getOrCreateButtonRef(index).retweet = el)}
                         onClick={() => handleRetweetBtnClick(index)}
                       >
@@ -379,7 +385,7 @@ const Tweet = ({ tweetType, username }: Props) => {
                     <div className="view">
                       <button
                         data-title="View"
-                        className={`tweet-action-btn view-btn blue`}
+                        className={`tweet-action-btn view-btn blue ${viewed && styles.viewedBlue}`}
                         ref={(el) => (getOrCreateButtonRef(index).view = el)}
                       >
                         <div className="blue tweet-icon">

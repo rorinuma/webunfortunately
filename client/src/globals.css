@@ -1,7 +1,10 @@
 :root {
   --blue: rgb(29, 155, 240);
   --blue-hover: rgba(29, 155, 240, 0.1);
-  --blue: rgb(29, 155, 240);
+  --green: rgb(0, 186, 124);
+  --green-hover: rgba(0, 186, 124, 0.1);
+  --red: rgb(249, 24, 128);
+  --red-hover: rgba(249, 24, 128, 0.1);
   --grey-border: rgb(50, 50, 50);
   --hover: rgba(25, 25, 25, 0.9);
   --grey-color: rgb(113, 118, 123);

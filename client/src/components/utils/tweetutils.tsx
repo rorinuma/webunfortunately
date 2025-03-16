@@ -8,7 +8,7 @@ export const sendAction = async (
   actionDone: boolean,
   action: string,
   tweets: TweetInterface[],
-  handleSetTweets: (value: TweetInterface[]) => void
+  handleSetTweets: (value: TweetInterface[]) => void,
 ) => {
   actionDone = !actionDone;
 
@@ -31,15 +31,13 @@ export const sendAction = async (
 
     handleSetTweets(updatedTweets);
 
-    let data = {
+    const data = {
       tweetId: id,
     };
-
     await axios.put("http://localhost:8080/api/tweets/action", data, {
       params: { tweetAction: action },
       withCredentials: true,
     });
-
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.error(error.stack);

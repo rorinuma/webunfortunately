@@ -16,13 +16,13 @@ exports.transformTweets = async (
   return tweets.map((tweet) => ({
     ...tweet,
     image: tweet.image ? `http://localhost:8080/uploads/${tweet.image}` : null,
-    liked: likedTweets.some((like) => like.tweet_id === tweet.id)
+    liked: likedTweets.some((like) => like.id === tweet.id)
       ? true
       : false,
-    retweeted: retweetedTweets.some((retweet) => retweet.tweet_id === tweet.id)
+    retweeted: retweetedTweets.some((retweet) => retweet.id === tweet.id)
       ? true
       : false,
-    viewed: viewedTweets.some((view) => view.tweet_id === tweet.id)
+    viewed: viewedTweets.some((view) => view.id === tweet.id)
       ? true
       : false,
   }));

@@ -65,7 +65,7 @@ button {
 
 .tweet {
   display: flex;
-  border-bottom: 1px solid rgb(50, 50, 50);
+  border-bottom: 1px solid var(--grey-border);
   min-width: 10rem;
   max-width: 100%;
   max-height: 50rem;
@@ -100,7 +100,7 @@ button {
   margin-left: 0.625rem;
 }
 
-.tweet-pfp > img {
+.tweet-pfp>img {
   height: 40px;
   width: 40px;
   border-radius: 50%;
@@ -123,7 +123,7 @@ button {
   margin-top: 0.5rem;
 }
 
-.tweet-image > img {
+.tweet-image>img {
   width: auto;
   height: auto;
   max-width: 100%;
@@ -171,53 +171,53 @@ button {
 
 .reply-btn:hover .reply-icon,
 .reply-btn:hover .reply-text {
-  color: rgb(29, 155, 240);
+  color: var(--blue);
   transition: 0.3s;
 }
 
 .repost-btn:hover .repost-icon,
 .repost-btn:hover .repost-text {
-  color: rgb(0, 186, 124);
+  color: var(--green);
   transition: 0.3s;
 }
 
 .like-btn:hover .like-icon,
 .like-btn:hover .like-text {
-  color: rgb(249, 24, 128);
+  color: var(--red);
   transition: 0.3s;
 }
 
 .view-btn:hover .view-icon,
 .view-btn:hover .view-text {
-  color: rgb(29, 155, 240);
+  color: var(--blue);
   transition: 0.3s;
 }
 
 .bookmark-btn:hover .bookmark-icon {
-  color: rgb(29, 155, 240);
+  color: var(--blue);
   transition: 0.3s;
 }
 
 .share-btn:hover .share-icon {
-  color: rgb(29, 155, 240);
+  color: var(--blue);
   transition: 0.3s;
 }
 
 .blue:hover {
-  background-color: rgba(29, 155, 240, 0.1);
+  background-color: (--blue-hover);
   transition: 0.3s;
 }
 
 .green:hover {
-  background-color: rgba(0, 186, 124, 0.1);
+  background-color: var(--green-hover);
   transition: 0.3s;
 }
 
 .red:hover {
-  background-color: rgba(249, 24, 128, 0.1);
+  background-color: var(--red-hover);
   transition: 0.3s;
 }
 
 .liked {
-  color: rgb(249, 24, 128);
+  color: var(--red);
 }

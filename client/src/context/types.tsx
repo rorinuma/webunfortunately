@@ -11,6 +11,7 @@ export interface TweetInterface {
   liked: boolean;
   retweeted: boolean;
   viewed: boolean;
+  quote_to: number;
   id: number;
   index: number;
 }

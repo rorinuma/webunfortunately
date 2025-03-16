@@ -12,7 +12,7 @@ router.post(
 );
 router.get("/all", authorization, tweetController.allTweets);
 router.get("/posts", authorization, tweetController.profileTweets);
-router.get("/liked", authorization, tweetController.likedTweets);
+router.get("/liked", authorization, tweetController.profileLikedTweets);
 router.put("/action", authorization, tweetController.tweetAction);
 router.get(
   "/:username/status/:statusNumber",

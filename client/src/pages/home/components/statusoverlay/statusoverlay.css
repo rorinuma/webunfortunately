@@ -15,7 +15,7 @@
   flex-basis: 73%;
 }
 
-.tweet-image-presentation > div:nth-child(1) {
+.tweet-image-presentation>div:nth-child(1) {
   display: flex;
   position: relative;
   justify-content: center;
@@ -23,7 +23,7 @@
   flex-basis: 93%;
 }
 
-.tweet-image-presentation > div:nth-child(2) {
+.tweet-image-presentation>div:nth-child(2) {
   display: flex;
   justify-content: center;
   flex: 1;
@@ -42,8 +42,8 @@
   overflow: hidden
 }
 
-.presentation-image > img {
-  object-fit: cover;
+.presentation-image>img {
+  object-fit: contain;
   max-width: 100%;
   max-height: 93vh;
 }
@@ -55,12 +55,12 @@
   width: 50%;
 }
 
-.presentation-actions > div > button {
+.presentation-actions>div>button {
   display: flex;
   align-items: center;
 }
 
-.presentation-actions > div > button > div:nth-child(1) {
+.presentation-actions>div>button>div:nth-child(1) {
   padding: 6px 10px;
   border-radius: 50%;
 }
